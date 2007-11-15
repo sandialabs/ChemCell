@@ -1,0 +1,556 @@
+<HTML>
+<CENTER><A HREF = "Section_modify.html">Previous Section</A> - <A HREF = "http://www.cs.sandia.gov/~sjplimp/chemcell.html">ChemCell WWW Site</A> -
+<A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell Commands</A> - <A HREF = "Section_history.html">Next
+Section</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>7. Errors 
+</H3>
+<P>This section describes the various kinds of errors you can encounter
+when using ChemCell.
+</P>
+7.1 <A HREF = "#7_1">Common problems</A><BR>
+7.2 <A HREF = "#7_2">Reporting bugs</A><BR>
+7.3 <A HREF = "#7_3">Error & warning messages</A> <BR>
+
+<HR>
+
+<A NAME = "7_1"></A><H4>7.1 Common problems 
+</H4>
+<P>If two ChemCell runs do not produce the same answer on different
+machines or different numbers of processors, this is typically not a
+bug.  In theory you should get identical answers on any number of
+processors and on any machine.  In practice, numerical round-off can
+cause slight differences and eventual divergence of molecular dynamics
+phase space trajectories within a few 100s or few 1000s of timesteps.
+However, the statistical properties of the two runs (e.g. average
+energy or temperature) should still be the same.
+</P>
+<P>If the <A HREF = "velocity.html">velocity</A> command is used to set initial atom
+velocities, a particular atom can be assigned a different velocity
+when the problem on different machines.  Obviously, this means the
+phase space trajectories of the two simulations will rapidly diverge.
+See the discussion of the <I>loop</I> option in the
+<A HREF = "velocity.html">velocity</A> command for details.
+</P>
+<P>A ChemCell simulation typically has two stages, setup and run.  Most
+ChemCell errors are detected at setup time; others like a bond
+stretching too far may not occur until the middle of a run.
+</P>
+<P>ChemCell tries to flag errors and print informative error messages so
+you can fix the problem.  Of course ChemCell cannot figure out your
+physics mistakes, like choosing too big a timestep, specifying invalid
+force field coefficients, or putting 2 atoms on top of each other!  If
+you find errors that ChemCell doesn't catch that you think it should
+flag, please send us an <A HREF = "mailto:sjplimp@sandia.gov">email</A>.
+</P>
+
+
+<P>If you get an error message about an invalid command in your input
+script, you can determine what command is causing the problem by
+looking in the log.ChemCell file or using the <A HREF = "echo.html">echo command</A>
+to see it on the screen.  For a given command, ChemCell expects certain
+arguments in a specified order.  If you mess this up, ChemCell will
+often flag the error, but it may read a bogus argument and assign a
+value that is valid, but not what you wanted.  E.g. trying to read the
+string "abc" as an integer value and assigning the associated variable
+a value of 0.
+</P>
+<P>Generally, ChemCell will print a message to the screen and exit
+gracefully when it encounters a fatal error.  Sometimes it will print
+a WARNING and continue on; you can decide if the WARNING is important
+or not.  If ChemCell crashes or hangs without spitting out an error
+message first then it could be a bug (see <A HREF = "#9_2">this section</A>) or one
+of the following cases:
+</P>
+<P>ChemCell runs in the available memory a processor allows to be
+allocated.  Most reasonable MD runs are compute limited, not memory
+limited, so this shouldn't be a bottleneck on most platforms.  Almost
+all large memory allocations in the code are done via C-style malloc's
+which will generate an error message if you run out of memory.
+Smaller chunks of memory are allocated via C++ "new" statements.  If
+you are unlucky you could run out of memory just when one of these
+small requests is made, in which case the code will crash or hang (in
+parallel), since ChemCell doesn't trap on those errors.
+</P>
+<P>Illegal arithmetic can cause ChemCell to run slow or crash.  This is
+typically due to invalid physics and numerics that your simulation is
+computing.  If you see wild thermodynamic values or NaN values in your
+ChemCell output, something is wrong with your simulation.
+</P>
+<P>In parallel, one way ChemCell can hang is due to how different MPI
+implementations handle buffering of messages.  If the code hangs
+without an error message, it may be that you need to specify an MPI
+setting or two (usually via an environment variable) to enable
+buffering or boost the sizes of messages that can be buffered.
+</P>
+<HR>
+
+<A NAME = "7_2"></A><H4>7.2 Reporting bugs 
+</H4>
+<P>If you are confident that you have found a bug in ChemCell, we'd like to
+know about it via <A HREF = "mailto:sjplimp@sandia.gov">email</A>.
+</P>
+<P>First, check the "New features and bug fixes" section of the <A HREF = "http://www.cs.sandia.gov/~sjplimp/chemcell.html">ChemCell
+WWW site</A> to see if the bug has already been reported or fixed.
+</P>
+<P>If not, the most useful thing you can do for us is to isolate the
+problem.  Run it on the smallest number of atoms and fewest number of
+processors and with the simplest input script that reproduces the bug.
+</P>
+<P>Send an email that describes the problem and any ideas you have as to
+what is causing it or where in the code the problem might be.  We'll
+request your input script and data files if necessary.
+</P>
+<HR>
+
+<H4><A NAME = "7_3"></A>7.3 Error & warning Messages 
+</H4>
+<P>These are two alphabetic lists of the <A HREF = "#error">ERROR</A> and
+<A HREF = "#warn">WARNING</A> messages ChemCell prints out and the reason why.  If the
+explanation here is not sufficient, the documentation for the
+offending command may help.  Grepping the source files for the text of
+the error message and staring at the source code and comments is also
+not a bad idea!  Note that sometimes the same message can be printed
+from multiple places in the code.
+</P>
+<H4><A NAME = "error"></A>Errors: 
+</H4>
+<DL>
+
+<DT><I>%d local particles on proc %d are in ghost cells after compact</I> 
+
+<DT><I>%d particles assigned to procs</I> 
+
+<DT><I>2d particle move hit a triangle vertex</I> 
+
+<DT><I>Alias %s already exists</I> 
+
+<DT><I>All universe variables must have same # of values</I> 
+
+<DT><I>All variables in next command must be same style</I> 
+
+<DT><I>Bin size of 0.0</I> 
+
+<DT><I>Bins are already setup</I> 
+
+<DT><I>Cannot add triangles to a region surface</I> 
+
+<DT><I>Cannot change dimension of existing particles</I> 
+
+<DT><I>Cannot check for a 2d species</I> 
+
+<DT><I>Cannot have 0-reactant reactions with spatial simulation</I> 
+
+<DT><I>Cannot do move_test with timestep = 0</I> 
+
+<DT><I>Cannot open file %s</I> 
+
+<DT><I>Cannot open fix conc file %s</I> 
+
+<DT><I>Cannot open restart file %s</I> 
+
+<DT><I>Cannot perform match with two or more wildcard *</I> 
+
+<DT><I>Cannot redefine variable as a different style</I> 
+
+<DT><I>Cannot set permeability for a 2d species</I> 
+
+<DT><I>Cannot use balance command with non-spatial simulation</I> 
+
+<DT><I>Cannot use bin command with non-spatial simulation</I> 
+
+<DT><I>Cannot use count command with spatial simulation</I> 
+
+<DT><I>Cannot use diffusion command with non-spatial simulation</I> 
+
+<DT><I>Cannot use dimension command with non-spatial simulation</I> 
+
+<DT><I>Cannot use dump command with non-spatial simulation</I> 
+
+<DT><I>Cannot use global command with non-spatial simulation</I> 
+
+<DT><I>Cannot use move_style command with non-spatial simulation</I> 
+
+<DT><I>Cannot use move_test command with non-spatial simulation</I> 
+
+<DT><I>Cannot use particle command with non-spatial simulation</I> 
+
+<DT><I>Cannot use permeable command with non-spatial simulation</I> 
+
+<DT><I>Cannot use probability command with non-spatial simulation</I> 
+
+<DT><I>Cannot use region command with non-spatial simulation</I> 
+
+<DT><I>Cannot use this run style in parallel</I> 
+
+<DT><I>Cannot use timestep command with non-spatial simulation</I> 
+
+<DT><I>Cannot use triangles command with non-spatial simulation</I> 
+
+<DT><I>Cannot use vectors in parallel</I> 
+
+<DT><I>Cannot use volume command with spatial simulation</I> 
+
+<DT><I>Cannot write dump files for Gillespie style</I> 
+
+<DT><I>Cannot write restart files for Gillespie style</I> 
+
+<DT><I>Code is not compiled with move debug option</I> 
+
+<DT><I>Command-line variable already exists</I> 
+
+<DT><I>Could not find reaction ID</I> 
+
+<DT><I>Could not find undump ID</I> 
+
+<DT><I>Could not find unfix ID</I> 
+
+<DT><I>Could not find unreact ID</I> 
+
+<DT><I>Could not open balance file</I> 
+
+<DT><I>Could not open dump file</I> 
+
+<DT><I>Could not open input script</I> 
+
+<DT><I>Could not open log.ccell</I> 
+
+<DT><I>Could not open logfile %s</I> 
+
+<DT><I>Could not open logfile</I> 
+
+<DT><I>Could not open move_test file</I> 
+
+<DT><I>Could not open new input file %s</I> 
+
+<DT><I>Could not open screen file</I> 
+
+<DT><I>Could not open universe log file</I> 
+
+<DT><I>Could not open universe screen file</I> 
+
+<DT><I>Cound not find dump_modify ID</I> 
+
+<DT><I>Did not assign all particles correctly</I> 
+
+<DT><I>Did not find matching reaction particle</I> 
+
+<DT><I>Dump species count does not match particle species count</I> 
+
+<DT><I>Failed to allocate %d bytes for array %s</I> 
+
+<DT><I>Failed to reallocate %d bytes for array %s</I> 
+
+<DT><I>Global bin does not map to local domain</I> 
+
+<DT><I>Illegal $ variable</I> 
+
+<DT><I>Illegal balance command</I> 
+
+<DT><I>Illegal bin command</I> 
+
+<DT><I>Illegal boundary command</I> 
+
+<DT><I>Illegal cd command</I> 
+
+<DT><I>Illegal check command</I> 
+
+<DT><I>Illegal clear command</I> 
+
+<DT><I>Illegal command-line argument</I> 
+
+<DT><I>Illegal count command</I> 
+
+<DT><I>Illegal debug command</I> 
+
+<DT><I>Illegal diffusion command</I> 
+
+<DT><I>Illegal diffusion constant</I> 
+
+<DT><I>Illegal dimension command</I> 
+
+<DT><I>Illegal dimensionality</I> 
+
+<DT><I>Illegal dump command</I> 
+
+<DT><I>Illegal dump frequency</I> 
+
+<DT><I>Illegal dump_modify command</I> 
+
+<DT><I>Illegal echo command</I> 
+
+<DT><I>Illegal fix command</I> 
+
+<DT><I>Illegal fix conc command</I> 
+
+<DT><I>Illegal fix style</I> 
+
+<DT><I>Illegal global command</I> 
+
+<DT><I>Illegal include command</I> 
+
+<DT><I>Illegal jump command</I> 
+
+<DT><I>Illegal keyword in bin command</I> 
+
+<DT><I>Illegal label command</I> 
+
+<DT><I>Illegal log command</I> 
+
+<DT><I>Illegal move_style command</I> 
+
+<DT><I>Illegal move_test command</I> 
+
+<DT><I>Illegal next command</I> 
+
+<DT><I>Illegal particles command</I> 
+
+<DT><I>Illegal permeable command</I> 
+
+<DT><I>Illegal print command</I> 
+
+<DT><I>Illegal probability command</I> 
+
+<DT><I>Illegal react_modify command</I> 
+
+<DT><I>Illegal reaction command</I> 
+
+<DT><I>Illegal read_restart command</I> 
+
+<DT><I>Illegal region arguments</I> 
+
+<DT><I>Illegal region command</I> 
+
+<DT><I>Illegal region style</I> 
+
+<DT><I>Illegal restart command</I> 
+
+<DT><I>Illegal run command</I> 
+
+<DT><I>Illegal run style</I> 
+
+<DT><I>Illegal seed command</I> 
+
+<DT><I>Illegal species command</I> 
+
+<DT><I>Illegal stats command</I> 
+
+<DT><I>Illegal surface command</I> 
+
+<DT><I>Illegal timestep command</I> 
+
+<DT><I>Illegal undump command</I> 
+
+<DT><I>Illegal unfix command</I> 
+
+<DT><I>Illegal unreact command</I> 
+
+<DT><I>Illegal variable command</I> 
+
+<DT><I>Illegal variable in command-line argument</I> 
+
+<DT><I>Illegal variable in next command</I> 
+
+<DT><I>Illegal variable in variable command</I> 
+
+<DT><I>Illegal volume command</I> 
+
+<DT><I>Illegal write_restart command</I> 
+
+<DT><I>Incorrect args in dump_modify command</I> 
+
+<DT><I>Invalid 2d particle move</I> 
+
+<DT><I>Invalid args in move_test command</I> 
+
+<DT><I>Invalid flag in header of restart file</I> 
+
+<DT><I>Invalid region arguments</I> 
+
+<DT><I>Invalid settings for reaction %s</I> 
+
+<DT><I>Invalid species %s in stats command</I> 
+
+<DT><I>Invalid species ID in fix_conc command</I> 
+
+<DT><I>Invalid value for variable equal command</I> 
+
+<DT><I>Invalid variable style with next command</I> 
+
+<DT><I>Label wasn't found in input script</I> 
+
+<DT><I>Max 2d move distance > bin size</I> 
+
+<DT><I>Max 3d move distance > bin size</I> 
+
+<DT><I>Max reaction distance > bin size</I> 
+
+<DT><I>Move to next bin out of range</I> 
+
+<DT><I>Must be 2 or more bins in periodic dimensions</I> 
+
+<DT><I>Must set bins before defining region</I> 
+
+<DT><I>Must set bins before read restart</I> 
+
+<DT><I>Must set bins before reading particles</I> 
+
+<DT><I>Must set bins before reading surface</I> 
+
+<DT><I>Must set bins before run</I> 
+
+<DT><I>Must set global domain before bins</I> 
+
+<DT><I>Must set run_style first</I> 
+
+<DT><I>Must set simulation domain via global command</I> 
+
+<DT><I>Must set volume for run style gillespie</I> 
+
+<DT><I>Must use -in switch with multiple partitions</I> 
+
+<DT><I>No matching move style parameters</I> 
+
+<DT><I>No particle species match dump species</I> 
+
+<DT><I>Particle %d is outside global domain</I> 
+
+<DT><I>Particle %d on timestep %d exceeds MAXITER</I> 
+
+<DT><I>Particle %d's triangle does not exist</I> 
+
+<DT><I>Particle is outside global domain</I> 
+
+<DT><I>Particles surf-ID does not exist</I> 
+
+<DT><I>Permeability is set for 2d species</I> 
+
+<DT><I>Permeable probabilities do not sum to 1.0</I> 
+
+<DT><I>Permeable stick species is not 2d</I> 
+
+<DT><I>Post-migrate: %d particles on proc %d are not in correct bin</I> 
+
+<DT><I>Pre-migrate: %d particles on proc %d are not in correct bin</I> 
+
+<DT><I>Probability %g for reaction %s is too large</I> 
+
+<DT><I>Processor partitions are inconsistent</I> 
+
+<DT><I>Quotes in a single arg</I> 
+
+<DT><I>Reaction ID %s already exists</I> 
+
+<DT><I>Reaction cannot have more than MAX_PRODUCT products</I> 
+
+<DT><I>Reaction has no numeric rate</I> 
+
+<DT><I>Reaction must have 0,1,2 reactants</I> 
+
+<DT><I>Reading 2d particles for a 3d species</I> 
+
+<DT><I>Reading 3d particles for a 2d species</I> 
+
+<DT><I>Region extends outside global domain</I> 
+
+<DT><I>Region intersects bin next to periodic boundary</I> 
+
+<DT><I>Region surf-ID already exists</I> 
+
+<DT><I>Replacing a fix, but new style != old style</I> 
+
+<DT><I>Reuse of dump ID</I> 
+
+<DT><I>Run style does not support checking</I> 
+
+<DT><I>Simulation domain is already set</I> 
+
+<DT><I>Species %s listed twice in stats command</I> 
+
+<DT><I>Species already exists and no new aliases are defined</I> 
+
+<DT><I>Sticking species is not 2d</I> 
+
+<DT><I>Substitution for undefined variable</I> 
+
+<DT><I>Summed probability %g for species %s & %s is too large</I> 
+
+<DT><I>Summed probability %g for species %s is too large</I> 
+
+<DT><I>Triangle intersects bin next to periodic boundary</I> 
+
+<DT><I>Two or more wildcard * in count species ID</I> 
+
+<DT><I>Two or more wildcard * in diffusion species ID</I> 
+
+<DT><I>Two or more wildcard * in dimension species ID</I> 
+
+<DT><I>Two or more wildcard * in stats species ID</I> 
+
+<DT><I>Unbalanced quotes in input line</I> 
+
+<DT><I>Unexpected end of file</I> 
+
+<DT><I>Universe variable count < # of partitions</I> 
+
+<DT><I>Unknown command: %s</I> 
+
+<DT><I>Unknown function for variable equal command</I> 
+
+<DT><I>Unknown keyword for variable equal command</I> 
+
+<DT><I>Unknown species %s in check command</I> 
+
+<DT><I>Unknown species %s in permeable command</I> 
+
+<DT><I>Unknown species in count command</I> 
+
+<DT><I>Unknown species in diffusion command</I> 
+
+<DT><I>Unknown species in dimension command</I> 
+
+<DT><I>Unknown species in move_test command</I> 
+
+<DT><I>Unknown species in particles command</I> 
+
+<DT><I>Unknown species in reaction command</I> 
+
+<DT><I>Unknown surface %s in check command</I> 
+
+<DT><I>Unknown surface %s in permeable command</I> 
+
+<DT><I>Unknown vector for variable equal command</I> 
+
+<DT><I>Using variable equal keyword before sim box is defined</I> 
+
+<DT><I>Vertex %d in surf %s is outside global domain</I> 
+
+<DT><I>World variable count doesn't match # of partitions</I> 
+
+
+</DL>
+<H4><A NAME = "warn"></A>Warnings: 
+</H4>
+<DL>
+
+<DT><I>Particle is inside surface</I> 
+
+<DT><I>Particle is outside surface</I> 
+
+<DT><I>Restart file used different # of processors</I> 
+
+<DT><I>Restart file version does not match ChemCell version</I> 
+
+<DT><I>Run styles do not match</I> 
+
+
+</DL>
+</HTML>

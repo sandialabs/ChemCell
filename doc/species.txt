@@ -1,0 +1,37 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+species command :h3
+
+[Syntax:]
+
+species species-ID alias1 alias2 ... :pre
+
+species-ID = user-assigned name for the particle
+alias1,alias2,etc = optional alias names by which the species can also be referenced :ul
+
+[Examples:]
+
+species Ca_cyto
+species C8x432 Ca Ca_input Ca_known :pre
+
+[Description:]
+
+Define a particle species and alternate names by which it can be
+referred to in any command that takes a species-ID.
+
+If species-ID does not exist, it is created with default dimension,
+diffusivity, and permeability settings.  If species-ID already exists,
+add new aliases for it.  If any alias already exists, it is an error.
+
+[Restrictions:] none
+
+[Related commands:] none
+
+[Default:] none

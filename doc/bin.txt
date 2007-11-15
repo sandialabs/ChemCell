@@ -1,0 +1,69 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+bin command :h3
+
+[Syntax:]
+
+bin keyword value(s) ... :pre
+
+one or more keyword/value pairs may be appended :l
+valid keywords: {diff} or {react} or {size} or {count} :l
+  {diff} value = D
+    D = diffusion coeff (cm^2/sec)
+  {react} value = dist
+    dist = distance (microns)
+  {size} values = Lx Ly Lz
+    Lx,Ly,Lz = bin sizes in each dimension (microns)
+  {count} values = Nx Ny Ny
+    Nx,Ny,Nz = bin count in each dimension :pre
+
+[Examples:]
+
+bin diff 1.0e-8
+bin react 0.02 diff 1.0e-7
+bin count 30 35 40
+
+[Description:]
+
+Create a set of bins that overlay the simulation domain.  Bins are
+used for storing the location of particles and geometry elements
+(regions, surface triangles) so they can be efficiently located.
+
+Bin size is determined by one or more keyword/value pairs.  The actual
+bin size is set to the maximum of the values induced by each keyword.
+
+The {diff} keyword sets the bin size to the maximum distance a
+particle will move in one timestep using the specified D and the
+"timestep"_timestep.html and "move_style"_move_style.html settings.
+
+The {react} keyword sets the bin size by the specified distance,
+assumed to be the largest distance at which a binary reaction between
+2 particles will occur.
+
+The {size} keyword sets the bin size in each dimension to the
+specified values.
+
+The {count} keyword sets the # of bins in each dimension to the
+specified values.
+
+Since the global domain is sub-divided by an integer # of bins in each
+dimension, the actual bin size chosen may be slightly larger than the
+values determined by the {diff}, {react}, or {size} keywords.
+
+[Restrictions:] 
+
+This command is not used for non-spatial (Gillespie) simulations.
+
+The "global"_global.html command must be used first, to specify the
+extent of the simulation domain.
+
+[Related commands:] none
+
+[Default:] none

@@ -1,0 +1,47 @@
+<HTML>
+<CENTER><A HREF = "http://www.cs.sandia.gov/~sjplimp/chemcell.html">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>read_restart command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>read_restart file 
+</PRE>
+<UL><LI>file = name of binary restart file to read in 
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>read_restart save.10000 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Read in a previously saved problem from a restart file.  This allows
+continuation of a previous run.
+</P>
+<P>Only particle information is stored in the restart file.  Thus before
+reading a restart file, you should re-define species and geometry
+information, and must setup bins (via the <A HREF = "bin.html">bin</A> command).
+</P>
+<P>Because restart files are binary, they may not be portable to other
+machines.
+</P>
+<P><B>Restrictions:</B> none
+</P>
+<P>The <A HREF = "bin.html">bin command</A> must be used before reading a restart file.
+</P>
+<P><B>Related commands:</B>
+</P>
+<P><A HREF = "write_restart.html">write_restart</A>, <A HREF = "restart.html">restart</A>
+</P>
+<P><B>Default:</B> none
+</P>
+</HTML>

@@ -1,0 +1,42 @@
+<HTML>
+<CENTER><A HREF = "http://www.cs.sandia.gov/~sjplimp/chemcell.html">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>species command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>species species-ID alias1 alias2 ... 
+</PRE>
+<UL><LI>species-ID = user-assigned name for the particle
+<LI>alias1,alias2,etc = optional alias names by which the species can also be referenced 
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>species Ca_cyto
+species C8x432 Ca Ca_input Ca_known 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Define a particle species and alternate names by which it can be
+referred to in any command that takes a species-ID.
+</P>
+<P>If species-ID does not exist, it is created with default dimension,
+diffusivity, and permeability settings.  If species-ID already exists,
+add new aliases for it.  If any alias already exists, it is an error.
+</P>
+<P><B>Restrictions:</B> none
+</P>
+<P><B>Related commands:</B> none
+</P>
+<P><B>Default:</B> none
+</P>
+</HTML>

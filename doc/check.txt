@@ -1,0 +1,58 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+check command :h3
+
+[Syntax:]
+
+check species-ID surf-ID flag lo hi plo phi
+
+species-ID = particle species to check
+surf-ID = surface to check
+flag = {in} or {out} or {none}
+lo,hi = optional timestep bounds
+plo,phi = optional particle index bounds
+
+[Examples:]
+
+check Ca_cyto ER_surf out 1000 2000 :pre
+
+[Description:]
+
+Check particles of species-ID to see if they are inside or outside of
+the surface with surf-ID.  A warning will be printed if a particle
+does not satisfy the check condition.  This can be useful for testing
+if particles have leaked thru a boundary they shouldn't have.
+
+The flag determines whether the check is for the particles being
+inside or outside the surface.  A value of {none} means do not perform
+the check.  This command can be used multiple times to specify
+combinations of particle species and surfaces to check.
+
+The surf-ID is assumed to be a closed set of triangles or closed
+region.  Performing a check for a triangulated surface is expensive;
+all triangles are looped over for each particle.
+
+Lo/hi are optional timestep values between which (inclusive) the check
+is done.  If not specified, a check is performed every timestep.
+
+Plo/phi are optional particle indices (0 to N-1) to specify a subset
+of particles (inclusive) to perform the check on.  If not specified
+all particles (of the specified species) are checked.  Note that lo/hi
+must be specified in order to also specify plo/phi.
+
+[Restrictions:]
+
+Only 3d particles can be checked.
+
+[Related commands:] none
+
+[Default:]
+
+No particle-surface checks are performed.

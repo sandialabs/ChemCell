@@ -1,0 +1,41 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+seed command :h3
+
+[Syntax:]
+
+seed N :pre
+
+N = integer random number seed (8 digits or less) :ul
+
+[Examples:]
+
+seed 5982983
+
+[Description:]
+
+Set the random # seed used for the simulation.  For non-spatial
+simulations (Gillespie) random numbers are used to pick reactions and
+variable timesteps.  For spatial simulations, random numbers are
+assigned to particles when they are read in and used thereafter for
+diffusive motion and reaction probabilities.
+
+[Restrictions:] none
+
+For spatial simulations, this command must be used before particles
+are read in, else it will have no effect.
+
+[Related commands:] none
+
+[Default:]
+
+If not specified, the seed is set by the current system time when the
+simulation is run.  This is a valid random seed, but means the seed
+will be different the next time the input script is run.

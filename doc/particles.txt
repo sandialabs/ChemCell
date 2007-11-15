@@ -1,0 +1,49 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+particles command :h3
+
+[Syntax:]
+
+particles species-ID N surface-ID
+
+species-ID = user-assigned species name for particles
+N = number of particles that follow
+surface-ID = optional surface ID to place the particles on :ul
+
+[Examples:]
+
+particles Ca 10000
+particles receptor 500 membrane :pre
+
+[Description:]
+
+Read N particles of type species-ID from successive lines of the input
+script.  The species name must already have been defined via the
+"species"_species.html command.  If the species is 3D, do not use the
+surface-ID argument.  If the species is 2d, use the surface-ID
+argument to specify what region or triangulated surface the particles
+are on.  Note that the species dimensionality must have already been
+set (default or via the "dimension"_dimension.html command) before
+particles are read in.
+
+Following the particles command, the next line in the input script is
+skipped (leave it blank).  The following N lines should have an index
+(1-N) and 3 particle coordinates (x,y,z in microns) on each line.
+
+Note that a long list of particles can be put in a separate file and
+read in via the "include"_include.html command.
+
+[Restrictions:] none
+
+The "bin command"_bin.html must be used before defining particles.
+
+[Related commands:] none
+
+[Default:] none

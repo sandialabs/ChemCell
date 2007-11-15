@@ -1,0 +1,50 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+   
+dump command :h3
+
+[Syntax:]
+
+dump ID N filename species1-ID species2-ID ...
+dump ID delta filename species1-ID species2-ID ...
+
+ID = user-assigned name for the dump
+N = dump particles every N timesteps (integer)
+delta = dump particles every delta seconds (floating point)
+filename = file to dump to
+speciesN-ID = optional list of species-IDs to dump to file :ul
+
+[Examples:]
+
+dump 1 100 tmp.dump
+dump Ca-dump 0.1 tmp.dump.Ca Ca-cyto Ca-ER :pre
+
+[Description:]
+
+Dump a snapshot of particle coordinates and species type to a file
+every so often as a simulation runs.  The species list is optional; if
+not specified, all particles are dumped.
+
+Any species-ID can contain a single wildcard character * which will
+match species and alias names in the usual way.  E.g. a species-ID can
+be *, ab*, *ab, ab*cd.
+
+Multiple dumps (with different IDs) can be defined.  See the
+"undump"_undump.html command for turning off a dump.
+
+[Restrictions:]
+
+Dumps cannot be defined for non-spatial simulations (Gillespie) since
+particle coordinates are not defined.
+
+[Related commands:] none
+
+"dump_modify"_dump_modify.html, "stats"_stats.html, "undump"_undump.html
+
+[Default:] none

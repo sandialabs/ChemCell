@@ -1,0 +1,62 @@
+<HTML>
+<CENTER><A HREF = "http://www.cs.sandia.gov/~sjplimp/chemcell.html">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>stats_modify command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>stats_modify keyword args ... 
+</PRE>
+<UL><LI>one or more keyword/arg pairs may be appended
+<LI>keyword = <I>units</I> or <I>format</I> 
+</UL>
+<PRE>  <I>units</I> arg = <I>count</I> or <I>molarity</I> or <I>um</I> or <I>nm</I>
+    count = integer count of particles
+    molarity = concentration in molarity = moles/liter
+    um = concentration in micro-molar
+    nm = concentration in nano-molar
+  <I>format</I> arg = C-style format string
+ 
+</PRE>
+<P><B>Examples:</B>
+</P>
+<PRE>stats_modify units molarity
+stats_modify format %7.2g 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Set options for how statistics are printed to the screen and logfile.
+via the <A HREF = "stats.html">stats</A> command.
+</P>
+<P>The <I>units</I> keyword sets the style of units used to print particle
+statistics.  Style <I>count</I> is the only allowed option for spatial
+simulations, since the enclosing volume is arbitrary.  For non-spatial
+simulations, the output can be done in concentration units (molarity,
+uM, nM) since a volume is explicitly specified.
+</P>
+<P>The <I>format</I> keyword sets the precision for how each particle species
+is printed.  For unit style <I>count</I> this should be an integer setting,
+e.g. %10d.  For other unit styles, it should be a floating point
+setting, e.g. %7.2g.
+</P>
+<P><B>Restrictions:</B> none
+</P>
+<P><B>Related commands:</B>
+</P>
+<P><A HREF = "stats.html">stats</A>
+</P>
+<P><B>Default:</B>
+</P>
+<P>The option defaults are units = count, format = %d (for count units)
+or format = %g (for molarity units).
+</P>
+</HTML>

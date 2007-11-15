@@ -1,0 +1,35 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell Commands"_cc :c
+
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+cd command :h3
+
+[Syntax:]
+
+cd dir :pre
+
+dir = directory to change to :ul
+
+[Examples:]
+
+cd sub1
+cd ../new2
+cd .. :pre
+
+[Description:]
+
+Change the working directory.  All subsequent ChemCell commands that
+access files for reading or writing will use the new directory.
+
+[Restrictions:]
+
+If the specified directory does not exist, ChemCell will not detect
+the error.
+
+[Related commands:] none
+
+[Default:] none

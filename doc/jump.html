@@ -1,0 +1,45 @@
+<HTML>
+<CENTER><A HREF = "http://www.cs.sandia.gov/~sjplimp/chemcell.html">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>jump command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>jump file 
+</PRE>
+<UL><LI>file = filename of new input script to switch to 
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>jump newfile
+jump in.run2 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>This command closes the current input script file, opens the file with
+the specified name, and begins reading ChemCell commands from that
+file.  The original file is not returned to.
+</P>
+<P>It is possible to chain from file to file or back to the original file
+using successive jump commands.  If the filename is a variable (see
+the <A HREF = "variable.html">variable</A> command), different processor partitions
+can run different input scripts.
+</P>
+<P><B>Restrictions:</B> none
+</P>
+<P><B>Related commands:</B>
+</P>
+<P><A HREF = "variable.html">variable</A>, <A HREF = "include.html">include</A>
+</P>
+<P><B>Default:</B> none
+</P>
+</HTML>

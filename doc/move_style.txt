@@ -1,0 +1,54 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+move_style command :h3
+
+[Syntax:]
+
+move_style option1 option2 ... :pre
+
+options = {cube} or {sphere} or {square} or {circle} or {uniform} or
+{brownian} :ul
+
+[Examples:]
+
+move_style sphere brownian
+move_style circle uniform :pre
+
+[Description:]
+
+Set one or more options that determine how particles move in a spatial
+simulation.
+
+The {cube} option means the particle samples points in a small cube
+around its location.  The {sphere} option means the particle samples
+points in a small sphere around its location.
+
+The {square} option means the particle only moves in 2d and samples
+points in a small xy square around its location.  The {cirlce} option
+means the particle only moves in 2d and samples points in a small xy
+circle around its location.  These options can be used with a
+"global"_global.html simulation domain that is small in the
+z-dimension to setup an effectively 2d simulation.
+
+The {uniform} option means the sampling of volumetric (or planar)
+space is uniform.  The {brownian} option means the sampling is a
+Gaussian corresponding to Brownian motion
+
+For 2d particles diffusing on regions or triangulated surfaces, only
+the uniform/brownian options are relevant since the particle always
+samples within a circle tangential to the surface.
+
+[Restrictions:] none
+
+[Related commands:] none
+
+[Default:]
+
+The default move_style is cube brownian.

@@ -1,0 +1,276 @@
+"Previous Section"_Section_tools.html - "ChemCell WWW Site"_cws -
+"ChemCell Documentation"_cd - "ChemCell Commands"_cc - "Next
+Section"_Section_errors.html :c
+
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+6. Modifying & extending ChemCell :h3
+
+ChemCell is designed in a modular fashion so as to be easy to modify
+and extend with new functionality.  In this section, changes and
+additions users can make are listed along with some minimal
+instructions.  Realistically, the best way to add a new feature is to
+find a similar feature in ChemCell and look at the corresponding
+source and header files to figure out what it does.  You will need
+some knowledge of C++ to be able to understand the hi-level structure
+of ChemCell and its class organization, but functions (class methods)
+that do actual computations are written in vanilla C-style code and
+typically operate on simple C-style data structures (vectors and
+arrays).
+
+Most of the new features described in this section require you to
+write a new C++ class.  Creating a new class requires 2 files, a
+source code file (*.cpp) and a header file (*.h).  Their contents are
+briefly discussed below.  Enabling ChemCell to invoke the new class is
+as simple as adding two definition lines to the style.h file, in the
+same syntax as the existing ChemCell classes are defined in the
+style.h file.
+
+The power of C++ and its object-orientation is that usually, all the
+code and variables needed to define the new feature are contained in
+the 2 files you write, and thus shouldn't make the rest of the code
+more complex or cause side-effect bugs.
+
+Here is a concrete example.  Suppose you write 2 files fix_foo.cpp and
+fix_foo.h that define a new class FixFoo that implements a boundary
+condition described in the classic 1997 "paper"_#Foo by Foo, et. al.
+If you wish to invoke that boundary condition in a ChemCell input
+script with a command like
+
+fix 1 foo 0.1 3.5 :pre
+
+you simply need to put your 2 files in the ChemCell src directory, add
+2 lines to the style.h file, and re-make the code.
+
+The first line added to style.h would be
+
+FixStyle(foo,FixFoo) :pre
+
+in the #ifdef FixClass section, where "foo" is the style keyword in
+the pair_style command, and FixFoo is the class name in your C++
+files.
+
+The 2nd line added to style.h would be
+
+#include "fix_foo.h" :pre
+
+in the #ifdef FixInclude section, where fix_foo.h is the name of your
+new include file.
+
+When you re-make ChemCell, your new boundary condition becomes part of
+the executable and can be invoked with a fix command like the example
+above.  Arguments like 0.1 and 3.5 can be defined and processed by
+your new class.
+
+Note that if you are using Makefile.list instead of Makefile to build
+ChemCell, you will need to explicitly add the names of your new .cpp and
+.h file to Makefile.list.
+
+Here is a list of the kinds of new features that can be added in this
+way:
+
+"Region geometry options"_#region
+"Fix options"_#fix which include boundary conditions, \
+   diagnostic output, etc
+"Simulator options"_#simulator
+"New top-level commands"_#command :ul
+
+As illustrated by the fix example, these options are referred to in
+the ChemCell documentation as the "style" of a particular command.
+
+The instructions below for each category will list the header file for
+the parent class that these styles are sub-classes of.  Public
+variables in that file are ones used and set by the sub-classes which
+are also used by the parent class.  Sometimes they are also used by
+the rest of ChemCell.  Virtual functions in the header file which are
+set = 0 are ones you must define in your new class to give it the
+functionality ChemCell expects.  Virtual functions that are not set to 0
+are functions you can optionally define.
+
+Here are some additional guidelines for modifying ChemCell and adding
+new functionality:
+
+Think about whether what you want to do would be better as a pre- or
+post-processing step.  Many computations are more easily and more
+quickly done that way.
+
+If you add something useful, send me an "email"_mail.  We might be
+interested in adding it to the ChemCell distribution.
+
+:link(mail,mailto:sjplimp@sandia.gov)
+
+:line
+
+Region geometry options :link(region),h4
+
+Classes that define simple geometric regions are sub-classes of the
+Region class.  See the region.h file for a list of methods these
+classes defines.  Regions are used in ChemCell to define surfaces
+which particles diffuse between or on.
+
+Region_sphere.cpp and region_sphere.h are the simplest example of a
+Region class.  They implement the {sphere} style of the
+"region"_region.html command.
+
+Here is a brief description of the class methods required:
+
+bbox: bounding box
+inside: determine whether a point is in the region
+hex_intersect: check if region surface intersects a hex cell
+line_intersect: check if line segment intersects region surface
+compute_normal: unit normal to region at a point
+move2d: perform a 2d move on region surface
+distance: compute distance from point to region surface :tb(s=:)
+
+:line
+
+Fix options :link(fix),h4
+
+In ChemCell, a "fix" is any operation that is computed during
+timestepping that alters some property of the system.  Essentially
+everything that happens during a simulation besides force computation,
+neighbor list manipulation, and output, is a "fix".  This includes
+time integration (update of velocity and coordinates), force
+constraints (SHAKE or walls), and diagnostics (compute a diffusion
+coefficient).  See the fix.h file for a list of methods these classes
+defines.
+
+There are dozens of fix options in ChemCell; choose one as a template
+that is similar to what you want to implement.  They can be as simple
+as zeroing out forces (see "fix enforce2d"_fix_enforce2d.html which
+corresponds to the {enforce2d} style) or as complicated as applying
+SHAKE constraints on bonds and angles (see "fix shake"_fix_shake.html
+which corresponds to the {shake} style) which involves many extra
+computations.
+
+Here is a brief description of the class methods in fix.h:
+
+setmask: determines when the fix is called during the timestep
+init: initialization before a run
+setup: called immediately before the 1st timestep
+initial_integrate: called at very beginning of each timestep
+pre_exchange: called before atom exchange on re-neighboring steps
+pre_neighbor: called before neighbor list build
+post_force: called after pair & molecular forces are computed
+final_integrate: called at end of each timestep
+end_of_step: called at very end of timestep
+write_restart: dumps fix info to restart file
+restart: uses info from restart file to re-initialize the fix
+grow_arrays: allocate memory for atom-based arrays used by fix
+copy_arrays: copy atom info when an atom migrates to a new processor
+memory_usage: report memory used by fix
+pack_exchange: store atom's data in a buffer
+unpack_exchange: retrieve atom's data from a buffer
+pack_restart: store atom's data for writing to restart file
+unpack_restart: retrieve atom's data from a restart file buffer
+size_restart: size of atom's data
+maxsize_restart: max size of atom's data
+initial_integrate_respa: same as initial_integrate, but for rRESPA
+post_force_respa: same as post_force, but for rRESPA
+final_integrate_respa: same as final_integrate, but for rRESPA
+pack_comm: pack a buffer to communicate a per-atom quantity
+unpack_comm: unpack a buffer to communicate a per-atom quantity
+pack_reverse_comm: pack a buffer to reverse communicate a per-atom quantity
+unpack_reverse_comm: unpack a buffer to reverse communicate a per-atom quantity
+thermo_fields: define quantities for thermodynamic output
+thermo_compute: compute thermodynamic quantities :tb(s=:)
+
+Typically, only a small fraction of these methods are defined for a
+particular fix.  Setmask is mandatory, as it determines when the fix
+will be invoked during the timestep.  Fixes that perform time
+integration ({nve}, {nvt}, {npt}) implement initial_integrate and
+final_integrate to perform velocity Verlet updates.  Fixes that
+constrain forces implement post_force.  Fixes that perform diagnostics
+typically implement end_of_step.
+
+If the fix needs to store information for each atom that persists from
+timestep to timestep, it can manage that memory and migrate it with
+the atoms as they move from processors to processor by implementing
+the grow_arrays, copy_arrays, pack_exchange, and unpack_exchange
+methods.  Similary, the pack_restart and unpack_restart methods can be
+implemented to store information about the fix in restart files.  If
+you wish a integrator or force constraint fix to work with rRESPA (see
+the "run_style"_run_style.html command), the initial_integrate,
+post_force_integrate, and final_integrate_respa methods can be
+implemented.  The thermo_fields and thermo_compute methods enable a
+fix to contribute values to thermodynamic output, as printed
+quantities and/or to be summed to the potential energy of the system.
+
+:line
+
+Atom options :link(atom),h4
+
+All classes that define an atom style are sub-classes of the Atom
+class.  See the atom.h file for a list of methods these classes
+defines.  The atom style determines what quantities are associated
+with an atom in a ChemCell simulation.  If one of the existing atom
+styles does not define all the arrays you need to store with an atom,
+then a new atom class can be created.
+
+Atom_atomic.cpp and atom_atomic.h are the simplest example of an Atom
+class.  They implement the {atomic} style of the
+"atom_style"_atom_style.html command.
+
+Here is a brief description of the class methods in atom.h:
+
+copy: copy info for one atom to another atom's array location
+pack_comm: store an atom's info in a buffer communicated every timestep
+unpack_comm: retrieve an atom's info from the buffer
+pack_reverse: store an atom's info in a buffer communicating partial forces
+unpack_reverse: retrieve an atom's info from the buffer
+pack_border: store an atom's info in a buffer communicated on neighbor re-builds
+unpack_border: retrieve an atom's info from the buffer
+pack_exchange: store all an atom's info to migrate to another processor
+unpack_exchange: retrieve an atom's info from the buffer
+:tb(s=:)
+
+There are also several methods in atom.cpp you will need to augment
+with information about your new atom class, following the patterns of
+the other atom styles.  These routines are so similar for all classes,
+that it was simpler to just have one master routine for all classes.
+
+constructor: create style variable and atom array ptrs to NULL
+destructor: free memory for atom arrays
+set_style: set style variable
+check_style: check for pure style vs hybrid style
+style2arg: convert style variables to keywords
+grow: re-allocate atom arrays to longer lengths
+unpack_data: parse atom lines from data file
+create_one: create an individual atom of this style
+size_restart: number of restart quantities associated with proc's atoms
+pack_restart: pack atom quantities into a buffer
+unpack_restart: unpack atom quantities from a buffer
+memory_usage: memory allocated by atom arrays
+:tb(s=:)
+
+New Top-level Commands :link(command),h4
+
+It is possible to add a new command to a ChemCell input script as
+opposed to adding a new style to an existing command (atom_style,
+pair_style, fix, etc).  For example the create_atoms, read_data,
+velocity, and run commands are all top-level ChemCell commands that are
+listed in the Command section of style.h.  When such a command is
+encountered in the ChemCell input script, the topmost level of ChemCell
+(ChemCell.cpp) simply creates a class with the corresponding name,
+invokes the "command" method of the class, and passes it the arguments
+from the input script.  The command method can perform whatever
+operations it wishes on the ChemCell data structures.
+
+Thus to add a new command, you simply need to add a *.cpp and *.h file
+containing a single class:
+
+command: operations performed by the new command :tb(s=:)
+
+Of course, the new class can define other methods and variables that
+it uses internally.
+
+:line
+
+:link(Foo)
+[(Foo)] Foo, Morefoo, and Maxfoo, J of Biological Boundary Conditions,
+75, 345 (1997).
+

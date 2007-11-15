@@ -1,0 +1,39 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+diffusion command :h3
+
+[Syntax:]
+
+diffusion species-ID value
+
+species-ID = particle species
+value = diffusion coefficient (cm^2/sec) :ul
+
+[Examples:]
+
+diffusion Ca 0.5e-7
+diffusion A* 1.0e-6 :pre
+
+[Description:]
+
+Set the diffusion coefficient for one or more particle species.
+
+The species-ID can contain a single wildcard character * which will
+match species and alias names in the usual way.  E.g. species-ID can
+be *, ab*, *ab, ab*cd.
+
+[Restrictions:] none
+
+[Related commands:] none
+
+[Default:]
+
+Diffusion coefficient = 0 for all species.
+

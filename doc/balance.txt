@@ -1,0 +1,63 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+balance command :h3
+
+[Syntax:]
+
+balance style arg(s) file
+
+style = {static} or {dynamic}
+  {static} args: {bin} or {particle}
+    bin = balance by bin count
+    particle = balance by particle count
+  {dynamic} args: N threshhold
+    N = test whether to balance every N steps
+    threshhold = only balance if imbalance is greater than threshhold
+file = optional filename for storing sub-domain boundaries :pre
+
+[Examples:]
+
+bin static particle
+bin dynamic 1000 1.5 out.file :pre
+
+[Description:]
+
+For parallel runs of spatial simulations, determine how bins are
+partitioned across processors.
+
+If this command is not used, the set of 3d bins are partitioned into
+small 3d bricks, one per processor.
+
+If "static bin" is used, bins are partitioned by recursive coordinate
+bisectioning (RCB) one time at the beginning of the 1st run.  Each bin
+is weighted the same, no matter how many particles it contains.
+
+If "static particle" is used, bins are partitioned by recursive
+coordinate bisectioning (RCB) at the beginning of each run.  Each bin
+is weighted by the number of particles it contains.
+
+If "dynamic" is used, bins are re-partitioned every N timesteps, with
+each bin weighting by their current number of particles.
+Re-partitioning only occurs if the imbalance factor exceeds the
+specfied threshhold.  The imbalance factor is the ratio of the maximum
+particles on any processor divided by the average particles across all
+processors, so an imbalance factor or 1.0 is perfect balance.
+
+File is an optional argument.  If specified the load balance
+partitions are written to the file each time the balancer is invoked,
+formatted as a surface of triangles
+
+[Restrictions:] none
+
+[Related commands:] none
+
+[Default:]
+
+Static partitioning of bins as 3d bricks.

@@ -1,0 +1,40 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+clear command :h3
+
+[Syntax:]
+
+clear :pre
+
+[Examples:]
+
+(commands for 1st simulation)
+clear
+(commands for 2nd simulation) :pre
+
+[Description:]
+
+This command deletes all particles, restores all settings to their
+default values, and frees all memory allocated by ChemCell.  Once a
+clear command has been executed, it is as if ChemCell were starting
+over, with only the exceptions noted below.  This command enables
+multiple jobs to be run sequentially from one input script.
+
+These settings are not affected by a clear command: the working
+directory ("cd"_cd.html command), log file status ("log"_log.html
+command), echo status ("echo"_echo.html command), and input script
+variables ("variable"_variable.html command).
+
+[Restrictions:] none
+
+[Related commands:] none
+
+[Default:] none
+

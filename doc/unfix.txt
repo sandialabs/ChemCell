@@ -1,0 +1,34 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+unfix command :h3
+
+[Syntax:]
+
+unfix fix-ID :pre
+
+fix-ID = ID of a previously defined fix :ul
+
+[Examples:]
+
+unfix 2
+unfix influx :pre
+
+[Description:]
+
+Turn off a fix that was previously defined with a "fix"_fix.html
+command.
+
+[Restrictions:] none
+
+[Related commands:]
+
+"fix"_fix.html
+
+[Default:] none

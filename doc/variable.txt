@@ -1,0 +1,147 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+variable command :h3
+
+[Syntax:]
+
+variable name style arg1 arg2 ... :pre
+
+name = single lower-case character, 'a' thru 'z'
+style = {proc} or {index}
+arg1 thru argN = list of text strings :ul
+
+[Examples:]
+
+variable s index 48279 58273 588182 6385 847585 599283
+variable t loop 20
+variable b equal div(lx,3.0)
+variable b equal add(x\[234\],mult(0.5,lx))
+variable t world 300.0 400.0 500.0 600.0
+variable x universe 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 :pre
+
+[Description:]
+
+This command assigns one or more values to a variable name so that the
+variable can be used in subsequent input script commands.  In this
+context a "value" is a string which could be text or numbers, as in
+the examples above.  As explained in "this
+section"_Section_commands.html#3_2, occurrences of $X in an input
+script line are replaced by the variable's value, where X is a single
+lower-case character from "a" to "z".
+
+As described below, for variable styles {index}, {loop}, and
+{universe}, the value assigned to a variable can be incremented via
+the "next"_next.html command.  When there are no more values to
+assign, the variable is "exhausted" and a flag is set that causes the
+next "jump"_jump.html command encountered in the input script to be
+skipped.  This enables the construction of simple loops in the input
+script that are iterated over and exited from.
+
+When a variable command is encountered for a variable that has already
+been specified, the command is skipped.  This is the case for all
+variable styles except {equal}, so that {equal}-style variable names
+can be re-used and re-defined anytime.  Skipping allows you to loop
+over the same input script many times without re-defining your
+variables.  When a variable is exhausted via the "next"_next.html
+command, it is then available to be re-defined in a subsequent
+variable command.
+
+For the {index} style, one or more strings are specified.  Initially,
+the 1st string is assigned to the variable.  Each time a
+"next"_next.html command is used with the variable name, the next
+string is assigned.  All processors assign the same string to the
+variable.  {Index}-style variables can also be set (with a single
+value) by using the command-line switch -var; see "this
+section"_Section_start.html#2_4 for details.
+
+The {loop} style is identical to the {index} style except that the
+strings are the integers from 1 to N.  Initially, the string "1" is
+assigned to the variable.  Each time a "next"_next.html command is
+used with the variable name, the next string ("2", "3", etc) is
+assigned.  All processors assign the same string to the variable.
+
+For the {equal} style, a single string is specified which represents
+an equation that will be evaluated afresh each time the variable is
+used.  Thus the variable can take on different values at different
+stages of the input script.  For example, if the variable is used in a
+"fix print"_fix_print.html command, it could print different values
+each timestep it was invoked.  The next command cannot be used with
+{equal}-style variables, since there is only one value.  Note that, as
+with any other input script command, it is feasible to use another
+variable in the {equal} variable's string, e.g. variable y equal
+mult($x,2).  However, $x will be replaced immediately by it's current
+value when the command is first parsed, not each time that $y is
+substituted for.
+
+The syntax of the equation assigned to {equal} variables is simple.
+It can contain "functions", "vectors", "keywords", or "numbers" in any
+combination.
+
+Function = a keyword followed by parenthesis with one or two arguments
+Supported functions = add(x,y), sub(x,y), mult(x,y), div(x,y), neg(x), \
+  pow(x,y), exp(x), ln(x)
+Example function usage = div(1.0e20,3.0), neg(x\[34\]), pow(lx,3.0)
+Vector = a keyword followed by square brackets containing an atom ID
+Supported vectors = x, y, z, sp, bin, tri, seed
+Example vector usage = x\[123\], tri\[1000\]
+Keyword = single word
+Supported keywords = step, npart, lx, ly, lz, vol
+Example keyword usage = atoms, pow(vol,0.333), mult(lx,0.5)
+Number = 0.2, 1.0e20, -15.4, etc :ul
+
+Currently, vectors cannot be used in a parallel simulation, so that
+particle indices have a consistent meaning.
+
+The variable {equal} equation can also be nested in that function
+arguments can be functions, vectors, keywords, or numbers.  For
+example, this is a valid equation:
+
+variable x equal div(add(lx,ly),pow(vol,div(1,3))) :pre
+
+For the {world} style, one or more strings are specified.  There must
+be one string for each processor partition or "world".  See "this
+section"_Section_start.html#2_4 of the manual for information on
+running ChemCell with multiple partitions via the "-partition"
+command-line switch.  This variable command assigns one string to each
+world.  All processors in the world are assigned the same string.  The
+next command cannot be used with {equal}-style variables, since there
+is only one value per world.  This style of variable is useful when
+you wish to run different simulations on different partitions.
+
+For the {universe} style, one or more strings are specified.  There
+must be at least as many strings as there are processor partitions or
+"worlds".  See "this page"_Section_start.html#2_4 for information on
+running ChemCell with multiple partitions via the "-partition"
+command-line switch.  This variable command initially assigns one
+string to each world.  When a "next"_next.html command is encountered
+using this variable, the first processor partition to encounter it, is
+assigned the next available value.  This continues until all the
+variable values are consumed.  Thus, this command can be used to run
+50 simulations on 8 processor partitions.  The simulations will be run
+one after the other on whatever partition becomes available, until
+they are all finished.  {Universe}-style variables are incremented
+using the files "tmp.ccell.variable" and "tmp.ccell.variable.lock"
+which you will see in your directory during such a ChemCell run.
+
+If a variable command is encountered when the variable has already
+been defined, the command is ignored.  Thss allows an input script
+with a variable command to be processed multiple times; see the
+"jump"_jump.html or "include"_include.html commands.  It also means
+that the use of the command-line switch -var will override a
+corresponding variable setting in the input script.
+
+[Restrictions:] none
+
+[Related commands:]
+
+"next"_next.html, "jump"_jump.html, "include"_include.html,
+"fix print"_fix_print.html, "print"_print.html
+
+[Default:] none

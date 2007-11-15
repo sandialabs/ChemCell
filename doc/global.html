@@ -1,0 +1,40 @@
+<HTML>
+<CENTER><A HREF = "http://www.cs.sandia.gov/~sjplimp/chemcell.html">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>global command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>global xlo ylo zlo xhi yhi zhi 
+</PRE>
+<UL><LI>xlo,ylo,zlo = lower-left corner of simulation domain (microns)
+<LI>xhi,yhi,zhi = upper-right corner of simulation domain (microns) 
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>global 0 0 0 5 10 5 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Define the lower-left and upper-right corners of the global simulation
+domain for a spatial simulation.  All particles and cellular geometry
+must be inside this domain.
+</P>
+<P><B>Restrictions:</B> none
+</P>
+<P><B>Related commands:</B>
+</P>
+<P><A HREF = "volume.html">volume</A>
+</P>
+<P><B>Default:</B> none
+</P>
+</HTML>

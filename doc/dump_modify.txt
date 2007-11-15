@@ -1,0 +1,44 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+dump_modify command :h3
+
+[Syntax:]
+
+dump_modify dump-ID keyword args ... :pre
+
+dump-ID = ID of dump to modify :ulb,l
+one or more keyword/arg pairs may be appended :l
+keyword = {orient} :l
+  {orient} arg = {yes} or {no} :pre
+:ule
+
+[Examples:]
+
+dump_modify 1 orient yes :pre
+
+[Description:]
+
+Modify the parameters of a previously defined dump command.
+
+The {orient} keyword determines whether 3 orientation values are added
+to each particle in the dump file.  If so, for 2d species they will be
+the normal vector components for the current location of the particle
+on its 2d surface (region or triangulated surface).  For 3d species,
+the 3 values will be 0.0.
+
+[Restrictions:] none
+
+[Related commands:]
+
+"dump"_dump.html
+
+[Default:]
+
+The option defaults are orient = no.

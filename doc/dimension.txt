@@ -1,0 +1,44 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+dimension command :h3
+
+[Syntax:]
+
+dimension species-ID value
+
+species-ID = particle species
+value = dimensionality of species = 2 or 3 :ul
+
+[Examples:]
+
+dimension Ca 3
+dimension receptor* 2 :pre
+
+[Description:]
+
+Set the dimensionality for one or more particle species.  A value of 3
+means the particles diffuse volumetrically.  A value of 2 means the
+particles diffuse on a surface; see the "region"_region.html or
+"triangles"_triangles.html command.
+
+The species-ID can contain a single wildcard character * which will
+match species and alias names in the usual way.  E.g. species-ID can
+be *, ab*, *ab, ab*cd.
+
+[Restrictions:]
+
+The dimensionality of a species cannot be changed if particles of that
+species already exist
+
+[Related commands:] none
+
+[Default:]
+
+Dimension = 3 for all species.

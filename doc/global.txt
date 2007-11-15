@@ -1,0 +1,35 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+global command :h3
+
+[Syntax:]
+
+global xlo ylo zlo xhi yhi zhi :pre
+
+xlo,ylo,zlo = lower-left corner of simulation domain (microns)
+xhi,yhi,zhi = upper-right corner of simulation domain (microns) :ul
+
+[Examples:]
+
+global 0 0 0 5 10 5 :pre
+
+[Description:]
+
+Define the lower-left and upper-right corners of the global simulation
+domain for a spatial simulation.  All particles and cellular geometry
+must be inside this domain.
+
+[Restrictions:] none
+
+[Related commands:]
+
+"volume"_volume.html
+
+[Default:] none

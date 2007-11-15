@@ -1,0 +1,50 @@
+<HTML>
+<CENTER><A HREF = "Section_howto.html">Previous Section</A> - <A HREF = "http://www.cs.sandia.gov/~sjplimp/chemcell.html">ChemCell WWW Site</A> -
+<A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell Commands</A> - <A HREF = "Section_perf.html">Next
+Section</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>4. Example problems 
+</H3>
+<P>The ChemCell distribution includes an examples sub-directory with
+several sample problems.  Each problem is in a sub-directory of its
+own.  Each problem has an input script (in.*) and produces a log file
+(log.*).  If may also produce a dump file (dump.*) when it runs.  Some
+use one or more data files (data.*) of geometry or particle info as
+additional input.  These were created via the <A HREF = "pizza">Pizza.py</A>
+pre-processing tool using the *.py scripts in the same directory.
+</P>
+<P>Plots can be made from the log files using the "clog" and plotting
+tools in Pizza.py.  Images and movies can be made from the dump and
+data files using the "cdata", "dump", and various visualization tools
+in Pizza.py.  Examples are shown on the <A HREF = "lws">ChemCell WWW Site</A>.
+</P>
+<P>These are the sample problems in the examples sub-directories:
+</P>
+<DIV ALIGN=center><TABLE  WIDTH="0%"  BORDER=1 >
+<TR><TD >abc</TD><TD > simple A + B -> C reaction</TD></TR>
+<TR><TD >kinase</TD><TD > 3-stage kinase cascade</TD></TR>
+<TR><TD >lotka</TD><TD > Lotka-Volterra predator-prey system</TD></TR>
+<TR><TD >ecoli</TD><TD > E Coli chemotaxis signaling pathway model 
+</TD></TR></TABLE></DIV>
+
+<P>Here is how you might run and visualize one of the sample problems:
+</P>
+<PRE>cd kinase
+cp ../../src/ccell_linux .         # copy ChemCell executable to this dir
+ccell_linux < in.kinase            # run the problem 
+</PRE>
+<P>Running the simulation produces the files <I>dump.indent</I> and
+<I>log.ccell</I>.  Assuming you have Pizza.py installed, you could
+visualize the dump file as follows:
+</P>
+<PRE>pizza -f dview.py dump.kinase 
+</PRE>
+</HTML>

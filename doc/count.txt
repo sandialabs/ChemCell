@@ -1,0 +1,46 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+count command :h3
+
+[Syntax:]
+
+count species-ID N
+
+species-ID = particle species to populate
+N = number of particles (Gillespie) or \
+    concentration (molarity) for ODE models :ul
+
+[Examples:]
+
+count Ca 1000
+count receptor* 500 :pre
+
+[Description:]
+
+Set the initial particle count for a non-spatial models.  For
+Gillespie models N is the particle count.  For deterministic models
+(ODEs) it is the particle concentration in molarity.
+
+The species-ID can contain a single wildcard character * which will
+match species and alias names in the usual way.  E.g. species-ID can
+be *, ab*, *ab, ab*cd.
+
+[Restrictions:] none
+
+This command can only be used for non-spatial simulations where
+particles do not have coordinates.
+
+[Related commands:]
+
+"particle"_particle.html
+
+[Default:]
+
+Count = 0 for all species.

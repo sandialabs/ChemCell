@@ -1,0 +1,54 @@
+<HTML>
+<CENTER><A HREF = "http://www.cs.sandia.gov/~sjplimp/chemcell.html">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>particles command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<P>particles species-ID N surface-ID
+</P>
+<UL><LI>species-ID = user-assigned species name for particles
+<LI>N = number of particles that follow
+<LI>surface-ID = optional surface ID to place the particles on 
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>particles Ca 10000
+particles receptor 500 membrane 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Read N particles of type species-ID from successive lines of the input
+script.  The species name must already have been defined via the
+<A HREF = "species.html">species</A> command.  If the species is 3D, do not use the
+surface-ID argument.  If the species is 2d, use the surface-ID
+argument to specify what region or triangulated surface the particles
+are on.  Note that the species dimensionality must have already been
+set (default or via the <A HREF = "dimension.html">dimension</A> command) before
+particles are read in.
+</P>
+<P>Following the particles command, the next line in the input script is
+skipped (leave it blank).  The following N lines should have an index
+(1-N) and 3 particle coordinates (x,y,z in microns) on each line.
+</P>
+<P>Note that a long list of particles can be put in a separate file and
+read in via the <A HREF = "include.html">include</A> command.
+</P>
+<P><B>Restrictions:</B> none
+</P>
+<P>The <A HREF = "bin.html">bin command</A> must be used before defining particles.
+</P>
+<P><B>Related commands:</B> none
+</P>
+<P><B>Default:</B> none
+</P>
+</HTML>

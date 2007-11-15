@@ -1,0 +1,406 @@
+"Previous Section"_Section_intro.html - "ChemCell WWW Site"_cws -
+"ChemCell Documentation"_cd - "ChemCell Commands"_cc - "Next
+Section"_Section_commands.html :c
+
+:link(lws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(ld,Manual.html)
+:link(lc,Section_commands.html#comm)
+
+:line
+
+2. Getting Started :h3
+
+This section describes how to unpack, make, and run ChemCell, for both
+new and experienced users.
+
+2.1 "What's in the ChemCell distribution"_#2_1
+2.2 "Making ChemCell"_#2_2
+2.3 "Running ChemCell"_#2_3
+2.4 "Command-line options"_#2_4
+2.5 "Screen output"_#2_5
+
+:line
+
+2.1 What's in the ChemCell distribution :h4,link(2_1)
+
+When you download ChemCell you will need to unzip and untar the
+downloaded file with the following commands, after placing the file in
+an appropriate directory.
+
+gunzip ChemCell*.tar.gz 
+tar xvf ChemCell*.tar :pre
+
+This will create a ChemCell directory containing two files and several
+sub-directories:
+    
+README: text file
+LICENSE: the GNU General Public License (GPL)
+doc: documentation
+examples: example problems
+src: source files :tb(s=:)
+
+:line
+
+2.2 Making ChemCell :h4,link(2_2)
+
+[{Read this first:}]
+
+Building ChemCell can be non-trivial.  You will likely need to edit a
+makefile, there are compiler options, additional libraries can be used
+(MPI, Zoltan), etc.  Please read this section carefully.  If you are
+not comfortable with makefiles, or building codes on a Unix platform,
+or running an MPI job on your machine, please find a local expert to
+help you.
+
+If you have a build problem that you are convinced is a ChemCell issue
+(e.g. the compiler complains about a line of ChemCell source code),
+then please send an email to sjplimp@sandia.gov.  Note that doesn't
+include linking problems - that's a question for a local expert!
+
+Also, if you succeed in building ChemCell on a new kind of machine
+(for which there isn't a similar Makefile in src/MAKE), send it to
+sjplimp@sandia.gov and we'll include it in future ChemCell releases.
+
+[{Building a ChemCell executable:}]
+
+The src directory contains the C++ source and header files for ChemCell.
+It also contains a top-level Makefile and a MAKE directory with
+low-level Makefile.* files for several machines.  From within the src
+directory, type "make" or "gmake".  You should see a list of available
+choices.  If one of those is the machine and options you want, you can
+type a command like:
+
+make linux
+gmake mac :pre
+
+If you get no errors and an executable like ccell_linux or ccell_mac
+is produced, you're done; it's your lucky day.  The remainder of this
+section addresses the following topics: errors that occur when making
+ChemCell, editing a new low-level Makefile.foo, and additional build
+tips.
+
+[{Errors that occur when making ChemCell:}]
+
+(1) If the make command breaks immediately with errors that indicate
+it can't find files with a "*" in their names, this can be because
+your machine's make doesn't support wildcard expansion in a makefile.
+Try gmake instead of make.  If that doesn't work, try using a -f
+switch with your make command to use Makefile.list which explicitly
+lists all the needed files, e.g.
+
+make makelist
+make -f Makefile.list linux
+gmake -f Makefile.list mac :pre
+
+The first "make" command will create a current Makefile.list with all
+the file names in your src dir.  The 2nd "make" command (make or
+gmake) will use it to build ChemCell.
+
+(2) Other errors typically occur because the low-level Makefile isn't
+setup correctly for your machine.  If your platform is named "foo",
+you need to create a Makefile.foo in the MAKE directory.  Use whatever
+existing file is closest to your platform as a starting point.  See
+the next section for more instructions.
+
+[{Editing a new low-level Makefile.foo:}]
+
+These are the issues you need to address when editing a low-level
+Makefile for your machine.  With a couple exceptions, the only portion
+of the file you should need to edit is the "System-specific Settings"
+section.
+
+(1) Change the first line of Makefile.foo to include the word "foo"
+and whatever other options you set.  This is the line you will see if
+you just type "make".
+
+(2) Set the paths and flags for your C++ compiler, including
+optimization flags.  You can use g++, the open-source GNU compiler,
+which is available on all Unix systems.  Vendor compilers often
+produce faster code.  On boxes with Intel CPUs, I use the free Intel
+icc compiler, which you can download from "Intel's compiler
+site"_intel.
+
+:link(intel,http://www.intel.com/software/products/noncom)
+
+(3) If you want ChemCell to run in parallel, you must have two
+libraries installed on your platform: MPI and Zoltan.  For MPI,
+Makefile.foo needs to specify where the mpi.h file (-I switch) and the
+libmpi.a library (-L switch) is found.  On my Linux box, I use
+Argonne's MPICH 1.2 which can be downloaded from the "Argonne MPI
+site"_http://www-unix.mcs.anl.gov/mpi.  LAM MPI should also work.  If
+you are running on a big parallel platform, your system people or the
+vendor should have already installed a version of MPI, which will be
+faster than MPICH or LAM, so find out how to link against it.  If you
+use MPICH or LAM, you will have to configure and build it for your
+platform.  The MPI configure script should have compiler options to
+enable you to use the same compiler you are using for the ChemCell
+build, which can avoid problems that may arise when linking ChemCell
+to the MPI library.
+
+Zoltan is an open-source parallel load-balancing library, also
+distributed by Sandia National Labs.  It can be downloaded at "this
+site"_zoltan.  Follow its installation instructions.  It builds
+out-of-the-box for many machines.  If not for yours, you will need to
+edit a Config file suitable for your platform.  Once a Zoltan library
+exists on your machine, add the appropriate -I, -L, and -l switches to
+your Makefile.foo using one of the other MAKE/Makefile.* files as a
+template.
+
+(4) If you just want ChemCell to run on a single processor, you can
+use the STUBS library in place of MPI and Zoltan, since you don't need
+either installed on your system.  See the Makefile.serial file for how
+to specify the -I and -L switches.  You will also need to build the
+STUBS library for your platform before making ChemCell itself.  From
+the STUBS dir, type "make" and it will hopefully create the dummy
+libraries suitable for linking to ChemCell.  If the build fails, you
+will need to edit the STUBS/Makefile for your platform.
+
+The file STUBS/mpi.cpp has a CPU timer function MPI_Wtime() that calls
+gettimeofday() .  If your system doesn't support gettimeofday() ,
+you'll need to insert code to call another timer.  Note that the
+ANSI-standard function clock() rolls over after an hour or so, and is
+therefore insufficient for timing long ChemCell runs.
+
+(5) The DEPFLAGS setting is how the C++ compiler creates a dependency
+file for each source file.  This speeds re-compilation when source
+(*.cpp) or header (*.h) files are edited.  Some compilers do not
+support dependency file creation, or may use a different switch than
+-D.  GNU g++ works with -D.  If your compiler can't create dependency
+files (a long list of errors involving *.d files), then you'll need to
+create a Makefile.foo patterned after Makefile.tflop, which uses
+different rules that do not involve dependency files.
+
+That's it.  Once you have a correct Makefile.foo and you have
+pre-built the MPI and FFT libraries it will use, all you need to do
+from the src directory is type one of these 2 commands:
+
+make foo
+gmake foo :pre
+
+You should get the executable ccell_foo when the build is complete.
+
+[{Additional build tips:}]
+
+(1) Building ChemCell for multiple platforms.
+
+You can make ChemCell for multiple platforms from the same src
+directory.  Each target creates its own object sub-dir called Obj_name
+where it stores the system-specific *.o files.
+
+(2) Cleaning up.
+
+Typing "make clean" will delete all *.o object files created when
+ChemCell is built.
+
+(3) Building for a Macintosh.
+
+OS X is BSD Unix, so it already works.  See the Makefile.mac file.
+
+(4) Building for MicroSoft Windows.
+
+I've never done this, but ChemCell is just standard C++ with MPI and FFT
+calls.  You should be able to use cygwin to build ChemCell with a
+Unix-style make.  Or you should be able to pull all the source files
+into Visual C++ (ugh) or some similar development environment and
+build it.  In the src/MAKE directory are some Notes from users on how
+they built ChemCell under Windows, so you can look at their instructions
+for tips.  Good luck - I can't help you on this one.
+
+:line
+
+2.3 Running ChemCell :h4,link(2_3)
+
+By default, ChemCell runs by reading commands from stdin;
+e.g. ccell_linux < in.file.  This means you first create an input
+script (e.g. in.file) containing the desired commands.  "This
+section"_Section_commands.html describes how input scripts are
+structured and what commands they contain.
+
+You can test ChemCell on any of the sample inputs provided in the
+examples directory.  Input scripts are named in.* and sample outputs
+are named log.*.
+
+Here is how you might run the simple A + B <-> C reaction network on a
+Linux box.
+
+cd src
+make linux
+cp ccell_linux ../examples/abc
+cd ../examples/abc
+ccell_linux < in.abc :pre
+
+If you wanted to run in parallel, mpirun could be used to launch ChemCell,
+replaing the last command with
+
+mpirun -np 4 ccell_linux < in.abc :pre
+
+The screen output from ChemCell is described in the next section.  As
+it runs, ChemCell also writes a log.ccell file with the same
+information.  Note that this sequence of commands copied the ChemCell
+executable (ccell_linux) to the directory with the input files.  If
+you don't do this, ChemCell may look for input files or create output
+files in the directory where the executable is, rather than where you
+run it from.
+
+If ChemCell encounters errors in the input script or while running a
+simulation it will print an ERROR message and stop or a WARNING
+message and continue.  See "this section"_Section_errors.html for a
+discussion of the various kinds of errors ChemCell detects, a list of
+all ERROR and WARNING messages, and what to do about them.
+
+For spatial simulations ChemCell can run a problem on any number of
+processors, including a single processor.  You should get identical
+answers on any number of processors and on any machine.  In practice,
+numerical round-off on different machines can cause slight differences
+and eventual divergence of two simulations.
+
+ChemCell can run as large a problem as will fit in the physical memory
+of one or more processors.  If you run out of memory, you must run on
+more processors or setup a smaller problem.
+
+:line
+
+2.4 Command-line options :h4,link(2_4)
+
+At run time, ChemCell recognizes several optional command-line switches
+which may be used in any order.  For example, ccell_ibm might be
+launched as follows:
+
+mpirun -np 16 ccell_ibm -var f tmp.out -log my.log -screen none < in.ecoli :pre
+
+These are the command-line options:
+
+-partition 8x2 4 5 ... :pre
+
+Invoke ChemCell in multi-partition mode.  When ChemCell is run on P
+processors and this switch is not used, ChemCell runs in one partition,
+i.e. all P processors run a single simulation.  If this switch is
+used, the P processors are split into separate partitions and each
+partition runs its own simulation.  The arguments to the switch
+specify the number of processors in each partition.  Arguments of the
+form MxN mean M partitions, each with N processors.  Arguments of the
+form N mean a single partition with N processors.  The sum of
+processors in all partitions must equal P.  Thus the command
+"-partition 8x2 4 5" has 10 partitions and runs on a total of 25
+processors.
+
+The input script specifies what simulation is run on which partition;
+see the "variable"_variable.html and "next"_next.html commands.
+
+-in file :pre
+
+Specify a file to use as an input script.  This is an optional switch
+when running ChemCell in one-partition mode.  If it is not specified,
+ChemCell reads its input script from stdin - e.g. ccell_linux <
+in.run.  This is a required switch when running ChemCell in
+multi-partition mode, since multiple processors cannot all read from
+stdin.
+
+-log file :pre
+
+Specify a log file for ChemCell to write status information to.  In
+one-partition mode, if the switch is not used, ChemCell writes to the
+file log.ccell.  If this switch is used, ChemCell writes to the
+specified file.  In multi-partition mode, if the switch is not used, a
+log.ccell file is created with hi-level status information.  Each
+partition also writes to a log.ccell.N file where N is the partition
+ID.  If the switch is specified in multi-partition mode, the hi-level
+logfile is named "file" and each partition also logs information to a
+file.N.  For both one-partition and multi-partition mode, if the
+specified file is "none", then no log files are created.  Using a
+"log"_log.html command in the input script will override this setting.
+
+-screen file :pre
+
+Specify a file for ChemCell to write it's screen information to.  In
+one-partition mode, if the switch is not used, ChemCell writes to the
+screen.  If this switch is used, ChemCell writes to the specified file
+instead and you will see no screen output.  In multi-partition mode,
+if the switch is not used, hi-level status information is written to
+the screen.  Each partition also writes to a screen.N file where N is
+the partition ID.  If the switch is specified in multi-partition mode,
+the hi-level screen dump is named "file" and each partition also
+writes screen information to a file.N.  For both one-partition and
+multi-partition mode, if the specified file is "none", then no screen
+output is performed.
+
+-var X value :pre
+
+Specify a variable that will be defined for substitution purposes when
+the input script is read.  X should be a single lower-case character
+from 'a' to 'z'.  The value can be any string.  Using this
+command-line option is equivalent to putting the line "variable X
+index value" at the beginning of the input script.  See the
+"variable"_variable.html command for more information.
+
+:line
+
+2.5 ChemCell screen output :h4,link(2_5)
+
+As ChemCell reads an input script, it prints information to both the
+screen and a log file about significant actions it takes to setup a
+simulation.  When the simulation is ready to begin, ChemCell performs
+various initializations and prints information about species,
+diffusion, reactions, and binning (used to find nearby particles).  It
+also prints details of the initial species counts for the system.
+During the run itself, species counts are printed periodically, every
+few timesteps.  When the run concludes, ChemCell prints the final
+species countsa and a total run time for the simulation.  It then
+appends additional statistics about the run.  An example set of
+statistics is shown here:
+
+Loop time of 14.0014 on 1 procs for 100 steps
+
+Move  time (%) = 0.9302 (6.6436)
+Migrt time (%) = 0.809228 (5.7796)
+React time (%) = 12.2261 (87.32)
+RComm time (%) = 0.0172122 (0.122931)
+Outpt time (%) = 0.0185347 (0.132377)
+Balnc time (%) = 0 (0)
+Other time (%) = 0.000203848 (0.00145591)
+
+Nlocal:    3641 ave 3641 max 3641 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:    2083 ave 2083 max 2083 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nbin:    512 ave 512 max 512 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Move statistics (total & per-step):
+  moves      = 379615 3796.15
+  tri checks = 0 0
+  refl  hits = 0 0
+  near  hits = 0 0
+  stick hits = 0 0
+  far   hits = 0 0
+  thru  hits = 0 0
+Reaction statistics (total & per-step):
+  bin-bin     = 302400 3024
+  bin pairs   = 90104885 901049
+  dist checks = 27858171 278582
+  overlaps    = 914444 9144.44
+  reactions   = 397 3.97
+  count of each reaction: (1 378) (2 19) 
+Number of balancing calls = 0
+Memory usage in Mbyte/proc (ave/max/min)
+  parts = 0.34758 0.34758 0.34758
+  bins  = 0.288513 0.288513 0.288513
+  surfs = 0 0 0
+  total = 0.636093 0.636093 0.636093
+Equivalance map of species & type
+  map A 1
+  map B 2
+  map C 3
+
+The first section gives the breakdown of the CPU run time (in seconds)
+into major categories.  The second section lists the number of owned
+particles (Nlocal), ghost particles (Nghost), and bins stored by
+processor.  The max and min values give the spread of these values
+across processors with a 10-bin histogram showing the distribution.
+The total number of histogram counts is equal to the number of
+processors.
+
+The last section gives aggregate statistics for diffusion and
+reactions during the run.  The memory usage per processor is
+summarized.  And a mapping of species names to index numbers is given
+which is useful for analyzing dump files of particle coordinates.

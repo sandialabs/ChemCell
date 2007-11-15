@@ -1,0 +1,52 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+stats command :h3
+
+[Syntax:]
+
+stats N species1-ID species2-ID ...
+stats delta species1-ID species2-ID ... :pre
+
+N = print stats every N timesteps (integer)
+delta = print stats every delta seconds (floating point)
+speciesN-ID = optional list of species IDs :ul
+
+[Examples:]
+
+stats 100
+stats 0.01 Ca_cyto Ca_er :pre
+
+[Description:]
+
+Print particle statistics to the screen (and log file) every so often
+as a simulation runs.  Setting N = 0 will only print statistics at the
+beginning and end of the run.  The units for the particle stats are
+specified by the "stats_modify"_stats_modify.html command.  The
+default is particle count.
+
+For Gillepsie simulations, N refers to a number of reactions, since
+there is one timestep/reaction.
+
+The list of species is optional.  If not specified, counts for all
+species will be printed.
+
+Any species-ID can contain a single wildcard character * which will
+match species and alias names in the usual way.  E.g. a species-ID can
+be *, ab*, *ab, ab*cd.
+
+[Restrictions:] none
+
+[Related commands:]
+
+"dump"_dump.html, "stats_modify"_stats_modify.html
+
+[Default:]
+
+N = 0

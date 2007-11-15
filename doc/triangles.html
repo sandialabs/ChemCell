@@ -1,0 +1,70 @@
+<HTML>
+<CENTER><A HREF = "http://www.cs.sandia.gov/~sjplimp/chemcell.html">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>triangles command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<P>triangles surf-ID M N
+</P>
+<UL><LI>surf-ID = user-assigned name for triangulated surface
+<LI>M = number of vertices that follow
+<LI>N = number of triangles and edge connections that follow 
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>triangles cell 150 100
+triangles ER 27000 16000 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Define a surface with N triangles and M vertices from successive lines
+of the input script.  If surf-ID already exists, the new triangles are
+added to it.  If it doesn't exist, a new surface is created with
+default permeability settings for all species.
+</P>
+<P>Following the triangles command, the next line in the input script is
+skipped (leave it blank).  3 sections of information follow, separated
+by blank lines.
+</P>
+<P>The first section has M vertex lines, each with an index (1-M) and 3
+coordinates (x,y,z in microns).
+</P>
+<P>The second section has N lines, each with an index (1-N) and 3 integer
+vertex indices (1-M) which define the corner points of each triangle.
+The 3 indices should be ordered so that applying the right-hand rule
+yields a normal vector pointing in the "outward" direction from the
+triangle face.
+</P>
+<P>The third section has an index (1-N) followed by 6 integers: i ei j ej
+k ek.  I,J,K are the 3 triangles this triangle is connected to across
+its 3 edges where its 1st edge is between vertices 1-2, its 2nd edge
+is between 2-3, and its 3rd edge is between 3-1.  I,J,K are integer
+values between 1-N.  Ei,Ej,Ek is the edge (1-3) on the other triangle
+that this edge is connected to.  If a triangle has no connection
+across a particular edge, than the 2 values (e.g. I,Ei) should be 0.
+</P>
+<P>Note that a long list of triangles can be put in a separate file and
+read in via the <A HREF = "include.html">include</A> command.
+</P>
+<P><B>Restrictions:</B>
+</P>
+<P>The <A HREF = "bin.html">bin command</A> must be used before defining a triangulated
+surface.
+</P>
+<P><B>Related commands:</B>
+</P>
+<P><A HREF = "region.html">region</A>
+</P>
+<P><B>Default:</B> none
+</P>
+</HTML>

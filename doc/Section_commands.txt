@@ -1,0 +1,289 @@
+"Previous Section"_Section_start.html - "ChemCell WWW Site"_cws -
+"ChemCell Documentation"_cd - "ChemCell Commands"_cc - "Next
+Section"_Section_howto.html :c
+
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+3. Commands :h3
+
+This section describes how a ChemCell input script is formatted and what
+commands are used to define a ChemCell simulation.
+
+3.1 "ChemCell input script"_#3_1
+3.2 "Parsing rules"_#3_2
+3.3 "Input script structure"_#3_3
+3.4 "Commands listed by category"_#3_4
+3.5 "Commands listed alphabetically"_#3_5 :all(b)
+
+:line
+
+3.1 ChemCell input script :link(3_1),h4
+
+ChemCell executes by reading commands from a input script (text file),
+one line at a time.  When the input script ends, ChemCell exits.  Each
+command causes ChemCell to take some action.  It may set an internal
+variable, read in a file, or run a simulation.  Most commands have
+default settings, which means you only need to use the command if you
+wish to change the default.
+
+In many cases, the ordering of commands in an input script is not
+important.  However the following rules apply:
+
+(1) ChemCell does not read your entire input script and then perform a
+simulation with all the settings.  Rather, the input script is read
+one line at a time and each command takes effect when it is read.
+Thus this sequence of commands:
+
+stats	 10
+run      100 
+run      100 :pre
+
+does something different than this sequence:
+
+run      100 
+stats	 10
+run      100 :pre
+
+In the first case, statistics are printed every 10 timesteps during
+two simulations of 100 timesteps each.  In the 2nd case, the default
+statistics setting (0) is used for the 1st 100 step simulation and the
+setting of 10 is used for the 2nd one.  Thus statistics during the 1st
+run will only be printed at the beginning and end or the run.
+
+(2) Some commands are only valid when they follow other commands.  For
+example you cannot setup a reaction until the particle species it
+specifies have been defined.
+
+(3) Sometimes command B will use values that can be set by command A.
+This means command A must precede command B in the input script if it
+is to have the desired effect.  For example, the
+"particles"_particles.html command reads a group of particles and
+assigns them random numbers using a random number generator.  If
+default values are not desired, the "seed"_seed.html command must be
+used before particles to tell ChemCell how to initialize the random
+number generator.
+
+Many input script errors are detected by ChemCell and an ERROR or
+WARNING message is printed.  "This section"_Section_errors.html gives
+more information on what errors mean.  The documentation for each
+command lists restrictions on how the command can be used.
+
+:line
+
+3.2 Parsing rules :link(3_2),h4
+
+Each non-blank line in the input script is treated as a command.
+ChemCell commands are case sensitive.  Command names are lower-case, as
+are specified command arguments.  Upper case letters may be used in
+file names or user-chosen ID strings.
+
+Here is how each line in the input script is parsed by ChemCell:
+
+(1) If the line ends with a "&" character (with no trailing
+whitespace), the command is assumed to continue on the next line.  The
+next line is concatenated to the previous line by removing the "&"
+character and newline.  This allows long commands to be continued
+across two or more lines.
+
+(2) All characters from the first "#" character onward are treated as
+comment and discarded.
+
+(3) The line is searched repeatedly for $ characters.  If the
+character following the $ is "a" to "z", the two-characters sequence
+(e.g. $x) is replaced with the corresponding variable text.  See the
+"variable"_variable.html command for details.
+
+(4) The line is broken into "words" separated by whitespace (tabs,
+spaces).  Note that words can thus contain letters, digits,
+underscores, or punctuation characters.
+
+(5) The first word is the command name.  All successive words in the
+line are arguments.
+
+(6) Text with spaces can be enclosed in double quotes so it will be
+treated as a single argument.  See the "fix print"_fix_print.html
+command for an example.  A '#' or '$' charater in text between double
+quotes will also not be treated as a comment or substituted for as a
+variable.
+
+:line
+
+3.3 Input script structure :h4,link(3_3)
+
+This section describes the structure of a typical ChemCell input script.
+The "examples" directory in the ChemCell distribution contains many
+sample input scripts; the corresponding problems are discussed in
+"this section"_Section_example.html, and animated on the "ChemCell WWW
+Site"_lws.
+
+A ChemCell input script typically has several stages:
+
+Initialization
+Define bins
+Define geometry
+Define particles
+Define reactions
+Settings
+Run a simulation :ol
+
+The last 2 stages can be repeated as many times as desired.  I.e. run
+a simulation, change some settings, run some more, etc.  The "Define
+bins" and "Define geometry" stages are not used for non-spatial
+(Gillespie) simulations.  Each of the stages is now described in
+more detail.  Remember that almost all the commands need only be used
+if a non-default value is desired.
+
+(1) Initialization
+
+Set parameters that are typically defined before the simulation domain
+is binned.
+
+The relevant commands are "run_style"_run_style.html,
+"global"_global.html, "volume"_volume.html, "boundary"_boundary.html,
+"seed"_seed.html, "timestep"_timestep.html,
+"move_style"_move_style.html.
+
+(2) Define bins
+
+For spatial simulations, the simulation domain is partitioned into 3d
+bins using the "bin"_bin.html command.  This must be done before
+geometric objects or particles are created or read-in.
+
+(3) Define geometry
+
+The "triangles"_triangles.html and "region"_region.html commands are
+used to create geometric objects and membrane boundaries.
+
+(4) Define particles
+
+Particles and their attributes are created and set via these
+commands:
+
+"species"_species.html, "dimension"_dimension.html,
+"diffusion"_diffusion.html, "count"_count.html,
+"permeable"_permeable.html, "particles"_particles.html,
+"read_restart"_read_restart.html
+
+(5) Define reactions
+
+Reactions (zero-order, unary, binary) are defined via the
+"reaction"_reaction.html, "react_modify"_react_modify.html, and
+"probability"_probability.html commands.
+
+(6) Settings
+
+Before a simulation is run, a variety of settings can be specified
+using these commands:
+
+"balance"_balance.html, "dump"_dump.html, "stats"_stats.html,
+"fix"_fix.html, "restart"_restart.html
+
+(7) Run a simulation
+
+A reaction/diffusion or Gillespie simulation is run using the
+"run"_run.html command.
+
+:line
+
+3.4 Commands listed by category :link(3_4),h4
+
+This section lists all ChemCell commands, grouped by category.  The
+"next section"_#3_5 lists the same commands alphabetically.
+
+Settings:
+
+"run_style"_run_style.html, "move_style"_move_style.html,
+"seed"_seed.html, "balance"_balance.html, "timestep"_timestep.html
+
+Geometry:
+
+"boundary"_boundary.html, "global"_global.html, "region"_region.html,
+"triangles"_triangles.html, "volume"_volume.html
+
+Particles:
+
+"species"_species.html, "count"_count.html,
+"diffusion"_diffusion.html, "dimension"_dimension.html,
+"permeable"_permeable.html, "particles"_particles.html,
+"read_restart"_read_restart.html
+
+Reactions:
+
+"reaction"_reaction.html, "react_modify"_react_modify.html,
+"unreact"_unreact.html, "probability"_probability.html
+
+Fixes:
+
+"fix"_fix.html, "unfix"_unfix.html
+
+Output:
+
+"dump"_dump.html, "restart"_restart.html, "stats"_stats.html,
+"stats_modify"_stats_modify.html, "dump_modify"_dump_modify.html,
+"undump"_undump.html, "write_restart"_write_restart.html,
+"check"_check.html, "debug"_debug.html
+
+Actions:
+
+"bin"_bin.html, "move_test"_move_test.html, "run"_run.html,
+
+Miscellaneous:
+
+"cd"_cd.html, "clear"_clear.html, "echo"_echo.html,
+"include"_include.html, "jump"_jump.html, "log"_log.html,
+"next"_next.html, "variable"_variable.html
+
+:line
+
+3.5 Individual commands :h4,link(3_5),link(comm)
+
+This section lists all ChemCell commands alphabetically.  The
+"previous section"_#3_4 lists the same commands, grouped by category.
+
+"balance"_balance.html,
+"bin"_bin.html,
+"boundary"_boundary.html,
+"cd"_cd.html,
+"check"_check.html,
+"clear"_clear.html,
+"count"_count.html,
+"debug"_debug.html,
+"diffusion"_diffusion.html,
+"dimension"_dimension.html,
+"dump"_dump.html,
+"dump_modify"_dump_modify.html,
+"echo"_echo.html,
+"fix"_fix.html,
+"global"_global.html,
+"include"_include.html,
+"jump"_jump.html,
+"log"_log.html,
+"move_style"_move_style.html,
+"move_test"_move_test.html,
+"next"_next.html,
+"particles"_particles.html,
+"permeable"_permeable.html,
+"probability"_probability.html,
+"react_modify"_react_modify.html,
+"reaction"_reaction.html,
+"read_restart"_read_restart.html,
+"region"_region.html,
+"restart"_restart.html,
+"run"_run.html,
+"run_style"_run_style.html,
+"seed"_seed.html,
+"species"_species.html,
+"stats"_stats.html,
+"stats_modify"_stats_modify.html,
+"timestep"_timestep.html,
+"triangles"_triangles.html,
+"undump"_undump.html,
+"unfix"_unfix.html,
+"unreact"_unreact.html,
+"variable"_variable.html,
+"volume"_volume.html,
+"write_restart"_write_restart.html :tb(c=6)

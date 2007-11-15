@@ -1,0 +1,151 @@
+<HTML>
+<CENTER><A HREF = "http://www.cs.sandia.gov/~sjplimp/chemcell.html">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>variable command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>variable name style arg1 arg2 ... 
+</PRE>
+<UL><LI>name = single lower-case character, 'a' thru 'z'
+<LI>style = <I>proc</I> or <I>index</I>
+<LI>arg1 thru argN = list of text strings 
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>variable s index 48279 58273 588182 6385 847585 599283
+variable t loop 20
+variable b equal div(lx,3.0)
+variable b equal add(x[234],mult(0.5,lx))
+variable t world 300.0 400.0 500.0 600.0
+variable x universe 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>This command assigns one or more values to a variable name so that the
+variable can be used in subsequent input script commands.  In this
+context a "value" is a string which could be text or numbers, as in
+the examples above.  As explained in <A HREF = "Section_commands.html#3_2">this
+section</A>, occurrences of $X in an input
+script line are replaced by the variable's value, where X is a single
+lower-case character from "a" to "z".
+</P>
+<P>As described below, for variable styles <I>index</I>, <I>loop</I>, and
+<I>universe</I>, the value assigned to a variable can be incremented via
+the <A HREF = "next.html">next</A> command.  When there are no more values to
+assign, the variable is "exhausted" and a flag is set that causes the
+next <A HREF = "jump.html">jump</A> command encountered in the input script to be
+skipped.  This enables the construction of simple loops in the input
+script that are iterated over and exited from.
+</P>
+<P>When a variable command is encountered for a variable that has already
+been specified, the command is skipped.  This is the case for all
+variable styles except <I>equal</I>, so that <I>equal</I>-style variable names
+can be re-used and re-defined anytime.  Skipping allows you to loop
+over the same input script many times without re-defining your
+variables.  When a variable is exhausted via the <A HREF = "next.html">next</A>
+command, it is then available to be re-defined in a subsequent
+variable command.
+</P>
+<P>For the <I>index</I> style, one or more strings are specified.  Initially,
+the 1st string is assigned to the variable.  Each time a
+<A HREF = "next.html">next</A> command is used with the variable name, the next
+string is assigned.  All processors assign the same string to the
+variable.  <I>Index</I>-style variables can also be set (with a single
+value) by using the command-line switch -var; see <A HREF = "Section_start.html#2_4">this
+section</A> for details.
+</P>
+<P>The <I>loop</I> style is identical to the <I>index</I> style except that the
+strings are the integers from 1 to N.  Initially, the string "1" is
+assigned to the variable.  Each time a <A HREF = "next.html">next</A> command is
+used with the variable name, the next string ("2", "3", etc) is
+assigned.  All processors assign the same string to the variable.
+</P>
+<P>For the <I>equal</I> style, a single string is specified which represents
+an equation that will be evaluated afresh each time the variable is
+used.  Thus the variable can take on different values at different
+stages of the input script.  For example, if the variable is used in a
+<A HREF = "fix_print.html">fix print</A> command, it could print different values
+each timestep it was invoked.  The next command cannot be used with
+<I>equal</I>-style variables, since there is only one value.  Note that, as
+with any other input script command, it is feasible to use another
+variable in the <I>equal</I> variable's string, e.g. variable y equal
+mult($x,2).  However, $x will be replaced immediately by it's current
+value when the command is first parsed, not each time that $y is
+substituted for.
+</P>
+<P>The syntax of the equation assigned to <I>equal</I> variables is simple.
+It can contain "functions", "vectors", "keywords", or "numbers" in any
+combination.
+</P>
+<UL><LI>Function = a keyword followed by parenthesis with one or two arguments
+<LI>Supported functions = add(x,y), sub(x,y), mult(x,y), div(x,y), neg(x),   pow(x,y), exp(x), ln(x)
+<LI>Example function usage = div(1.0e20,3.0), neg(x[34]), pow(lx,3.0)
+<LI>Vector = a keyword followed by square brackets containing an atom ID
+<LI>Supported vectors = x, y, z, sp, bin, tri, seed
+<LI>Example vector usage = x[123], tri[1000]
+<LI>Keyword = single word
+<LI>Supported keywords = step, npart, lx, ly, lz, vol
+<LI>Example keyword usage = atoms, pow(vol,0.333), mult(lx,0.5)
+<LI>Number = 0.2, 1.0e20, -15.4, etc 
+</UL>
+<P>Currently, vectors cannot be used in a parallel simulation, so that
+particle indices have a consistent meaning.
+</P>
+<P>The variable <I>equal</I> equation can also be nested in that function
+arguments can be functions, vectors, keywords, or numbers.  For
+example, this is a valid equation:
+</P>
+<PRE>variable x equal div(add(lx,ly),pow(vol,div(1,3))) 
+</PRE>
+<P>For the <I>world</I> style, one or more strings are specified.  There must
+be one string for each processor partition or "world".  See <A HREF = "Section_start.html#2_4">this
+section</A> of the manual for information on
+running ChemCell with multiple partitions via the "-partition"
+command-line switch.  This variable command assigns one string to each
+world.  All processors in the world are assigned the same string.  The
+next command cannot be used with <I>equal</I>-style variables, since there
+is only one value per world.  This style of variable is useful when
+you wish to run different simulations on different partitions.
+</P>
+<P>For the <I>universe</I> style, one or more strings are specified.  There
+must be at least as many strings as there are processor partitions or
+"worlds".  See <A HREF = "Section_start.html#2_4">this page</A> for information on
+running ChemCell with multiple partitions via the "-partition"
+command-line switch.  This variable command initially assigns one
+string to each world.  When a <A HREF = "next.html">next</A> command is encountered
+using this variable, the first processor partition to encounter it, is
+assigned the next available value.  This continues until all the
+variable values are consumed.  Thus, this command can be used to run
+50 simulations on 8 processor partitions.  The simulations will be run
+one after the other on whatever partition becomes available, until
+they are all finished.  <I>Universe</I>-style variables are incremented
+using the files "tmp.ccell.variable" and "tmp.ccell.variable.lock"
+which you will see in your directory during such a ChemCell run.
+</P>
+<P>If a variable command is encountered when the variable has already
+been defined, the command is ignored.  Thss allows an input script
+with a variable command to be processed multiple times; see the
+<A HREF = "jump.html">jump</A> or <A HREF = "include.html">include</A> commands.  It also means
+that the use of the command-line switch -var will override a
+corresponding variable setting in the input script.
+</P>
+<P><B>Restrictions:</B> none
+</P>
+<P><B>Related commands:</B>
+</P>
+<P><A HREF = "next.html">next</A>, <A HREF = "jump.html">jump</A>, <A HREF = "include.html">include</A>,
+<A HREF = "fix_print.html">fix print</A>, <A HREF = "print.html">print</A>
+</P>
+<P><B>Default:</B> none
+</P>
+</HTML>

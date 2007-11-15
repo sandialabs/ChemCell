@@ -1,0 +1,39 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+move_test command :h3
+
+[Syntax:]
+
+move_test species-ID N Nhisto seed file :pre
+
+species-ID = ID of species
+N = # of moves
+Nhisto = number of histogram bins
+seed = random # seed
+file = file to write results to :ul
+
+[Examples:]
+
+move_test Ca 10000 100 58327 tmp.diff :pre
+
+[Description:]
+
+Test the diffusive movement of a species by performing N moves of a
+single particle, and binning the result in distance.  The histogram
+statistics are written to the specified file.
+
+This is useful to test the distribution of move distances for a
+particular diffusion coefficient and timestep size.
+
+[Restrictions:] none
+
+[Related commands:] none
+
+[Default:] none

@@ -1,0 +1,70 @@
+<HTML>
+<CENTER><A HREF = "http://www.cs.sandia.gov/~sjplimp/chemcell.html">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>fix conc/random command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>fix ID conc/random N file Nin insp1 insp2 ... Nout outsp1 outsp2 ... 
+</PRE>
+<UL><LI>ID is documented in <A HREF = "fix.html">fix</A> command
+<LI>conc/random = style name of this fix command
+<LI>N = apply fix every this many timesteps
+<LI>file = filename in which time course data is specified
+<LI>Nin = # of input species
+<LI>insp1,insp2,etc = IDs of input species
+<LI>Nout = # of output species
+<LI>outsp1,outsp2,etc = IDs of output species 
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>fix mine conc/random 100 data.time 2 CheA CheAa 2 CheAa CheA 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Randomize the species type of certain particles at specified time
+increments in a spatial simulation.  This is an effective way of
+coupling ChemCell to another model or simulation that produced
+concentration vs time profiles of certain species.
+</P>
+<P>Here is how the fix operates.  Every N timesteps, the list of current
+particles is scanned.  Each partice with a species type in the list of
+Nin input species has its species type reset to a new value which is
+one of the Nout output species.  Each of the Nout species has a
+fractional probability associated with it (between 0.0 and 1.0), which
+sum to 1.0.  The assignment of a particle to a new species is done
+randomly, in accord with those probabilities.
+</P>
+<P>The probabilities for new species can be time-dependent and are
+read-in from the time course data file, which has the following
+format.  Lines beginning with a "#" character are ignored.  Other
+lines must begin with a time value (in seconds), followed by Nout-1
+values (between 0.0 and 1.0) which sum to a value <= 1.0.  These are
+the probabilities for each of the Nout species.  The value for the
+last Nout species is 1.0 - sum.  The time stamp for successive lines
+in the file should be monotonically increasing.
+</P>
+<P>On a timestep when the fix is applied, the file line with a time stamp
+just smaller (or equal) to the current time is used to set the Nout
+probabilities.
+</P>
+<P><B>Restrictions:</B>
+</P>
+<P>This fix can only be used with spatial simulations.
+</P>
+<P><B>Related commands:</B>
+</P>
+<P><A HREF = "fix_conc_set.html">fix conc/set</A>
+</P>
+<P><B>Default:</B> none
+</P>
+</HTML>

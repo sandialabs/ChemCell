@@ -1,0 +1,59 @@
+<HTML>
+<CENTER><A HREF = "http://www.cs.sandia.gov/~sjplimp/chemcell.html">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>move_style command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>move_style option1 option2 ... 
+</PRE>
+<UL><LI>options = <I>cube</I> or <I>sphere</I> or <I>square</I> or <I>circle</I> or <I>uniform</I> or
+<LI><I>brownian</I> 
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>move_style sphere brownian
+move_style circle uniform 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Set one or more options that determine how particles move in a spatial
+simulation.
+</P>
+<P>The <I>cube</I> option means the particle samples points in a small cube
+around its location.  The <I>sphere</I> option means the particle samples
+points in a small sphere around its location.
+</P>
+<P>The <I>square</I> option means the particle only moves in 2d and samples
+points in a small xy square around its location.  The <I>cirlce</I> option
+means the particle only moves in 2d and samples points in a small xy
+circle around its location.  These options can be used with a
+<A HREF = "global.html">global</A> simulation domain that is small in the
+z-dimension to setup an effectively 2d simulation.
+</P>
+<P>The <I>uniform</I> option means the sampling of volumetric (or planar)
+space is uniform.  The <I>brownian</I> option means the sampling is a
+Gaussian corresponding to Brownian motion
+</P>
+<P>For 2d particles diffusing on regions or triangulated surfaces, only
+the uniform/brownian options are relevant since the particle always
+samples within a circle tangential to the surface.
+</P>
+<P><B>Restrictions:</B> none
+</P>
+<P><B>Related commands:</B> none
+</P>
+<P><B>Default:</B>
+</P>
+<P>The default move_style is cube brownian.
+</P>
+</HTML>

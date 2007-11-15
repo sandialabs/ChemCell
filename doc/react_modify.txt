@@ -1,0 +1,136 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+react_modify command :h3
+
+[Syntax:]
+
+react_modify reaction-ID keyword value(s) ...
+
+reaction-ID = ID of reaction to modify :ulb,l
+one or more keyword/value pairs can be specified :l
+  keywords = {rate} or {loc} or {dist} or {prob}
+  {rate} value = rate
+    rate = reaction rate (same units as in "reaction"_react.html command)
+  {loc} values = product styleflag whichflag dirflag
+    product = which product (1-N)
+    styleflag = {def} or {at} or {near}
+    whichflag = {def} or {1} or {2} or {1/2}
+    dirflag = {def} or {in} or {out} or {in/out}
+  {dist} = r
+    r = distance at which reactants will react (microns)
+  {prob} = p
+    p = probability (0-1) with which reactants react :pre
+  {weight} values = which index ratio
+    which = {reactant} or {product}
+    index = which reactant or product (1-N)
+    styleflag = {def} or {at} or {near}
+    whichflag = {def} or {1} or {2} or {1/2}
+    dirflag = {def} or {in} or {out} or {in/out}
+:ule
+
+[Examples:]
+
+react_modify 1 dist 0.05 prob 1.0
+react_modify channel 2 near 2 out :pre 
+
+[Description:]
+
+Reset one or more parameters of a specific reaction.
+
+The {rate} keyword resets the reaction rate.
+
+The {loc} keyword sets the location at which a product of the reaction
+is placed.  The {prod} setting determines which product (1 to N).  A
+value of -1 means all products.  The {styleflag} setting refers to
+placing the product at or near a reactant's location.  The {whichflag}
+setting refers to which reactant (1 to N) to place the product at or
+near.  A value of {1/2} means to randomly choose which reactant each
+time a reaction occurs.  The {dirflag} setting only applies to 3d
+products placed near 2d reactants and refers to which side of the
+surface (inside or outside) to place the product on.  A value of
+{in/out} means to randomly choose the side each time a reaction
+occurs.  A value of {def} should be used if {dirflag} does not apply.
+
+Depending on the kind of reaction (1 or 2 reactants) and whether the
+reactants are 3d diffusing species or 2d (on a surface), certain
+combinations of settings are invalid and will generate errors.  Note
+that only 3d products can be placed at a 3d reactant's location.  Only
+2d products can be placed at a 2d reactant's location.  And only 3d
+products can be placed near a 2d reactant's location, which means to
+place it a distance epsilong from the surface the 2d reactant is on.
+
+These are the default rules for reactions with a single reactant:
+
+If the reactant and product are 3d, \
+  put the product at the location of the reactant.
+If the reactant and product are 2d, \
+  put the product at the location of the reactant.
+If the reactant is 3d and the product is 2d, this is an error.
+If the reactant is 2d and the product is 3d, \
+  put the product near the reactant on the inside of the surface. :ul
+
+These are the default rules for reactions with two reactants:
+
+If both reactants and the product are 2d, put the product at the \
+  location of the reactant with the smaller diffusion coeff.
+If both reactants and the product are 3d, put the product at the \
+  location of the reactant with the smaller diffusion coeff.
+If one reactant is 2d and the other 3d and the product is 3d, put the \
+  product at the 3d reactant's location.
+If one reactant is 2d and the other 3d and the product is 2d, put the \
+  product at the 2d reactant's location.
+If both reactants are 3d and the product is 2d, this is an error.
+If both reactants are 2d and the product is 3d, put the product \
+  a distance epsilon away from the reactant with the smaller diffusion coeff \
+  on the inside of the surface.
+In all cases where diffusion coeffs are used, if the diffusion coeffs of \
+  the 2 reactants are equal, the 1st reactant is used. :ul
+
+The {dist} keyword explicitly sets the cutoff distance for a binary
+reaction bewteen two reactants.  Normally, ChemCell sets this distance
+itself (see the "probability"_probability.html command for options).
+Setting the {dist} value to -1.0 turns off the explicit setting;
+ChemCell will again compute the reaction cutoff.
+
+The {prob} keyword explicitly sets the probablility (from 0.0 to 1.0)
+for a binary reaction to take place (assuming the reactants are within
+the cutoff distance).  Normally, ChemCell sets this probability itself
+(see the "probability"_probability.html command for options).  Setting
+the {prob} value to -1.0 turns off the explicit setting; ChemCell will
+again compute the probability.
+
+Note that setting the probability to 1.0 and the cutoff distance to
+the binding radius computed by the Smoldyn algorithms described in
+"(Andrews)"_#Andrews enables a "Smoldyn-style"_smoldyn spatial
+simulation to be run.
+
+The {weight} keyword sets a volume weighting factor for a specific
+reactant or product.  This is used by non-spatial, non-stochastic
+simulations (ODEs) to weight the effects of a reaction.  The weighting
+factor can be thought of as a volume ratio between 2 compartments, so
+these factors can be set to enable a multi-compartment ODE solution
+where each compartment has its own volume.
+
+[Restrictions:] none
+
+The {dist} and {prob} keywords only apply to spatial simulations.
+
+[Related commands:]
+
+"probability"_probability.html, "reaction"_reaction.html
+
+[Default:] none
+
+:line
+
+:link(Andrews)
+[(Andrews)] Andrews and Bray, Phys Biol, 1, 137-151 (2004).
+
+:link(smoldyn,http://genomics.lbl.gov/~sandrews/software.html)
