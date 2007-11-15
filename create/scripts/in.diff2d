@@ -1,0 +1,5 @@
+random 49218
+create_surf SURF one 60tris.sphere SPHERE !translate 0.0 0.0 0.0 scale 1.0 1.0 1.0 rotate 0.0 0.0 0.0
+create_particle 10 A 2d SURF
+write_surf surf.diff2d
+write_particle part.diff2d

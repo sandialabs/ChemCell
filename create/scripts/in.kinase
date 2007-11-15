@@ -1,0 +1,10 @@
+# simple 3-stage kinase cascade
+
+create_particle 1000 active-receptor sphere 0.0 0.0 0.0 0.0 6.2035
+create_particle 1000 inactive-kin1 sphere 0.0 0.0 0.0 0.0 6.2035
+create_particle 1000 inactive-kin2 sphere 0.0 0.0 0.0 0.0 6.2035
+create_particle 1000 inactive-kin3 sphere 0.0 0.0 0.0 0.0 6.2035
+create_particle 1000 ptase-x sphere 0.0 0.0 0.0 0.0 6.2035
+
+write_particle data.kinase
+

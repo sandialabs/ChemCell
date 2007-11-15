@@ -1,0 +1,17 @@
+create_surf CARBOX1 one ../spheres/116tris.sphere SPHERE origin 0.0 0.0 0.0 translate 0.0 0.09 0.0 scale 0.1 0.1 0.1 rotate 0.0 0.0 0.0
+create_surf CARBOX2 one  ../spheres/116tris.sphere SPHERE origin 0.0 0.0 0.0 translate .23 0.09 0.0 scale 0.1 0.1 0.1 rotate 0.0 0.0 0.0
+create_surf CARBOX3 one  ../spheres/116tris.sphere SPHERE origin 0.0 0.0 0.0 translate -.23 0.09 0.0 scale 0.1 0.1 0.1 rotate 0.0 0.0 0.0
+create_surf CARBOX4 one  ../spheres/116tris.sphere SPHERE origin 0.0 0.0 0.0 translate .105 -0.1 0.0 scale 0.1 0.1 0.1 rotate 0.0 0.0 0.0
+create_surf CARBOX5 one  ../spheres/116tris.sphere SPHERE origin 0.0 0.0 0.0 translate -.105 -0.1 0.0 scale 0.1 0.1 0.1 rotate 0.0 0.0 0.0
+
+
+create_surf CELL one ../scripts/synecho_create/cylcap.surf CELL origin 0.0 0.0 0.0 translate 0.0 0.0 0.0 scale 0.1 0.1 0.1 rotate 0.0 0.0 0.0
+
+add_surf CARBOX1 CARBOX2
+add_surf CARBOX1 CARBOX3
+add_surf CARBOX1 CARBOX4
+add_surf CARBOX1 CARBOX5
+
+write_surf bicarb.surf
+
+

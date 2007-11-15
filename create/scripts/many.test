@@ -1,0 +1,3 @@
+create_surf CARBOX1 one 1996tris.sphere SPHERE 
+create_particle 100  H sphere 0.0 0.0 0.0 0.0 1.5  dist uniform inside CARBOX1
+write_particle benching.part

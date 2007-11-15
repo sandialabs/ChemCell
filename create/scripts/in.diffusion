@@ -1,0 +1,13 @@
+seed 1234
+
+create_surf CELL one 500tris.sphere SPHERE translate 0.0 0.0 0.0 scale 15.0 10.0 10.0 rotate 0.0 0.0 0.0
+
+write_surf diffusion.surf
+
+
+! create_particle 500 B 2d CELL
+
+create_particle 500 N 2d CELL clumps 20 sigma 0.2
+create_particle 1000 A sphere 0.0 0.0 0.0 0.0 22.0  dist uniform outside CELL
+
+write_particle clumps_20_0.2.part

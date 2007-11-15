@@ -1,0 +1,39 @@
+# storm = Cray Red Storm, Cray mpicxx, native MPI, FFTW
+
+SHELL = /bin/sh
+.SUFFIXES: .cpp .d
+.IGNORE:
+
+# System-specific settings
+
+CC =		CC
+#CCFLAGS =	-fastsse -DFFT_NONE -DMPICH_IGNORE_CXX_SEEK -DREDSTORM
+CCFLAGS =	-fastsse -DFFT_FFTW -DMPICH_IGNORE_CXX_SEEK \
+		-I/home/sjplimp/zoltan/Zoltan/include
+DEPFLAGS =	-M
+LINK =		CC
+LINKFLAGS =	-O -L/home/sjplimp/zoltan/Zoltan/Obj_storm
+USRLIB =	-lzoltan -lzoltan_mem -lzoltan_comm
+SYSLIB =
+SIZE =	size
+
+# Link rule
+
+$(EXE):	$(OBJ)
+	$(LINK) $(LINKFLAGS) $(OBJ) $(USRLIB) $(SYSLIB) -o $(EXE)
+	$(SIZE) $(EXE)
+
+# Library target
+
+lib:	$(OBJ)
+	$(ARCHIVE) $(ARFLAGS) $(EXE) $(OBJ)
+
+# Compilation rules
+
+.cpp.o:
+	$(CC) $(CCFLAGS) -c $<
+
+# Individual dependencies
+
+$(OBJ):	     $(INC)
+

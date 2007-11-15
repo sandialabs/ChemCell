@@ -1,0 +1,34 @@
+# ross = CPlant machine at Sandia, compiling on taylor
+
+SHELL = /bin/sh
+.IGNORE:
+
+# System-specific settings
+
+CC =		/usr/local/cplant/ross/current/bin/c++
+CCFLAGS =	-O -I/enfs/tmp/sjplimp/zoltan_cell/include
+DEPFLAGS =	-M
+LINK =		/usr/local/cplant/ross/current/bin/c++
+LINKFLAGS =	-O -L/enfs/tmp/sjplimp/zoltan_cell/Obj_ross
+USRLIB =	-lzoltan -lzoltan_mem -lzoltan_comm
+SYSLIB =	-lmpi -lm
+SIZE =		size
+
+# Link rule
+
+$(EXE):	$(OBJ)
+	$(LINK) $(LINKFLAGS) $(OBJ) $(USRLIB) $(SYSLIB) -o $(EXE)
+	$(SIZE) $(EXE)
+
+# Compilation rules
+
+%.o:%.cpp
+	$(CC) $(CCFLAGS) -c $<
+
+%.d:%.cpp
+	$(CC) $(CCFLAGS) $(DEPFLAGS) $< > $@
+
+# Individual dependencies
+
+DEPENDS = $(OBJ:.o=.d)
+include $(DEPENDS)

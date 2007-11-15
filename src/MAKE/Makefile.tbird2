@@ -1,0 +1,55 @@
+# tbird2 = Dell cluster with dual 3.6 GHz Xeons, Intel mpicxx, native MPI, FFTW
+
+SHELL = /bin/sh
+.IGNORE:
+
+# System-specific settings
+
+# openmpi on tbird does not work correctly with LAMMPS
+# mvapich should be used
+# mpiexec should be used
+#
+# Before building Lammps on tbird, do the following two module commands:
+#     "module switch mpi mpi/mvapich-0.9.8-ofed-intel-9.1"
+#
+# Before issuing a mpiexec command for Lammps, use the following commands:
+#     "source /opt/modules/3.1.6/init/bash"
+#     "module switch mpi mpi/mvapich-0.9.8-ofed-intel-9.1"
+#
+# If bash is not your interactive shell,
+#    or what is specified in your NQS script,
+#    substitute another shell name for bash in the "source" line
+
+CC =		mpicxx
+CCFLAGS =	-O -I/home/sjplimp/zoltan/Zoltan/include
+DEPFLAGS =	-M
+LINK =		mpicxx
+LINKFLAGS =	-O -L/home/sjplimp/zoltan/Zoltan/Obj_tbird
+USRLIB =	-lzoltan -lzoltan_mem -lzoltan_comm
+SYSLIB =	-lm
+SIZE =		size
+
+# Link rule
+
+$(EXE):	$(OBJ)
+	$(LINK) $(LINKFLAGS) $(OBJ) $(USRLIB) $(SYSLIB) -o $(EXE)
+	$(SIZE) $(EXE)
+
+# Library target
+ 
+lib:    $(OBJ)
+	$(ARCHIVE) $(ARFLAGS) $(EXE) $(OBJ)
+
+
+# Compilation rules
+
+%.o:%.cpp
+	$(CC) $(CCFLAGS) -c $<
+
+%.d:%.cpp
+	$(CC) $(CCFLAGS) $(DEPFLAGS) $< > $@
+
+# Individual dependencies
+
+DEPENDS = $(OBJ:.o=.d)
+include $(DEPENDS)

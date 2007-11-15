@@ -1,0 +1,35 @@
+create_surf CARBOX1 one 116tris.sphere SPHERE translate 0.0 0.9 0.0 scale 1.0 1.0 1.0 rotate 0.0 0.0 0.0
+create_surf CARBOX2 one 116tris.sphere SPHERE translate 2.3 0.9 0.0 scale 1.0 1.0 1.0 rotate 0.0 0.0 0.0
+create_surf CARBOX3 one 116tris.sphere SPHERE translate -2.3 0.9 0.0 scale 1.0 1.0 1.0 rotate 0.0 0.0 0.0
+create_surf CARBOX4 one 116tris.sphere SPHERE translate 1.05 -1.0 0.0 scale 1.0 1.0 1.0 rotate 0.0 0.0 0.0
+create_surf CARBOX5 one 116tris.sphere SPHERE translate -1.05 -1.0 0.0 scale 1.0 1.0 1.0 rotate 0.0 0.0 0.0
+
+
+create_surf CELL one cylcap.surf CELL translate 0.0 0.0 0.0 scale 1.0 1.0 1.0 rotate 0.0 0.0 0.0
+
+add_surf CARBOX1 CARBOX2
+add_surf CARBOX1 CARBOX3
+add_surf CARBOX1 CARBOX4
+add_surf CARBOX1 CARBOX5
+
+write_surf bicarb.surf
+
+create_particle 50 HCO3U sphere 0.0 0.0 0.0 0.0 3.5  dist uniform outside CELL
+create_particle 50 HCO3U sphere 1.0 0.0 0.0 0.0 3.5  dist uniform outside CELL
+create_particle 50 HCO3U sphere -1.0 0.0 0.0 0.0 3.5  dist uniform outside CELL
+create_particle 50 HCO3U sphere 3.0 0.0 0.0 0.0 3.5  dist uniform outside CELL
+create_particle 50 HCO3U sphere -3.0 0.0 0.0 0.0 3.5  dist uniform outside CELL
+create_particle 50 HCO3U sphere 5.0 0.0 0.0 0.0 3.5  dist uniform outside CELL
+create_particle 50 HCO3U sphere -5.0 0.0 0.0 0.0 3.5  dist uniform outside CELL
+create_particle 50 HCO3U sphere 7.0 0.0 0.0 0.0 3.0  dist uniform outside CELL
+create_particle 50 HCO3U sphere -7.0 0.0 0.0 0.0 3.0  dist uniform outside CELL
+
+create_particle 200 rib sphere 0.0 0.0 0.0 0.0 1.0  dist uniform inside CELL
+create_particle 500 RUB sphere 0.0 0.0 0.0 0.0 5.0  dist uniform inside CARBOX1
+create_particle 500 CA sphere 0.0 0.0 0.0 0.0 5.0  dist uniform inside CARBOX1
+
+!create_particle 1000 N 2d CELL
+
+
+
+write_particle bicarb.part

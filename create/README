@@ -1,0 +1,17 @@
+This is quick start info for running chemcreate:
+
+1. Change into the run directory
+
+2. At command line, run the following command:
+
+> cd ../src;make;cd ../run
+
+This generates an executable in the run directory called "chemcreate".
+
+3. Run chemcreate with a script using the following example syntax:
+
+> ./chemcreate ../scripts/synecho_create/in.synecho_test
+
+4. Now the run directory contains surface and particle output files
+specified in the script. These can be used as input files to chemcell
+and can be viewed in gui3d.

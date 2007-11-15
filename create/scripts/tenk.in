@@ -1,0 +1,3 @@
+
+create_particle 10000 H sphere 0.0 0.0 0.0 0.0 3.5  dist uniform
+write_particle tenk.part

@@ -1,0 +1,34 @@
+# g++ = Debian Linux workstation, g++ compiler, MPICH
+
+SHELL = /bin/sh
+
+# System-specific settings
+
+CC =		g++
+CCFLAGS =	-g -O -I/home/sjplimp/tools/zoltan/include -DPOPEN \
+		-DMPICH_IGNORE_CXX_SEEK
+DEPFLAGS =	-M
+LINK =		g++
+LINKFLAGS =	-g -O -L/home/sjplimp/tools/zoltan/Obj_plimpton
+USRLIB =	-lzoltan -lmpich
+SYSLIB =	-pthread
+SIZE =		size
+
+# Link rule
+
+$(EXE):	$(OBJ)
+	$(LINK) $(LINKFLAGS) $(OBJ) $(USRLIB) $(SYSLIB) -o $(EXE)
+	$(SIZE) $(EXE)
+
+# Compilation rules
+
+%.o:%.cpp
+	$(CC) $(CCFLAGS) -c $<
+
+%.d:%.cpp
+	$(CC) $(CCFLAGS) $(DEPFLAGS) $< > $@
+
+# Individual dependencies
+
+DEPENDS = $(OBJ:.o=.d)
+include $(DEPENDS)

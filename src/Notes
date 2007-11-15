@@ -1,0 +1,954 @@
+Documentation and other notes on ChemCell
+
+--------------------------------------------
+valgrind run:
+
+valgrind --leak-check=yes --show-reachable=yes --num-callers=10 ccell_g++ < in.*
+
+----------------------------
+6 Nov 2005
+how to debug a lost particle or one that is in wrong place
+
+can it be reproduced on one proc
+  if no reactions, this gives you index of particle to track
+find timestep it happens:
+  use "check" command to find when on wrong side of surface
+  may be on wrong side long before it is lost via non-PBC
+  check is expensive so try to narrow down via particle index
+    or timestep bracketing
+when have timestep and particle ID:
+ use "debug" command to print out all about it's move and bounces that step
+ use the output from "debug" to find what triangles were checked,
+   what bin particle is in
+ do viz via Pizza.py of particle move (line) and tri's and bin (lbox) the
+   particle is in
+most common problems:
+  hex does not contain a needed triangle
+  tri_hex does not record a hit when particle passes thru it
+
+----------------------------
+Algorithmic notes
+
+choice of reaction distances and probabilities
+
+Brownian move formulas are in cell/Notes
+
+RNG usage:
+  one unexpected bug
+  if 2 particles assigned successive RN from stream 2 (read)
+  then each particle's RN is changed via a stream 1 (move)
+  then reactant particle creates a daughter product via stream 2 (chem)
+  turns out the daughter will have same RN as 2nd read particle
+    the 2 RNs are still successive in stream 2 !!
+    didn't know this
+  solution: use a RNG with a different period for the other stream
+
+How random #'s are used
+  read in of particles - unique RN assigned to each
+    done from user-specified (or time-clock-derived) seed
+    use Park/Miller with 2nd set of coeffs, update single seed
+    only thing seed is used for (except Gillespie in serial)
+  move of particles (0 diffusers, Brownian, surf collide stick/reflect)
+    standard Park/Miller with particle seed
+  chemistry for 1 or 2 particles
+    compare to pre-computed prob of reaction happening
+    use sum of 2 seeds (or 1 seed for mono reaction)
+    use Park/Miller with 3rd set of coeffs
+    doesn't change particle seed
+  create product(s) from a reaction (trickiest one)
+    used to select ONE/TWO location, INSIDE/OUTSIDE location in some cases
+    have to be able to create two or more particles with unique seeds
+      so could not just use move RNG on seed of parent
+      else children would be one seed behind each other in stream
+    instead use parent seed as seed in Park/Miller with 4th set of coeff
+      is really L'Ecuyer with different period
+      has to be different period for reason described above
+      also updates parent's seed so can be used on next call for next product
+    parent is deleted after this operation anyway
+    
+when particles move and hit surf, normally exclude that surf
+  from next iteration of move
+works for triangles, since after bounce, cannot hit it again unless
+  it hits something else first
+but for regions, does not work, cannot exclude
+  going into corner of box
+  grazing a sph or cyl and having multiple hits on inside
+so instead, in regions, ignore parametric hit distance of 0.0
+  which will be found when particle starts on surface (after previous bounce)
+
+proc owns a rectangular block of grid cells inside global domain
+also stores border ghost cells
+ghost cells can be
+  (1) owned by a neighbor proc in non-PBC sense
+  (2) owned by self or another proc in PBC sense
+  (3) a global non-perioidic ghost
+
+each bin (owned and ghost) also stores ptrs to all geometry
+  that overlaps that bin in any way (volume, face, edge, pt)
+  no geometry (tri or region) can touch global periodic boundary
+  more restrictive, no geometry (tri or region) can be in bin
+    adjacent to perioidic boundary
+    this is so don't have to make copies or periodic images of regions/tris
+  one exception is that regions that are infinite (plane, cylinder)
+    can touch global periodic boundary (or non-periodic)
+    they will be assigned to ghost bins correctly without images
+    plane must be axis-aligned for this exception to be allowed
+
+reverted to globally storing all geometry (tri and region):
+  doesn't take that much memory - about 6 Mb for 100K triangles
+    roughly 1/2 as many verts as tris
+  could implement distributed tri and vert (no need for region)
+    look in old code for these routines
+    need hash tables to find global ID in local list
+    need to pass tri and vert as request/reply in rebalance
+    need gargage collector count with tri and vert so can delete them
+      after rebalance
+    debug for move needs to print out global IDs, not local
+
+what would it take to relax these restrictions on periodic geometry:
+  still shouldn't allow region/tri to touch periodic boundary
+    probably not crrect for movement
+  but could allow it to be in bin near boundary
+  would have to clone regions (possibly 27 times) and triangles and vertices
+  name/ID generation for periodic images
+  what if particles sticks to periodic image - what is ID of that image  
+  how set surf attributes of periodic image - what is ID of the image
+  
+at beginning of move, proc only has particles for its owned bins
+  no ghost particles
+at end of particle move, proc's particles can be in any of its
+  owned or ghost cells
+at begining of react, proc has all particles in its owned bins
+  and ghost particles in its upwind ghost bins
+
+at end of move call particle::migrate() to get particles to new procs
+goals for end-of-migrate are:
+  (1) particles are deleted if they left non-perioidc domain
+  (2) each particle is on proc that owns it
+  (3) procs have copies of particles in upwind ghost cells
+  (4) each migrate action stores local bin ID and coord adjustment for PBC
+
+bins that have migrate actions:
+  all ghost bins (if not global non-periodic ghost)
+  owned bins at lower edge of owned domain
+    since one or more of their downwind neighs are ghosts
+
+each bin can have up to 8 migrate actions in 3d with full PBC
+
+have one master bin and 8 downwind stencil bins (including self)
+  convert stencil to global bin is,js,ks via PBC
+  if global doesn't exist (non-PBC) then no action
+  compute proc owner of is,js,ks
+  ibin = local ibin of master (mapped via same ops as is,js,ks) on proc
+  also need to prevent copying a ghost particle that should be deleted
+    on self - is case where stencil bin is owned by me but master is
+    non-periodic ghost - so test for it explicitly and return no action
+
+final storage of a migrate action is the proc it's going to and
+  the local ibin on that proc
+don't want 2 actions with same proc/ibin, since it would make 2 copies
+  of a particle on the recv proc, so cull list
+also don't send particle to self if master bin is owned, since
+  that would make a copy of particle, so cull 1st stencil bin
+  is OK if 1st stencil bin is ghost, then it must be a needed upwind ghost
+
+----------------------------
+formulas for overlapping spheres in reactions
+
+  2d: radius = 0.5 * sqrt(vol_overlap/PI)
+  3d: rad = 0.5 * pow(0.75*vol_overlap/PI,1.0/3.0)
+  2d: vol_overlap = PI * rad*rad;
+  3d: vol_overlap = 4.0/3.0 * PI * rad*rad*rad;
+
+----------------------------
+Old serial code
+
+  in react, I loop over binned particles in odd way to avoid seeing
+    reaction twice (partner is only set for i,j not for j,i)
+    this is related to double-counting problem
+    might be better to have 13 stencil rather than 27
+  did not skip self-self interaction in loop thru own bin
+  A + A -> B was probably not handled correctly
+  particles built up on compartment boundaries for large D
+
+----------------------------
+Bins
+
+  nbinx,nbiny,nbinz = # of global bins in each dim
+  this includes one layer of non-exist bins on each edge
+  thus if nbinx = 10, bin 0 is non-exist, bins 1-8 exist, bin 9 is non-exist
+  additional bins are marked non-exist if the global domain is spherical
+  only bins that exist are sent thru RCB
+  global ID of bin is only computed for bins that exist
+  global ID = k*nbiny*nbinx + j*nbinx + i
+    i,j,k each run from 1 to nbin-2 inclusive
+    is just a simple calendar numbering that includes global non-exist bins
+  any bin thru which the global BC runs will have its global flag set
+    any bin with global flag set will be an exist bin
+    layer of non-exist bins on global edge will not have global flag set
+  mbinx,mbiny,mbinz = # of owned bins on each proc in each dim
+  each proc also has one layer of ghost bins on each edge
+
+----------------------------
+Particle list maintenance
+
+nlocal + nghost = ntotal
+
+spatial hueristic method (serial or parallel):
+
+beginning of timestep:
+  nlocal = owned particles
+  nghost = 0
+  particle flag is indeterminate
+  bin first = -1 and nparts = 0
+move:
+  only nlocal particles, does not change
+  some end up in owned bins, some end up in ghost bins
+migrate:
+  loop over nlocal particles, invoking migrate action of bin they are in
+  sends particles in ghost bins to owning proc (could be self if PBC)
+  insures each proc acquires upwind ghosts
+  delete any particle that is in ghost bin
+  end up with new nlocal, new nghost
+pre-react link/sort of each particle:
+  bin ntotal particles in owned and ghost bins
+  set nlink = ntotal so can unlink same particles later
+  sort particles within owned and ghost bins
+pre-react flagging of each particle:
+  set flag of local particles to 0
+  set flag of ghost particles to 1
+react (loop over colors):
+  possible reactants with flag = -1 are skipped
+  loop over bin pairs ibin,jbin in stencil
+  consider dual reactions first, then mono in ibin
+  for dual, loop over all pairs of i,j particles where i in ibin, j in jbin
+  when do a reaction:
+    set flag = -1 for reactants whether local or ghost particles
+    products are added to my ghost list, update nghost and ntotal
+    if product will be owned by me, set flag to 0
+    if product will not be owned by me, set flag to 1 (like a ghost)
+    no products are in future reactions, so do not add to bin link lists
+react communication (between colors):
+  send reactants to downwind procs
+  send products owned by other procs to the owning proc
+  for reactants recvd, flag them as -1 whether a owned or ghost particle
+  for products recvd, add them to ghost list, flag them as 0
+post-react bin cleanup:
+  loop over pre-react nlink
+  clear bin for each particle regardless of particle flag since it was binned
+  resets bin first = -1 and nparts = 0
+post-react compact particles:
+  loop over ntotal = nlocal + nghost
+  only keep particles with flag = 0 (delete 1 and -1)
+  nlocal = owned particles
+  nghost = 0
+
+spatial/ssa method (serial only):
+
+beginning of timestep:
+  nlocal = owned particles
+  nghost = 0
+  particle flag is indeterminate
+move:
+  only nlocal particles, does not change
+migrate to acquire periodic ghosts (not parallel)
+pre-react flagging of each particle:
+  set nlocal to 0
+  set nghost to 1
+pre-react link of each particle:
+  bin nlocal and nghost
+  set nlink to number binned
+react:
+  set flag = -1 for reactants
+  products are added to my owned list, update nlocal and ntotal
+  product will be owned by me, so set flag to 0
+  products are in future reactions, so add to bin ptr lists
+no react communication since not parallel
+post-react bin cleanup:
+  loop over post-react ntotal
+  clear bin for each particle regardless of particle flag since it was binned
+post-react compact particles:
+  loop over ntotal = nlocal
+  only keep particles with flag = 0 (-1)
+  nlocal = owned particles
+  nghost = 0
+
+----------------------------
+Particle creation/deletion
+
+When are particles created
+  when read-in
+  during a reaction
+  when created on-the-fly (not yet)
+When are particles deleted:
+  during a reaction
+  when leave non-periodic global domain (in migrate)
+
+----------------------------
+Sticky issues with a 3d move that must be addressed correctly
+
+  what if move is 0.0 length (don't think that happens)
+  if start within EPS of a tri (from previous non-collide move)
+    and collide with it:
+    will I compute collision pt correctly
+    can I reflect off it correctly and compute xnew correctly
+  if I hit an edge or vertex will I ever pass thru a closed surf when
+    really should reflect
+
+----------------------------
+Sticky issues with a 2d move that must be addressed correctly
+
+  if previous step ends on edge or vertex, will new step start-up correctly?
+
+----------------------------
+Documentation
+
+domain::enforce_bc for sphere
+
+want to find pt where particle path intersects sphere
+
+particle moves from (x1,y1,z1) to (x2,y2,z2)
+
+parametric form:
+
+x = x1 + t(x2-x1)
+y = y1 + t(y2-y1)
+z = z1 + t(z2-z1)
+
+sphere:
+
+r^2 = (x - xc)^2 + (y - yc)^2 + (z - zc)^2
+
+if substitute in parametric form, then solve for t
+gives quadratic eq - want the solution where 0 < t < 1
+
+let xd = x2 - x1, xf = x1 - xc, etc
+
+(t*xd + xf)^2 + (t*yd + yf)^2 + (t*zd + zf)^2 = r^2
+
+A t^2 + B t + C = 0
+
+A = xd^2 + yd^2 + zd^2
+B = 2 * (xd*xf + yd*yf + zd*zf)
+C = xf^2 + yf^2 + zf^2 - r^2
+
+t = (-B +/- sqrt(B^2 - 4AC)) / 2A 
+
+----------------------------
+Differences from MCell
+
+  open source
+  particle-particle reactions (solution chemistry)
+  2d diffusion on membranes (fluid membranes)
+  not true ray-trace
+  integral rules for reactions
+  we're likely slower
+  we have not as good viz
+  parallel - dynamic LB
+
+Why not MCell?
+  closed src
+  offered but they weren't interested
+  no particle-particle
+  no particles diffusing on surfs (fluid membranes)
+  we wanted to implement, run our problems, be able to change src
+  parallel - it's what we do, wanted to be able to expt with strategies
+  we did learn a lot from them
+    
+----------------------------
+Data structs in code:
+
+surfs file:
+  # verts, # tris
+  list of verts: x,y,z
+  list of tris: triple index into verts, right-hand rule
+  list of edge connectios:
+    a) pair of tri and edge (0,1,2)
+    b) or for each tri, ptrs to other tris or -1 if no connection
+  look at file format below
+
+bins:
+  each has ptr to list of particles in it
+    subsequent ptrs are stored in list of particles
+  each has list of surfs in it
+    global surf IDs and local IDs
+  each has flag if global BC in it
+  
+local surfs:
+  list of vertices
+  list of triangles (with a rh orientation)
+  list of edge connections
+  some edges may be boundaries (no connection)
+  each surf (set of triangles) has an ID
+  each triangle should generally be larger than a bin
+    
+particles:
+  x,y,z and species
+  what bin its in
+  ptr to next particle in bin
+  no compartment info
+  
+species:
+  diff coeff (0.0 OK, but not INF)
+  each species is either 2d or 3d
+    2d species move within a surf
+    have to assign a surf ID?
+  
+reactions:
+  ID & rate, one or 2 reactants, 0 or more products
+  option to place products at site of either reactant or mid pt
+  a reaction can cause 2d species to leave a surf and become 3d
+    have to specify which side of surf it leaves from?
+
+permeability:
+  assigned to species/surf pair
+  has directionality with respect to surf
+  can convert to new species if permeates
+  option to reflect, stick and become 2d, stick and stay 3d, transmit
+
+----------------------------
+Setup phase
+
+set global boundary:
+  could be just 2 corner pts, or x,y,z & radius
+  could be 12 triangles or outer sphere
+  allow for 2d problem or thin 3d slabs?
+  allow for periodicty in 1 or more dims?
+    will affect RCB
+
+create surfs:
+  could read from file
+  could use command: sphere x y z r N where N is rough # of triangles
+
+create particles:
+  3d: no longer have compartments, so distributions are part of creation?
+  2d: how to create within surfs?
+      based on triangle area and density (N/total-area)?
+  
+create bins:
+  compute bin-size based on timestep, max diff const
+  all moves will be at most one bin
+  all reacts will be in same or adjacent bins  
+  if too many bins, could make them larger than diff step
+  
+print # of bins, # of triangles, # of bins with triangles
+  ave # of tri/bin, max # of tri/bin
+  
+stage 1: set global box, max_diff, P, timestep
+stage 2: compute bin-size, do RCB on empty domain to partition space
+         setup bins on each proc with overlap
+stage 3: define species, reactions (could have been stage 1),
+         read/create surfs (assign each surf to a bin and to local list)
+  read/create particles (assign each particle to a proc)
+stage 4: run and dynamically load-balance - may want to balance before run
+stage 5: can continue run so long as don't change bin size or global domain
+
+----------------------------
+Simulation phase
+
+move:
+  3d species:
+    compute delx, dely, delz, at most one bin length
+    initial and final bin
+    if neither bin has surfs, done (store stats on this case)
+    else test for collision with surfs in initial bin
+    else test for collision with surfs in final bin
+    if collision, do permeable test
+    either go onto surf, go thru surf, reflect off surf
+      first two may change species
+      first one may become surf species or volume species on other side?
+    if reflect, then create new coord (via more diff, or just geometrically)
+    need to test reflected coord for more collisions?
+    have to detect 1st surf the particle hits?
+    if go thru, need to check for more collisions?
+    need special test for global boundary?
+    need to ray-trace if are surfs in either init or final bin
+      could have MCELL-like option to always ray-trace thru intermediate bins
+  2d species:
+    start in a triangle at x,y,z
+    generate random 2d direction (relative to triangle normal) and distance
+    move in tessalated surf from triangle to triangle
+    final pt is a x,y,z coord in a triangle
+    might bounce off triangle edges with no connectivity
+  
+react:
+  use integral form for pairs of particles
+  flag reacted particles for no more reactions that timestep
+  is integral form correct for 2d/3d interactions or 2d/2d interactions?
+  have to color bins to enable particles to change independently
+    e.g. if A + B -> C, then A,B have to be deleted so don't react with
+    any other particles and neighbor procs have to know it immediately
+  in 2d use 4 bin colors, in 3d use 8 colors
+  have to communicate changed particles between colors to RCB neighbors
+  for each reaction, user specifies where created products reside:
+    A loc, B loc, midpt
+
+timestep:
+  move
+    all particles independently
+    at most one bin away
+    need geom info for each bin any of my particles could move to
+  migrate particles
+    via RCB to irregular procs
+  clone particles
+    within a cutoff distance to all procs that need copy
+    add as ghost particles to my list
+    what info is needed
+  bin particles
+    mine, then ghosts at end
+    which bins do I need all particles in that bin for?
+      any bin I own (upper right corner) and any bins up and to right of it
+  reactions via loop over colors
+    I own a bin if upper right corner pt is in my RCB domain
+    all red bins can be done independently
+    red-red interaction and all bins up and to right of red
+    have to communicate reacted particles to all procs that own that bin
+
+  reactions via loop like in LAMMPS
+    loop over my particles
+      check my bin, particles beyond me, use geometry criterion for i,j
+      check 13 other stencil bins, do all reactions
+  delete reacted particles and compact
+
+----------------------------
+Other issues
+ 
+fundamental issues:
+  should be options in code?
+  to run as 3d grid of procs or as RCB static or RCB dynamic
+  to do RCB on particles or bins
+  to allow for 2d sims via thin 3d (2 actual bins for coloring) and PBC in z
+
+parallel:
+  all surfs stored on every proc
+  particles or bins via RCB
+  if particles, then acquire bins based on RCB box with overlaps
+  if create particles before 1st RCB then who owns them?
+  how to do reacts between particles on 2 procs
+    could have RNG for a reaction or a particle
+  is there a way to exploit COI to comm only half as far a distance
+  can order moves so P-independent (RN with particle)
+    any way to order reactions so P-independent?
+    if sort within bins, and use particle-RN, could do this?
+
+needed geometry routines:
+  create a triangle list for sphere, capped cylinder, ellipsoid
+    in-site or to a file
+  xyz (old) and xyz (new) and a triangle
+    do I collide, if so, where
+    for set of tiling triangles, demand that it hit at least one triangle
+  diffusion within a 2d surf
+  is a point inside a collection of closed surfs - needed to create particles
+
+viz:
+  triangles and particles
+  DReAMM/OpenDX or Qt/OpenGL or Sandia viz folks
+
+talked to Ray:
+  surf generation
+  viz
+  3d line intersection with triangles
+  2d surf diffusion
+  find what triangles are in a bin
+  is a point "inside" a surf (collection of tris)
+  $10K/month for one of his people
+
+can we run identically in parallel, independent of P
+  could have unique RN for each particle
+  with pairwise reaction, choose same RN to roll dice
+  how can we loop over pairs in same order?
+
+need to make sure each pair is considered exactly once
+  may not be done now
+  what is reaction rate for A + A -> B
+   how to insure problem scales like # of particles, independent of # of bins
+
+Alex ideas:
+  can do coloring by proc octant to save inter-color particle comm
+    comm with less procs
+  do move and react at same time in each octant
+    savings is all particle migration at once
+    instead of once after particle move, once during each color of reactions
+    means some reacting partners are not at same timestep
+    how to update bin ptrs with all inner step moves?
+    maybe we should NOT be moving particles that react in a step
+
+----------------------------
+Discussion with Ray Meyers
+
+Ray - here is a proposed format for an ASCII file that represents a
+surf = collection of connected triangles.  It would be the output of
+the pre-processing tool we talked about.  E.g. create a set of
+tri-surfs for a sphere.
+
+This is also close to the data struct internally for how I am thinking
+the set of triangles would be stored, so it is what the geometry
+routines would access for 2d diffusion, line-segment intersection,
+etc.  The "edges" would be stored so that you can get to 3 of them
+directly from a triangle.
+
+We can iterate on this w/ Boyd ...
+
+Steve
+
+Triangles for a lo-res sphere                 // 1st line = comment
+                                              // blank line
+100 vertices				
+59 triangles
+72 edges                               // these are common edges between 2 tris
+
+Vertices
+
+1 1.0 2.0 3.0                          // non-duplicated list of vertices
+2 x y z                                // x,y,z value for each vertex
+...
+100 x y z
+
+Triangles
+
+1 1 5 7                                // vertices 1,5,7 make a triangle
+2 5 7 11                               // right-hand rule on 1,5,7 points
+...                                    //   in consistent (e.g. inside) dir
+59 34 19 4
+
+Edges
+
+1 1 0 17 2                             // side 0 of triangle 1 connects to
+2 6 1 7 2                              //   side 2 of triangle 17
+...                                    // some triangle edges may have no
+72 59 0 58 2                           //   connections if on outer edge
+
+
+Format of particle file:
+
+ChemCell Particles                     // 1st line = comment
+                                       // blank line
+1000 RuBisCO                           // # and species-ID
+                                       // blank line
+1 x y z                                // x,y,z for each particle
+2 x y z
+...
+1000 x y z                         
+                                       // blank line
+200 HCO3                               // # and species-ID
+                                       // blank line
+1 x y z                                // x,y,z for each particle
+2 x y z
+...
+200 x y z                              // repeat as many times as desired
+
+how LAMMPS works:
+
+full Newton
+stencil = up and to the right, no self
+loop over particles
+  loop over rest of particles in my bin (ghosts at end)
+    store i,j pair if j is owned
+    store i,j pair if j is ghost only if x(j) is above and to right of x(i)
+  loop over stencil bins
+    loop over all atoms (own and ghost) in each bin
+    store i,j with no geometry check or own/ghost check
+
+how COI works in SPH:
+
+bin all atoms, stencil = up and to the right
+loop over bins
+  N^2/2 loop over pairs in self bin
+  only compute i,j if COI is in my proc's domain
+  loop over other bins in stencil is the same
+
+if do RCB on particles, not bins:
+
+have to decide which proc owns a colored bin to do reactions on the stencil
+  owned bins = if upper right corner is in my domain
+  ghost bins = any bin with any overlap with my domain (sufficient for react)
+  also need bins further away for move
+need all particles in bin + all particles in surrounding bins
+  if get all particles up to one cutoff away from my domain, this will be OK
+  means will get some particles not in my ghost bins
+
+Alex's 2 ideas:
+  color bins by quadrant in domains and use up-and-to-right stencil
+    still use 8 bins
+    as long as each domain is 4x4x4 bins, should give no conflicts
+    will require less communication with neighbors (only 1 direction)
+    no worse load-balance for reactions
+    doesn't enable same answer independent of P like bin coloring does
+  do move at same time as react
+    combine communicate for move (migrate & clone) with react
+    means reactions are taking place with some particles (on boundaries)
+      at offset timestep
+    same volume of communication but less latency since doing comm
+      in one pass instead of 2
+    could I combine migrate/clone comm in my algorithm
+
+---------------------------
+Absolute rules
+
+  balance:
+    may be more particles than bins or more bins than particles
+  bins:
+    I own 3d block of bins
+    some may be flagged as non-exist
+    some I own, some are ghost
+  surfs:
+    need surf info for all owned and ghost bins
+  move:
+    particle will move no more than 1 bin length
+    need surf info in the bin particle starts in
+    need surf info for all 26 surrounding bins
+  react:
+    use 8 colors with self + 13 stencil that involves bin pairs in 2x2x2
+      bins up and to right of colored bin
+    need all particles in bins that are in 2x2x2 block for each colored bin
+      I own
+
+Tricky operations:
+  migrate particles
+  acquire ghost particles
+  dynamic LB of particles or bins
+    initial and on-the-fly
+  comm after reaction changes for each color
+  binning particles and clearing bins
+
+2 options:
+  a) own 3d chunk of bins with one layer of ghost bins
+    own particles in those bins
+  b) own 3d chunk of space with all particles
+    own bins that overlap that chunk
+    own ghost bins that my particle could move into (may not overlap me at all)
+
+Trade-offs:
+  a) requires Zoltan mods, b) does not
+  b) is more work to clone particles (box-drop), for a) just know bin and procs
+  b) is perfectly balanced on particles (move), a) is more coarsely
+  a) is not balanced on bins since dense particle regions will have few bins
+     but might be balanced well on reactions
+  b) is only roughly balanced on reactions
+  b) requires more ghost bins since bins do not fit in domain in integer
+     fashion
+
+** Option where each proc owns a 3d block of bins and particles in the bins
+
+start-up:
+
+define bin size, global box
+initial partition of bins (no surfs, no particles)
+create particles
+create surfs
+acquire overlaps of bins, surfs
+
+own:
+
+3d box of bins + 1 ghost layer
+  for ghost bins, know what proc owns it
+  for border owned and ghost bins: know what procs store as own or ghosts
+all surfs in owned and ghost bins
+all particles in owned bins
+
+move:
+
+start with no ghosts
+loop over owned particles
+compute displacement, 3d or 2d
+know starting bin, compute ending bin
+interact with surfs (for 3d only)
+
+migrate:
+
+all particles that end up in ghost bins are sent to single owning proc
+compact my particles by deleted ones
+add incoming as owned particles with valid bin #s
+
+clone:
+
+all particles in owned border bins are sent to multiple procs that store
+  that bin as ghost
+recv particles as ghosts with valid bin #
+
+bin:
+
+loop over owned and ghost particles
+use valid bin # to order ptrs
+unflag own and ghost particles so can react
+
+react:
+
+8-color loop only for bins I own
+  obvious which bins I own
+need way to loop over bins of a single color efficiently
+  skip non-exist bins and any stencil pair with no particles in bin
+requirements for stencil:
+  8 colors in 3d
+  sum of stencils for 8 colors at 8 starting pts (each location in 2x2x2 cube)
+    has to cover all bin pairings exactly once
+  it only involves bins in 2x2x2 cube --> no overlaps with stencil of
+    other red bins
+  aside from self, each bin interacts with 26 others, or 13 pairs
+    so stencil for one color has to have 13 bin pairs
+  key is that a bin pair does not have to involve the color itself
+  stencil = bins up and to the right does not work
+    stencil overlaps between 2 red bins
+    this would yield changes in a bin during the color computation
+    would force communication
+  2d: valid stencil that satisifies these criteria is:
+    consider 4 bins: 1 = lower left, 2 = lower right, 3 = ul, 4 = ur
+    stencil centerd on bin 1 is 1-1, 1-2, 1-3, 1-4, 2-3
+  3d: valid stencil that satisifies these criteria is:
+    consider 8 bins: 1 = lower left bottom, 2 = lrb, 3 = ulb, 4 = urb,
+      5 = ll top, 6 = lrt, 7 = ult, 8 = urt
+    stencil centerd on bin 1 is 1-1 (self), 1-2, 1-3, 1-4, 2-3 (all 2d ones),
+      1-5, 2-7, 1-7, 1-8, 1-6, 2-5, 3-5, 4-5, 3-6 (2 planes in each of 9 dirs)
+when reaction occurs, flag reactants as deleted, create products as non-react
+  x,y,z where products are created - user specifies it
+  will always be withing 2x2x2 stencil
+  if midpt then where is it in 2d or 3d
+    in 2d, have to place it on surfs
+    in 3d have to worry about it hitting a surf in an in-between bin
+  keep list of these particles as loop through colored bins and stencil
+
+communicate changed particles between colors:
+
+send deleted reactants to all procs who own them or ghost them
+send added products only to owning proc
+for received reactants, find them in bin and flag them as no-react
+for received products, add them at end of ghost list
+how to find the particle on receiver?
+  could do x,y,z,type,bin
+  then will have to scan bin, but can always find it
+  else need particle ID to look up
+    but how to create new unique IDs in parallel
+
+clean-up:
+  clear bins by looping over original particle list
+    inefficient if lots of particles/bin?
+    more efficient is most bins empty
+  delete ghost particles, compact good ones, including new received products
+
+occasional dynamic LB:
+
+done outside of this loop, before move when no ghost particles exist
+by bins, based on particle counts in bins
+  for initial (no particles):
+    could have 0-weight on non-exist bins
+    1-weight on valid bins
+Zoltan has to make integer cut between bins
+migrate old bins to new owners
+acquire ghost bins
+request all surfs in own + ghost bins
+  reform data structs
+request all particles in owned bins
+
+Zoltan issues:
+  how to make integer cuts to LB weighted bins
+    use RCB_RECTILINEAR_BLOCKS option in Zoltan
+    have to change cuts afterward to be exactly on bin boundaries
+      they won't be if there isn't a tie
+  how to identify all ghost owners of a owned (border) bin
+    box-drop a box centered at center pt and with radius = 1 bin-size
+  how to identify true owner of a ghost bin
+    point-drop the center pt of the bin
+  how to make initial LB when no particles, only bins
+    could put one dot in center of each bin (or at upper-right corner)
+    no dots in non-exist bins
+
+** Option where each proc owns a 3d chunk of space, particles in space,
+   and overlapping and nearby bins
+
+be careful about <= and > issues
+
+own:
+
+all particles in RCB domain
+3d box of bins with ghost layer
+  include any bin with one of my particles + 1 extra layer
+  some subset of those bins I own if I own upper right point
+I own a bin if I own centerpt (or upper right corner)
+all surfs in all bins
+
+move: same as above
+
+migrate:
+  all particles outside my domain are point-dropped, sent to owning proc
+  delete, compact, add incoming with good bin #
+
+clone:
+  I need particles in any bin that overlaps my domain
+  should send particles to multiple procs that own the bin that the
+    particle is in
+  any owned particle within a bin-size of my domain border should be sent
+  do via box drop of box with size = 2 bins centered around particle
+  add received particles as ghosts with correct bin #
+  box drop is expensive relative to just knowing bin # and procs to send to
+  don't need to fill all my bins with particles, just particles within
+    a cutoff of my domain, since that will fill bins in my stencil
+  
+bin: same as above
+
+react:
+  I own a colored bin if own upper-right corner point
+
+communicate changed particles between colors:
+  send deleted reactants via box-drop to all procs who own them or ghost them
+  send added products via box-drop only to owning proc
+  for received reactants & products, same as above
+
+occasional LB:
+  RCB on particles will work directly
+    how to do 1st RCB when no particles
+
+clean-up: same as above
+
+occasional dynamic LB:
+
+done outside of this loop, before move when no ghost particles exist
+by particles
+migrate old particles to new owners
+decide what bins I need for new RCB domain
+do point-drop to determine old owner of needed bins
+request info from old owners to migrate bins to new owners
+request all surfs in all my bins
+  reform data structs
+
+Zoltan issues: none
+
+--------------------
+Viz
+
+DReAMM issues:
+
+closed source (we just get executable)
+file format (binary or text, conversion)
+ease of use
+functionality
+requires DX installation
+
+Issues of our own:
+
+we have source, can distribute, modify
+does it require user to install other packages
+how many features will it have
+
+Here are the minimal requirements for a stand-alone viz package:
+
+(1) input of a set of surfs
+    each surf is a collection of triangles
+    these are all static (don't move in time)
+(2) input of particles: x,y,z and a type-flag
+    these are dynamic - meaning there will be snapshots at different times
+    some might be static, only specify once
+(3) render surfs in different styles:
+    transparent, turn different surfs on/off, etc
+(4) render particles in different color/style/glyph/icon due to type-flag
+    turn on/off some types
+(5) ability to zoom, pan thru model from different viewpoints,
+    view cut-away sections or slices of model
+(6) ability to step back/forward thru time
+(7) write a particular image (snapshot) out to a file
+(8) ability to animate - output a series of frames in GIF or JPEG files
+    so they can be made into a movie
+(9) ability to setup an animation with a changing viewpoint - e.g.
+    fly thru the model as it animates - I think this is typically done
+    by specifying a few key points and splining inbetween them to interpolate
+(10) render at different resolutions - e.g. quick/dirty for fast animation,
+    hi-quality for movie making

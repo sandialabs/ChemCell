@@ -1,0 +1,31 @@
+# tflop = Intel Tflops machine at Sandia, compiling on sasn100 with ciCC
+
+SHELL = /bin/sh
+.SUFFIXES: .cpp .d
+.IGNORE:
+
+# System-specific settings
+
+CC =		ciCC
+CCFLAGS =	-O4 -Knoieee -I/home/sjplimp/zoltan_cell/include
+DEPFLAGS =	-M
+LINK =		ciCC
+LINKFLAGS =	-Knoieee -L/home/sjplimp/zoltan_cell/Obj_tflopx
+USRLIB =	-lzoltan -lzoltan_mem -lzoltan_comm
+SYSLIB =	-lmpi
+SIZE =		xsize
+
+# Link rule
+
+$(EXE):	$(OBJ)
+	$(LINK) $(LINKFLAGS) $(OBJ) $(USRLIB) $(SYSLIB) -o $(EXE)
+	$(SIZE) $(EXE)
+
+# Compilation rules
+
+.cpp.o:
+	$(CC) $(CCFLAGS) -c $<
+
+# Individual dependencies
+
+$(OBJ):	     $(INC)

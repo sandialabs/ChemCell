@@ -1,0 +1,33 @@
+# serial = Intel icc compiler, STUBS lib for Zoltan and MPI
+
+SHELL = /bin/sh
+
+# System-specific settings
+
+CC =		g++
+CCFLAGS =	-g -O -I../STUBS
+DEPFLAGS =	-M
+LINK =		g++
+LINKFLAGS =	-O -L../STUBS
+USRLIB =	-lstub
+SYSLIB =
+SIZE =		size
+
+# Link rule
+
+$(EXE):	$(OBJ)
+	$(LINK) $(LINKFLAGS) $(OBJ) $(USRLIB) $(SYSLIB) -o $(EXE)
+	$(SIZE) $(EXE)
+
+# Compilation rules
+
+%.o:%.cpp
+	$(CC) $(CCFLAGS) -c $<
+
+%.d:%.cpp
+	$(CC) $(CCFLAGS) $(DEPFLAGS) $< > $@
+
+# Individual dependencies
+
+DEPENDS = $(OBJ:.o=.d)
+include $(DEPENDS)
