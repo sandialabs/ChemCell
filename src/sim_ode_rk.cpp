@@ -97,6 +97,8 @@ void SimODERK::run()
   for (int istep = 0; istep < nsteps; istep++) {
     ntimestep++;
 
+    if (modify->n_initial) modify->initial();
+
     timer->stamp();
     chem->reactions();
     timer->stamp(TIME_REACT);

@@ -16,6 +16,7 @@
 #include "particle.h"
 #include "react.h"
 #include "chem_gillespie.h"
+#include "modify.h"
 #include "random.h"
 #include "output.h"
 #include "timer.h"
@@ -41,6 +42,7 @@ SimGillespie::SimGillespie(int narg, char **arg) : Simulator(narg, arg)
   particle = new Particle;
   react = new React;
   chem = new ChemGillespie;
+  modify = new Modify;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -50,6 +52,7 @@ SimGillespie::~SimGillespie()
   delete particle;
   delete react;
   delete chem;
+  delete modify;
 }
 
 /* ----------------------------------------------------------------------
@@ -86,6 +89,7 @@ void SimGillespie::init()
   particle->init();
   react->init();
   chem->init();
+  modify->init();
   timer->init();
   output->init();
 }
@@ -103,6 +107,8 @@ void SimGillespie::run()
 
   while (1) {
     ntimestep++;
+
+    if (modify->n_initial) modify->initial();
 
     timer->stamp();
     chem->reactions();
