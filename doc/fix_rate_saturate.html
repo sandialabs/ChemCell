@@ -20,7 +20,7 @@ Commands</A>
 <LI>conc/random = style name of this fix command
 <LI>N = apply fix every this many timesteps
 <LI>species-ID = ID of species whose dynamic concentration will affect rate
-<LI>half = concentration which will cut rate in half (molarity or count)
+<LI>half = concentration of species-ID which will cut rate in half (molarity)
 <LI>react1-ID, react2-ID, ... = list of reactions whose rates are affected 
 </UL>
 <P><B>Examples:</B>
@@ -42,10 +42,12 @@ listed reactions are scaled to new values in the following way:
 <PRE>r_new = r_initial * half / (half + [species-ID]) 
 </PRE>
 <P>R(t) is the new scaled reaction rate.  R_initial is the rate set for
-this reaction initially in the input script.  H is the concentration
-value set for this command.  [Species-ID](t) is the current
-concentration of the selected species.  Note that the scale factor is
-thus unitless.
+this reaction initially in the input script.  Half is the
+concentration value set for this command.  [Species-ID] is the
+current concentration of the selected species.  Note that half is the
+concentration value of species-ID at which the effective rate will be
+cut in half.  Note that the scale factor half / (half +
+[species-ID]) is unitless.
 </P>
 <P><B>Restrictions:</B>
 </P>
