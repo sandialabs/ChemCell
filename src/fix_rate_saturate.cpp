@@ -17,9 +17,13 @@
 #include "simulator.h"
 #include "particle.h"
 #include "react.h"
+#include "chem.h"
+#include "chem_gillespie.h"
 #include "random.h"
 #include "memory.h"
 #include "error.h"
+
+#define AVOGADRO 6.023e23
 
 /* ---------------------------------------------------------------------- */
 
@@ -74,6 +78,8 @@ int FixRateSaturate::setmask()
 
 void FixRateSaturate::init()
 {
+  // extract list of reaction rates
+
   rate = react->rate;
 
   ispecies = particle->find(species);
@@ -94,27 +100,34 @@ void FixRateSaturate::initial()
 {
   if (simulator->ntimestep % nevery) return;
 
-  /*
-  double dynamic = count[ispecies];
-  scale = half / (half + dynamic);
+  // Gillespie stochastic simulation
+  // adjust rate, reset propensity, trigger tree recalibration
 
-  int index;
-  double propensity;
+  if (simulator->stochastic_flag) {
+    double dynamic = particle->pcount[ispecies] / (AVOGADRO * chem->volume);
+    double scale = half / (half + dynamic);
 
-  if (stochastic) {
+    int index;
+    double propensity;
+    ChemGillespie *gillespie = (ChemGillespie *) chem;
+
     for (int i = 0; i < nlist; i++) {
       index = list[i];
       rate[index] = rate_initial[index] * scale;
-      propensity = chem->compute_propensity(index);
-      chem->set(index,propensity);
+      propensity = gillespie->compute_propensity(index);
+      gillespie->set(index,propensity);
     }
-  }
 
-  if (ode) {
+  // continuum ODE simulation, just adjust rate
+
+  } else {
+    double dynamic = particle->ccount[ispecies];
+    double scale = half / (half + dynamic);
+
+    int index;
     for (int i = 0; i < nlist; i++) {
       index = list[i];
       rate[index] = rate_initial[index] * scale;
     }
   }
-  */
 }

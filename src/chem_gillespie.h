@@ -17,6 +17,8 @@
 #include "chem.h"
 
 class ChemGillespie : public Chem {
+  friend class FixRateSaturate;
+
  public:
   ChemGillespie();
   ~ChemGillespie();
