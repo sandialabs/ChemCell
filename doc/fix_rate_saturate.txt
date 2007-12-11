@@ -1,0 +1,53 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+fix rate/saturate command :h3
+
+[Syntax:]
+
+fix ID rate/saturate N file Nsp sp1 sp2 ... :pre
+
+ID is documented in "fix"_fix.html command
+conc/random = style name of this fix command
+N = apply fix every this many timesteps
+sp1,sp2,etc = IDs of species :ul
+
+[Examples:]
+
+fix mine rate/saturate 1 :pre
+
+[Description:]
+
+Set the concentration level of certain species at specified time
+increments in a non-spatial simulation.  This is an effective way of
+coupling ChemCell to another model or simulation that produced
+concentration vs time profiles of certain species.
+
+Here is how the fix operates.  Every N timesteps, the concentration or
+count of particles of each species in the specified list is reset to a
+new value which is listed in the time course data file, which has the
+following format.  Lines beginning with a "#" character are ignored.
+Other lines must begin with a time value (in seconds), followed by Nsp
+values.  The time stamp for successive lines in the file should be
+monotonically increasing.  For stochastic non-spatial simulations
+(Gillespie), the value for each species is a particle count.  For
+deterministic non-spatial simulations (ODE), the value for each
+species is a concentration in molarity.
+
+On a timestep when the fix is applied, the file line with a time stamp
+just smaller (or equal) to the current time is used to set the Nout
+probabilities.
+
+[Restrictions:]
+
+This fix can only be used with non-spatial simulations.
+
+[Related commands:] none
+
+[Default:] none

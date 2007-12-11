@@ -1,0 +1,58 @@
+<HTML>
+<CENTER><A HREF = "http://www.cs.sandia.gov/~sjplimp/chemcell.html">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>fix rate/saturate command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>fix ID rate/saturate N file Nsp sp1 sp2 ... 
+</PRE>
+<UL><LI>ID is documented in <A HREF = "fix.html">fix</A> command
+<LI>conc/random = style name of this fix command
+<LI>N = apply fix every this many timesteps
+<LI>sp1,sp2,etc = IDs of species 
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>fix mine rate/saturate 1 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Set the concentration level of certain species at specified time
+increments in a non-spatial simulation.  This is an effective way of
+coupling ChemCell to another model or simulation that produced
+concentration vs time profiles of certain species.
+</P>
+<P>Here is how the fix operates.  Every N timesteps, the concentration or
+count of particles of each species in the specified list is reset to a
+new value which is listed in the time course data file, which has the
+following format.  Lines beginning with a "#" character are ignored.
+Other lines must begin with a time value (in seconds), followed by Nsp
+values.  The time stamp for successive lines in the file should be
+monotonically increasing.  For stochastic non-spatial simulations
+(Gillespie), the value for each species is a particle count.  For
+deterministic non-spatial simulations (ODE), the value for each
+species is a concentration in molarity.
+</P>
+<P>On a timestep when the fix is applied, the file line with a time stamp
+just smaller (or equal) to the current time is used to set the Nout
+probabilities.
+</P>
+<P><B>Restrictions:</B>
+</P>
+<P>This fix can only be used with non-spatial simulations.
+</P>
+<P><B>Related commands:</B> none
+</P>
+<P><B>Default:</B> none
+</P>
+</HTML>

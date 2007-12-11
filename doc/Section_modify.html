@@ -120,7 +120,7 @@ Region class.  They implement the <I>sphere</I> style of the
 </P>
 <P>Here is a brief description of the class methods required:
 </P>
-<DIV ALIGN=center><TABLE  WIDTH="0%"  BORDER=1 >
+<DIV ALIGN=center><TABLE  BORDER=1 >
 <TR><TD >bbox</TD><TD > bounding box</TD></TR>
 <TR><TD >inside</TD><TD > determine whether a point is in the region</TD></TR>
 <TR><TD >hex_intersect</TD><TD > check if region surface intersects a hex cell</TD></TR>
@@ -153,7 +153,7 @@ computations.
 </P>
 <P>Here is a brief description of the class methods in fix.h:
 </P>
-<DIV ALIGN=center><TABLE  WIDTH="0%"  BORDER=1 >
+<DIV ALIGN=center><TABLE  BORDER=1 >
 <TR><TD >setmask</TD><TD > determines when the fix is called during the timestep</TD></TR>
 <TR><TD >init</TD><TD > initialization before a run</TD></TR>
 <TR><TD >setup</TD><TD > called immediately before the 1st timestep</TD></TR>
@@ -223,7 +223,7 @@ class.  They implement the <I>atomic</I> style of the
 </P>
 <P>Here is a brief description of the class methods in atom.h:
 </P>
-<DIV ALIGN=center><TABLE  WIDTH="0%"  BORDER=1 >
+<DIV ALIGN=center><TABLE  BORDER=1 >
 <TR><TD >copy</TD><TD > copy info for one atom to another atom's array location</TD></TR>
 <TR><TD >pack_comm</TD><TD > store an atom's info in a buffer communicated every timestep</TD></TR>
 <TR><TD >unpack_comm</TD><TD > retrieve an atom's info from the buffer</TD></TR>
@@ -241,7 +241,7 @@ with information about your new atom class, following the patterns of
 the other atom styles.  These routines are so similar for all classes,
 that it was simpler to just have one master routine for all classes.
 </P>
-<DIV ALIGN=center><TABLE  WIDTH="0%"  BORDER=1 >
+<DIV ALIGN=center><TABLE  BORDER=1 >
 <TR><TD >constructor</TD><TD > create style variable and atom array ptrs to NULL</TD></TR>
 <TR><TD >destructor</TD><TD > free memory for atom arrays</TD></TR>
 <TR><TD >set_style</TD><TD > set style variable</TD></TR>
@@ -273,7 +273,7 @@ operations it wishes on the ChemCell data structures.
 <P>Thus to add a new command, you simply need to add a *.cpp and *.h file
 containing a single class:
 </P>
-<DIV ALIGN=center><TABLE  WIDTH="0%"  BORDER=1 >
+<DIV ALIGN=center><TABLE  BORDER=1 >
 <TR><TD >command</TD><TD > operations performed by the new command 
 </TD></TR></TABLE></DIV>
 
