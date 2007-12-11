@@ -25,7 +25,17 @@ class FixRateSaturate : public Fix {
   void initial();
 
  private:
-  int nevery;           // how often to adjust rates
+  int nevery;            // how often to adjust rates
+
+  int nlist;             // number of rates to adjust
+  int *list;             // reaction indices of rates to adjust
+  double *rate_initial;  // initial unadjusted rates
+  double half;           // concentration at which rate is cut in half
+  int ispecies;          // species index which affects rate dynamically
+
+  double *rate;
+  char *species;
+  char **reactions;
 };
 
 #endif
