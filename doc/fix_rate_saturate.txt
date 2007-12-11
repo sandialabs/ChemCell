@@ -11,38 +11,38 @@ fix rate/saturate command :h3
 
 [Syntax:]
 
-fix ID rate/saturate N file Nsp sp1 sp2 ... :pre
+fix ID rate/saturate N species-ID half react1-ID react2-ID ... :pre
 
 ID is documented in "fix"_fix.html command
 conc/random = style name of this fix command
 N = apply fix every this many timesteps
-sp1,sp2,etc = IDs of species :ul
+species-ID = ID of species whose dynamic concentration will affect rate
+half = concentration which will cut rate in half (molarity or count)
+react1-ID, react2-ID, ... = list of reactions whose rates are affected :ul
 
 [Examples:]
 
-fix mine rate/saturate 1 :pre
+fix mine rate/saturate 1 NFkB-nuc 100 c1 u1 u3 :pre
 
 [Description:]
 
-Set the concentration level of certain species at specified time
-increments in a non-spatial simulation.  This is an effective way of
-coupling ChemCell to another model or simulation that produced
-concentration vs time profiles of certain species.
+Adjust one or more reaction rates based on the current concentration
+of a chosen species.  This is a way to have a time-dependent rate for
+a reaction that goes to zero as the concentration of one of its
+reactants increases, so that the amout of product produced saturates
+rather than increases forever.  For example, it can be used to
+model gene transcription resulting in mRNA production.
 
-Here is how the fix operates.  Every N timesteps, the concentration or
-count of particles of each species in the specified list is reset to a
-new value which is listed in the time course data file, which has the
-following format.  Lines beginning with a "#" character are ignored.
-Other lines must begin with a time value (in seconds), followed by Nsp
-values.  The time stamp for successive lines in the file should be
-monotonically increasing.  For stochastic non-spatial simulations
-(Gillespie), the value for each species is a particle count.  For
-deterministic non-spatial simulations (ODE), the value for each
-species is a concentration in molarity.
+Here is how the fix operates.  Every N timesteps, the rates for the
+listed reactions are scaled to new values in the following way:
 
-On a timestep when the fix is applied, the file line with a time stamp
-just smaller (or equal) to the current time is used to set the Nout
-probabilities.
+r_new = r_initial * half / (half + \[species-ID\]) :pre
+
+R(t) is the new scaled reaction rate.  R_initial is the rate set for
+this reaction initially in the input script.  H is the concentration
+value set for this command.  \[Species-ID\](t) is the current
+concentration of the selected species.  Note that the scale factor is
+thus unitless.
 
 [Restrictions:]
 
