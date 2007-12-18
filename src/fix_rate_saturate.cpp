@@ -29,7 +29,7 @@
 
 FixRateSaturate::FixRateSaturate(int narg, char **arg) : Fix(narg, arg)
 {
-  if (narg < 6) error->all("Illegal fix rate/saturate command");
+  if (narg < 7) error->all("Illegal fix rate/saturate command");
   if (simulator->spatial_flag == 1)
     error->all("Cannot use fix rate/saturate with spatial simulations");
 
@@ -40,14 +40,15 @@ FixRateSaturate::FixRateSaturate(int narg, char **arg) : Fix(narg, arg)
   strcpy(species,arg[3]);
 
   half = atof(arg[4]);
+  volscale = atof(arg[5]);
 
-  nlist = narg - 5;
+  nlist = narg - 6;
   list = new int[nlist];
   rate_initial = new double[nlist];
 
   reactions = new char*[nlist];
   int ilist = 0;
-  for (int i = 5; i < narg; i++) {
+  for (int i = 6; i < narg; i++) {
     n = strlen(arg[i]) + 1;
     reactions[ilist] = new char[n];
     strcpy(reactions[ilist],arg[i]);
@@ -90,7 +91,7 @@ void FixRateSaturate::init()
     list[i] = react->find(reactions[i]);
     if (list[i] < 0)
       error->all("Invalid reaction ID in fix rate/saturate command");
-    rate_initial[list[i]] = rate[list[i]];
+    rate_initial[i] = rate[list[i]];
   }
 }
 
@@ -105,6 +106,7 @@ void FixRateSaturate::initial()
 
   if (simulator->stochastic_flag) {
     double dynamic = particle->pcount[ispecies] / (AVOGADRO * chem->volume);
+    dynamic *= volscale;
     double scale = half / (half + dynamic);
 
     int index;
@@ -113,7 +115,7 @@ void FixRateSaturate::initial()
 
     for (int i = 0; i < nlist; i++) {
       index = list[i];
-      rate[index] = rate_initial[index] * scale;
+      rate[index] = rate_initial[i] * scale;
       propensity = gillespie->compute_propensity(index);
       gillespie->set(index,propensity);
     }
@@ -127,7 +129,7 @@ void FixRateSaturate::initial()
     int index;
     for (int i = 0; i < nlist; i++) {
       index = list[i];
-      rate[index] = rate_initial[index] * scale;
+      rate[index] = rate_initial[i] * scale;
     }
   }
 }

@@ -31,6 +31,7 @@ class FixRateSaturate : public Fix {
   int *list;             // reaction indices of rates to adjust
   double *rate_initial;  // initial unadjusted rates
   double half;           // concentration at which rate is cut in half
+  double volscale;       // scale factor on species concentration for stoch
   int ispecies;          // species index which affects rate dynamically
 
   double *rate;
