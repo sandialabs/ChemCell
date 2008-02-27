@@ -449,7 +449,7 @@ void React::init()
 	  if (idim == 3 && kdim == 3) invalid(ireact);
 	  else if (idim == 2 && kdim == 2) invalid(ireact);
 	  else if (idim == 3 && kdim == 2) invalid(ireact);
-	  else if (idim == 2 && kdim == 3) locdir[ireact][k] = INSIDE;
+	  else if (idim == 2 && kdim == 3) locdir[ireact][k] = OUTSIDE;
 	}
 	if (setdir[ireact][k] == INOUT) {
 	  if (idim == 3 && kdim == 3) invalid(ireact);

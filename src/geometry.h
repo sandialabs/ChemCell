@@ -17,7 +17,6 @@
 bool tri_line_intersect(double *v0, double *v1, double *v2, double *norm,
 			double *start, double *stop,
 			double *intersect, double &param, int &flagface);
-
 // debug routine
 bool tri_line_intersect2(double *v0, double *v1, double *v2, double *norm,
 			double *start, double *stop,

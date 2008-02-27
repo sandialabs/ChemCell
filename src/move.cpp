@@ -845,8 +845,8 @@ void Move::motion()
 	      printf("  triangle check:\n");
 	      if (jtri >= 0) {
 		printf("    tri, verts: %d: %d %d %d\n",
-		       jtri,tlist[jtri].vert[0],
-		       tlist[jtri].vert[1],tlist[jtri].vert[2]);
+		       jtri+1,tlist[jtri].vert[0]+1,
+		       tlist[jtri].vert[1]+1,tlist[jtri].vert[2]+1);
 	      } else
 		printf("    local region: %d %s\n",
 		       -jtri-1,surf->name[region2surf[-jtri-1]]);
