@@ -11,13 +11,14 @@ fix rate/saturate command :h3
 
 [Syntax:]
 
-fix ID rate/saturate N species-ID half react1-ID react2-ID ... :pre
+fix ID rate/saturate N species-ID half volscale react1-ID react2-ID ... :pre
 
 ID is documented in "fix"_fix.html command
 conc/random = style name of this fix command
 N = apply fix every this many timesteps
 species-ID = ID of species whose dynamic concentration will affect rate
 half = concentration of species-ID which will cut rate in half (molarity)
+volscale = scale factor to apply to concentration of species-ID
 react1-ID, react2-ID, ... = list of reactions whose rates are affected :ul
 
 [Examples:]
@@ -29,9 +30,9 @@ fix mine rate/saturate 1 NFkB-nuc 100 c1 u1 u3 :pre
 Adjust one or more reaction rates based on the current concentration
 of a chosen species.  This is a way to have a time-dependent rate for
 a reaction that goes to zero as the concentration of one of its
-reactants increases, so that the amout of product produced saturates
-rather than increases forever.  For example, it can be used to
-model gene transcription resulting in mRNA production.
+reactants increases, so that the amount of product produced saturates
+rather than increases forever.  For example, it can be used to model
+gene transcription resulting in mRNA production.
 
 Here is how the fix operates.  Every N timesteps, the rates for the
 listed reactions are scaled to new values in the following way:
@@ -41,10 +42,22 @@ r_new = r_initial * half / (half + \[species-ID\]) :pre
 R(t) is the new scaled reaction rate.  R_initial is the rate set for
 this reaction initially in the input script.  Half is the
 concentration value set for this command.  \[Species-ID\] is the
-current concentration of the selected species.  Note that half is the
-concentration value of species-ID at which the effective rate will be
-cut in half.  Note that the scale factor half / (half +
-\[species-ID\]) is unitless.
+current concentration of the selected species.
+
+For continuum ODE simulations this concentration is stored directly by
+ChemCell and is correct for whatever compartment the species may be
+in.  Thus the {volscale} parameter is ignored.  For stochastic models,
+the concentration is computed by the molecule count divided by the
+volume.  It is then scaled by the specified {volscale} parameter.
+This should be set to 1.0 if the system volume is the one in which
+{species-ID} is present.  If the concentration is for a species in a
+smaller volume (e.g. the nucleus), then {volscale} should be set to
+the ratio of the system volume to the smaller volume, e.g. 10.0 if the
+cell is 10x larger than the nucleus.
+
+Note that the {half} parameter is the concentration of species-ID at
+which the effective rate will be cut in half.  Note that the scale
+factor half / (half + \[species-ID\]) is unitless.
 
 [Restrictions:]
 
