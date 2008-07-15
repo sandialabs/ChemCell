@@ -17,6 +17,7 @@
 #include "chem.h"
 
 class ChemGillespie : public Chem {
+  friend class FixDNAToggle;
   friend class FixRateSaturate;
 
  public:

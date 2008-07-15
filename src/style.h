@@ -30,12 +30,14 @@ CommandStyle(write_restart,WriteRestart)
 #ifdef FixInclude
 #include "fix_conc_random.h"
 #include "fix_conc_set.h"
+#include "fix_dna_toggle.h"
 #include "fix_rate_saturate.h"
 #endif
 
 #ifdef FixClass
 FixStyle(conc/random,FixConcRandom)
 FixStyle(conc/set,FixConcSet)
+FixStyle(dna/toggle,FixDNAToggle)
 FixStyle(rate/saturate,FixRateSaturate)
 #endif
 
