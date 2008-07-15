@@ -10,14 +10,14 @@ Commands</A>
 
 <HR>
 
-<H3>fix rate/saturate command 
+<H3>fix dna/toggle command 
 </H3>
 <P><B>Syntax:</B>
 </P>
-<PRE>fix ID rate/saturate N species-ID half volscale react1-ID react2-ID ... 
+<PRE>fix ID dna/toggle N species-ID half volscale react1-ID react2-ID ... 
 </PRE>
 <UL><LI>ID is documented in <A HREF = "fix.html">fix</A> command
-<LI>rate/saturate = style name of this fix command
+<LI>dna/toggle = style name of this fix command
 <LI>N = apply fix every this many timesteps
 <LI>species-ID = ID of species whose dynamic concentration will affect rate
 <LI>half = concentration of species-ID which will cut rate in half (molarity)
@@ -26,7 +26,7 @@ Commands</A>
 </UL>
 <P><B>Examples:</B>
 </P>
-<PRE>fix mine rate/saturate 1 NFkB-nuc 100 c1 u1 u3 
+<PRE>fix mine dna/toggle 1 NFkB-nuc 100 c1 u1 u3 
 </PRE>
 <P><B>Description:</B>
 </P>

@@ -7,14 +7,14 @@ Commands"_cc :c
 
 :line
 
-fix rate/saturate command :h3
+fix dna/toggle command :h3
 
 [Syntax:]
 
-fix ID rate/saturate N species-ID half volscale react1-ID react2-ID ... :pre
+fix ID dna/toggle N species-ID half volscale react1-ID react2-ID ... :pre
 
 ID is documented in "fix"_fix.html command
-rate/saturate = style name of this fix command
+dna/toggle = style name of this fix command
 N = apply fix every this many timesteps
 species-ID = ID of species whose dynamic concentration will affect rate
 half = concentration of species-ID which will cut rate in half (molarity)
@@ -23,7 +23,7 @@ react1-ID, react2-ID, ... = list of reactions whose rates are affected :ul
 
 [Examples:]
 
-fix mine rate/saturate 1 NFkB-nuc 100 c1 u1 u3 :pre
+fix mine dna/toggle 1 NFkB-nuc 100 c1 u1 u3 :pre
 
 [Description:]
 
