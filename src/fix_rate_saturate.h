@@ -23,6 +23,7 @@ class FixRateSaturate : public Fix {
   int setmask();
   void init();
   void initial();
+  void cleanup();
 
  private:
   int nevery;            // how often to adjust rates

@@ -72,6 +72,7 @@ int FixRateSaturate::setmask()
 {
   int mask = 0;
   mask |= INITIAL;
+  mask |= CLEANUP;
   return mask;
 }
 
@@ -131,5 +132,16 @@ void FixRateSaturate::initial()
       index = list[i];
       rate[index] = rate_initial[i] * scale;
     }
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+
+void FixRateSaturate::cleanup()
+{
+  int index;
+  for (int i = 0; i < nlist; i++) {
+    index = list[i];
+    rate[index] = rate_initial[i];
   }
 }

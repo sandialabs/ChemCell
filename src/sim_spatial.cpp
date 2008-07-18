@@ -136,6 +136,8 @@ void SimSpatial::run()
     }
   }
 
+  if (modify->n_cleanup) modify->cleanup();
+
   timer->barrier_stop(TIME_LOOP);
 }
 

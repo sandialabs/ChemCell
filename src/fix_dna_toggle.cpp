@@ -29,41 +29,43 @@
 
 FixDNAToggle::FixDNAToggle(int narg, char **arg) : Fix(narg, arg)
 {
-  if (narg < 7) error->all("Illegal fix dna/toggle command");
+  if (narg != 11) error->all("Illegal fix dna/toggle command");
   if (simulator->spatial_flag == 1)
     error->all("Cannot use fix dna/toggle with spatial simulations");
 
   nevery = atoi(arg[2]);
 
   int n = strlen(arg[3]) + 1;
-  species = new char[n];
-  strcpy(species,arg[3]);
+  dnaspecies = new char[n];
+  strcpy(dnaspecies,arg[3]);
 
-  half = atof(arg[4]);
-  volscale = atof(arg[5]);
+  kon = atof(arg[4]);
+  koff = atof(arg[5]);
 
-  nlist = narg - 6;
-  list = new int[nlist];
-  rate_initial = new double[nlist];
+  n = strlen(arg[6]) + 1;
+  eqrna = new char[n];
+  strcpy(eqrna,arg[6]);
 
-  reactions = new char*[nlist];
-  int ilist = 0;
-  for (int i = 6; i < narg; i++) {
-    n = strlen(arg[i]) + 1;
-    reactions[ilist] = new char[n];
-    strcpy(reactions[ilist],arg[i]);
-    ilist++;
-  }
+  ktranscription = atof(arg[7]);
+  kconstitutive = atof(arg[8]);
+
+  n = strlen(arg[9]) + 1;
+  eqdna = new char[n];
+  strcpy(eqdna,arg[9]);
+
+  n = strlen(arg[10]) + 1;
+  bindspecies = new char[n];
+  strcpy(bindspecies,arg[10]);
 }
 
 /* ---------------------------------------------------------------------- */
 
 FixDNAToggle::~FixDNAToggle()
 {
-  delete [] list;
-  delete [] rate_initial;
-  for (int i = 0; i < nlist; i++) delete [] reactions[i];
-  delete [] reactions;
+  delete [] dnaspecies;
+  delete [] eqrna;
+  delete [] eqdna;
+  delete [] bindspecies;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -72,6 +74,7 @@ int FixDNAToggle::setmask()
 {
   int mask = 0;
   mask |= INITIAL;
+  mask |= CLEANUP;
   return mask;
 }
 
@@ -79,20 +82,28 @@ int FixDNAToggle::setmask()
 
 void FixDNAToggle::init()
 {
-  // extract list of reaction rates
+  // extract two initial reaction rates
 
   rate = react->rate;
+  pcount = particle->pcount;
+  ccount = particle->ccount;
 
-  ispecies = particle->find(species);
-  if (ispecies < 0)
-    error->all("Invalid species ID in fix rate/saturate command");
+  idna = particle->find(dnaspecies);
+  if (idna < 0)
+    error->all("Invalid species ID in fix dna/toggle command");
+  ibind = particle->find(bindspecies);
+  if (ibind < 0)
+    error->all("Invalid species ID in fix dna/toggle command");
 
-  for (int i = 0; i < nlist; i++) {
-    list[i] = react->find(reactions[i]);
-    if (list[i] < 0)
-      error->all("Invalid reaction ID in fix rate/saturate command");
-    rate_initial[i] = rate[list[i]];
-  }
+  ieqrna = react->find(eqrna);
+  if (ieqrna < 0)
+    error->all("Invalid reaction ID in fix dna/toggle command");
+  rate_rna = rate[ieqrna];
+
+  ieqdna = react->find(eqdna);
+  if (ieqdna < 0)
+    error->all("Invalid reaction ID in fix dna/toggle command");
+  rate_dna = rate[ieqdna];
 }
 
 /* ---------------------------------------------------------------------- */
@@ -105,31 +116,33 @@ void FixDNAToggle::initial()
   // adjust rate, reset propensity, trigger tree recalibration
 
   if (simulator->stochastic_flag) {
-    double dynamic = particle->pcount[ispecies] / (AVOGADRO * chem->volume);
-    dynamic *= volscale;
-    double scale = half / (half + dynamic);
 
-    int index;
-    double propensity;
+    rate[ieqrna] = ktranscription * koff/kon * pcount[idna] + 
+      kconstitutive * (1.0-pcount[idna]);
+    rate[ieqdna] = -koff * pcount[idna] + 
+      kon * pcount[ibind] * (1.0-pcount[idna]);
+
     ChemGillespie *gillespie = (ChemGillespie *) chem;
 
-    for (int i = 0; i < nlist; i++) {
-      index = list[i];
-      rate[index] = rate_initial[i] * scale;
-      propensity = gillespie->compute_propensity(index);
-      gillespie->set(index,propensity);
-    }
+    double propensity = gillespie->compute_propensity(ieqrna);
+    gillespie->set(ieqrna,propensity);
+    propensity = gillespie->compute_propensity(ieqdna);
+    gillespie->set(ieqdna,propensity);
 
-  // continuum ODE simulation, just adjust rate
+  // continuum ODE simulation, adjust 2 rates
 
   } else {
-    double dynamic = particle->ccount[ispecies];
-    double scale = half / (half + dynamic);
-
-    int index;
-    for (int i = 0; i < nlist; i++) {
-      index = list[i];
-      rate[index] = rate_initial[i] * scale;
-    }
+    rate[ieqrna] = ktranscription * koff/kon * ccount[idna] + 
+      kconstitutive * (1.0-ccount[idna]);
+    rate[ieqdna] = -koff * ccount[idna] + 
+      kon * ccount[ibind] * (1.0-ccount[idna]);
   }
+}
+
+/* ---------------------------------------------------------------------- */
+
+void FixDNAToggle::cleanup()
+{
+  rate[ieqrna] = rate_rna;
+  rate[ieqdna] = rate_dna;
 }

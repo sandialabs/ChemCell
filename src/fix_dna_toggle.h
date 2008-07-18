@@ -23,20 +23,22 @@ class FixDNAToggle : public Fix {
   int setmask();
   void init();
   void initial();
+  void cleanup();
 
  private:
   int nevery;            // how often to adjust rates
+  double kon,koff;
+  double ktranscription,kconstitutive;
 
-  int nlist;             // number of rates to adjust
-  int *list;             // reaction indices of rates to adjust
-  double *rate_initial;  // initial unadjusted rates
-  double half;           // concentration at which rate is cut in half
-  double volscale;       // scale factor on species concentration for stoch
-  int ispecies;          // species index which affects rate dynamically
+  int ieqrna,ieqdna;
+  int idna,ibind;
+  char *dnaspecies,*bindspecies;
+  char *eqrna,*eqdna;
+  double rate_rna,rate_dna;
 
   double *rate;
-  char *species;
-  char **reactions;
+  int *pcount;
+  double *ccount;
 };
 
 #endif

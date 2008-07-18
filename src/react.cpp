@@ -204,7 +204,7 @@ void React::delete_reaction(char *str)
 
   int ireact = find(str);
   if (ireact == -1) error->all("Could not find unreact ID");
-  delete name[ireact];
+  delete [] name[ireact];
 
   // move other reactions down in list one slot
 
@@ -212,14 +212,20 @@ void React::delete_reaction(char *str)
     name[i-1] = name[i];
     nreactant[i-1] = nreactant[i];
     nproduct[i-1] = nproduct[i];
-    rate[i-1] = rate[i];
-    for (int j = 0; j < nproduct[i-1]; j++) {
+
+    for (int j = 0; j < nreactant[i-1]; j++) {
       reactants[i-1][j] = reactants[i][j];
+      wreactant[i-1][j] = wreactant[i][j];
+    }
+    for (int j = 0; j < nproduct[i-1]; j++) {
       products[i-1][j] = products[i][j];
+      wproduct[i-1][j] = wproduct[i][j];
       setwhich[i-1][j] = setwhich[i][j];
       setstyle[i-1][j] = setstyle[i][j];
       setdir[i-1][j] = setdir[i][j];
     }
+
+    rate[i-1] = rate[i];
     setdist[i-1] = setdist[i];
     setprob[i-1] = setprob[i];
   }

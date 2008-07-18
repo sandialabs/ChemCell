@@ -122,6 +122,8 @@ void ChemODE::reactions()
       ccount[reactants[i][j]] -= delta * wreactant[i][j];
     for (j = 0; j < nproduct[i]; j++)
       ccount[products[i][j]] += delta * wproduct[i][j];
+
+    //if (i == 82) printf(" CC %d %g %g %g\n",i,delta,rate[i],ccount[28]);
   }
 }
 

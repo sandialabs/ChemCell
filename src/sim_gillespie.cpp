@@ -133,6 +133,8 @@ void SimGillespie::run()
     if (doneflag) break;
   }
 
+  if (modify->n_cleanup) modify->cleanup();
+
   timer->barrier_stop(TIME_LOOP);
   nsteps = ntimestep - firststep;
 }

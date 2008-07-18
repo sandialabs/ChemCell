@@ -27,17 +27,19 @@
 // mask settings - same as mask settings in fix.cpp
 
 #define INITIAL  1
+#define CLEANUP  2
 
 /* ---------------------------------------------------------------------- */
 
 Modify::Modify()
 {
   nfix = maxfix = 0;
-  n_initial = 0;
+  n_initial = n_cleanup = 0;
 
   fix = NULL;
   fmask = NULL;
   list_initial = NULL;
+  list_cleanup = NULL;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -51,6 +53,7 @@ Modify::~Modify()
   memory->sfree(fmask);
 
   delete [] list_initial;
+  delete [] list_cleanup;
 }
 
 /* ----------------------------------------------------------------------
@@ -68,6 +71,7 @@ void Modify::init()
   // create lists of fixes to call at each stage of run
 
   list_init(INITIAL,n_initial,list_initial);
+  list_init(CLEANUP,n_cleanup,list_cleanup);
 }
 
 /* ----------------------------------------------------------------------
@@ -78,6 +82,16 @@ void Modify::initial()
 {
   for (int i = 0; i < n_initial; i++)
     fix[list_initial[i]]->initial();
+}
+
+/* ----------------------------------------------------------------------
+   end of run
+------------------------------------------------------------------------- */
+
+void Modify::cleanup()
+{
+  for (int i = 0; i < n_cleanup; i++)
+    fix[list_cleanup[i]]->cleanup();
 }
 
 /* ----------------------------------------------------------------------
