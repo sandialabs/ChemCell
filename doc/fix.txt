@@ -51,6 +51,7 @@ Here is an alphabetic list of fix styles currently defined in ChemCell:
 
 "fix conc/random"_fix_conc_random.html - set the concentration of one or more species
 "fix conc/set"_fix_conc_set.html - set the concentration of one or more species
+"fix dna/toggle"_fix_dna_toggle.html - model DNA toggling on/off to modulate mRNA production
 "fix rate/saturate"_fix_rate_saturate.html - adjust the rate of one or more reactions :ul
 
 [Restrictions:] none
