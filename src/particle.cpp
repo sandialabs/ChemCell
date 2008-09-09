@@ -1180,7 +1180,7 @@ int Particle::allmatch(char *pattern, int *flag)
 
 int Particle::pack_restart(double *buf)
 {
-  int m;
+  int m = 0;
   for (int i = 0; i < nlocal; i++) {
     buf[m++] = plist[i].x[0];
     buf[m++] = plist[i].x[1];
