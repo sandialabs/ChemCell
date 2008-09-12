@@ -31,7 +31,6 @@ CommandStyle(write_restart,WriteRestart)
 #include "fix_conc_random.h"
 #include "fix_conc_set.h"
 #include "fix_dna_toggle.h"
-#include "fix_dna_toggle2.h"
 #include "fix_rate_saturate.h"
 #endif
 
@@ -39,7 +38,6 @@ CommandStyle(write_restart,WriteRestart)
 FixStyle(conc/random,FixConcRandom)
 FixStyle(conc/set,FixConcSet)
 FixStyle(dna/toggle,FixDNAToggle)
-FixStyle(dna/toggle2,FixDNAToggle2)
 FixStyle(rate/saturate,FixRateSaturate)
 #endif
 
