@@ -14,7 +14,7 @@ Commands</A>
 </H3>
 <P><B>Syntax:</B>
 </P>
-<PRE>fix ID dna/toggle N speciesDNA-ID Kon Koff reactRNA-ID Ktranscription Kconstitutive reactDNA-ID bind-ID 
+<PRE>fix ID dna/toggle N speciesDNA-ID Kon Koff reactRNA-ID Ktranscription Kconstitutive reactDNA-ID bind-ID Vratio 
 </PRE>
 <UL><LI>ID is documented in <A HREF = "fix.html">fix</A> command
 <LI>dna/toggle = style name of this fix command
@@ -23,14 +23,15 @@ Commands</A>
 <LI>Kon = rate at which DNA is turned on (per second per molarity)
 <LI>Koff = rate at which DNA is turned off (per second)
 <LI>reactRNA-ID = ID of reaction which produces mRNA transcripts
-<LI>Ktranscription = constitutive rate at which mRNA is produced (per second)
+<LI>Ktranscription = transcription rate at which mRNA is produced (per second per molarity)
 <LI>Kconstitutive = constitutive rate at which mRNA is produced (molarity per second)
 <LI>reactDNA-ID = ID of reaction which represents DNA on/off state
-<LI>bind-ID = ID of transcription species which binds to DNA 
+<LI>bind-ID = ID of transcription species which binds to DNA
+<LI>Vratio = volume ratio to use as scale factor on bind-ID concentration 
 </UL>
 <P><B>Examples:</B>
 </P>
-<PRE>fix mine dna/toggle 1 DNA 2.0e5 0.02 RNA-reac 100.0 0.1 DNA-reac NFkB-nuc 
+<PRE>fix mine dna/toggle 1 DNA 2.0e5 0.02 RNA-reac 100.0 0.1 DNA-reac NFkB-nuc 10.0 
 </PRE>
 <P><B>Description:</B>
 </P>
@@ -84,9 +85,13 @@ be produced.
 <PRE>Knew = sign * Koff * DNA + Kon * [bind-ID] * (1 - DNA) 
 </PRE>
 <P>Koff, Kon, and DNA are as above.  [bind-ID] is the concentration of
-the transcription factor species which binds to the DNA site.  The
-units of Knew are thus per second which is the rate at which the DNA
-toggles its state.
+the transcription factor species which binds to the DNA site.  This
+concentration will be boosted by Vratio if you need to account for the
+fact that the transcription factor species is in a smaller-volume
+compartment, e.g. the nucleus.  This is only relevant for stochastic
+models since the concentration should already be scaled appopriately
+in an ODE model.  The units of Knew are thus per second which is the
+rate at which the DNA toggles its state.
 </P>
 <P>Sign is set to a value of -1 for continuum ODE models.  This is what
 keeps the value of DNA between 0 and 1.  Sign is set to +1 for
