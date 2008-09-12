@@ -1,0 +1,55 @@
+ChemCell Simulator :c,h3
+
+quote about well-mixed cell era is behind us :c
+
+:line
+
+This is the home page for the cell modeling package ChemCell.
+The current version of ChemCell is 1 Jan 2006.
+
+"Features"_cell/features.html,
+"FAQ"_cell/FAQ.html,
+"Documentation"_cell/doc/Manual.html,
+"Download"_download.html,
+"New features"_cell/bug.html,
+"Bug fixes"_cell/bug.html,
+"Open source"_cell/open_source.html,
+"Pictures"_cell/pictures.html,
+"Movies"_cell/movies.html,
+"Authors"_cell/authors.html,
+"Funding"_cell/funding.html,
+"Pizza.py Toolkit"_pizza.html,
+"Other codes"_cell/other.html,
+"Citing ChemCell"_cell/cite.html,
+"Contribute to ChemCell"_cell/contribute.html :tb(c=5,ea=c,a=c)
+
+:line
+
+ChemCell runs on single-processor machines or in parallel using
+message-passing techniques and a spatial-decomposition of the
+simulation domain.  The code is designed to be easy to modify or
+extend with new functionality.  It's distributed as an "open source
+code"_ChemCell/open_source.html under the terms of the "GPL"_gpl
+license and can be downloaded from "this site"_download.html or from
+"SourceForge"_http://sourceforge.net/project/showfiles.php?group_id=149493.
+
+ChemCell is distributed by "Steve Plimpton"_main.html at "Sandia
+National Laboratories"_snl, a US Department of Energy ("DOE"_doe)
+laboratory.  Many people have contributed to ChemCell; they are
+"acknowledged here"_ChemCell/authors.html.  Funding for ChemCell
+development has come primarily from DOE (OASCR, OBER, ASCI, LDRD,
+Genomes-to-Life) and is "acknowledged here"_ChemCell/funding.html.
+
+:link(gpl,http://www.gnu.org/copyleft/gpl.html)
+:link(snl,http://www.sandia.gov)
+:link(doe,http://www.doe.gov)
+
+:line
+
+ChemCell Highlight :c,h4
+
+(see the "Pictures"_ChemCell/pictures.html and
+"Movies"_ChemCell/movies.html pages for more examples of ChemCell
+calculations) :c
+
+5.5 Mb and 5.1 Mb movies
