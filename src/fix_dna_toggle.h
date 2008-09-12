@@ -29,6 +29,7 @@ class FixDNAToggle : public Fix {
   int nevery;            // how often to adjust rates
   double kon,koff;
   double ktranscription,kconstitutive;
+  double volratio;
 
   int ieqrna,ieqdna;
   int idna,ibind;

@@ -29,7 +29,7 @@
 
 FixDNAToggle::FixDNAToggle(int narg, char **arg) : Fix(narg, arg)
 {
-  if (narg != 11) error->all("Illegal fix dna/toggle command");
+  if (narg != 12) error->all("Illegal fix dna/toggle command");
   if (simulator->spatial_flag == 1)
     error->all("Cannot use fix dna/toggle with spatial simulations");
 
@@ -56,6 +56,7 @@ FixDNAToggle::FixDNAToggle(int narg, char **arg) : Fix(narg, arg)
   n = strlen(arg[10]) + 1;
   bindspecies = new char[n];
   strcpy(bindspecies,arg[10]);
+  volratio = atof(arg[11]);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -113,26 +114,39 @@ void FixDNAToggle::initial()
   if (simulator->ntimestep % nevery) return;
 
   // Gillespie stochastic simulation
-  // adjust rate, reset propensity, trigger tree recalibration
+  // set DNA to 0 if it has increased past 1
+  // adjust 2 rates, reset propensity, trigger tree recalibration
+  // for RNA reaction, rate is units of molarity/sec, no reactants
+  //   so compute_propensity() can compute propensity
+  // for DNA reaction, rate is units of 1/sec which is the desired propensity
+  //   don't use compute_propensity() since it will multiply by Avo*volume
+  // for DNA reaction, convert pcount of binder to a concentration in nucleus
 
   if (simulator->stochastic_flag) {
+    pcount[idna] %= 2;
 
-    rate[ieqrna] = ktranscription * koff/kon * pcount[idna] + 
+    double hm = 0.0;
+    if (kon > 0.0) hm = koff/kon;
+    rate[ieqrna] = ktranscription * hm * pcount[idna] + 
       kconstitutive * (1.0-pcount[idna]);
-    rate[ieqdna] = -koff * pcount[idna] + 
-      kon * pcount[ibind] * (1.0-pcount[idna]);
+    double conc_bind = volratio * pcount[ibind] / (AVOGADRO * chem->volume);
+    rate[ieqdna] = koff * pcount[idna] + kon * conc_bind * (1.0-pcount[idna]);
 
     ChemGillespie *gillespie = (ChemGillespie *) chem;
 
     double propensity = gillespie->compute_propensity(ieqrna);
     gillespie->set(ieqrna,propensity);
-    propensity = gillespie->compute_propensity(ieqdna);
-    gillespie->set(ieqdna,propensity);
+    gillespie->set(ieqdna,rate[ieqdna]);
 
-  // continuum ODE simulation, adjust 2 rates
-
+  // continuum ODE simulation, adjust 2 rates directly
+  // since are both 0-reactant reactions, they will be used as-is
+  // ibind concentration should already be scaled up by volratio
+  //   in model itself via reaction product weighting
+    
   } else {
-    rate[ieqrna] = ktranscription * koff/kon * ccount[idna] + 
+    double hm = 0.0;
+    if (kon > 0.0) hm = koff/kon;
+    rate[ieqrna] = ktranscription * hm * ccount[idna] + 
       kconstitutive * (1.0-ccount[idna]);
     rate[ieqdna] = -koff * ccount[idna] + 
       kon * ccount[ibind] * (1.0-ccount[idna]);
