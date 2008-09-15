@@ -23,7 +23,7 @@
 
 Universe::Universe(MPI_Comm communicator)
 {
-  version = "1 Jan 2007";
+  version = "10 Sept 2008";
 
   uworld = communicator;
   MPI_Comm_rank(uworld,&me);

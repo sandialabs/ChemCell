@@ -32,8 +32,10 @@
 #include "memory.h"
 #include "error.h"
 
+#define CommandInclude
 #define SimulatorInclude
 #include "style.h"
+#undef CommandInclude
 #undef SimulatorInclude
 
 #define MAXLINE 20000
@@ -91,7 +93,7 @@ Input::Input(int argc, char **argv)
 Input::~Input()
 {
   // don't free command and arg strings
-  // they point to memory allocated elsewhere
+  // they just point to other allocated memory
 
   delete variable;
   delete [] line;
@@ -103,16 +105,13 @@ Input::~Input()
 }
 
 /* ----------------------------------------------------------------------
-   read successive lines from input script
-   parse each line and execute it in Input if possible
-   continue until command requires top-level code to execute it
-   return command name to be executed by top-level code
-   return NULL if reach end of input script
+   process all input from infile
+   infile = stdin or file if command-line arg "-in" was used
 ------------------------------------------------------------------------- */
 
-char *Input::next()
+void Input::file()
 {
-  int n,flag;
+  int n;
 
   while (1) {
     
@@ -132,7 +131,7 @@ char *Input::next()
     // bcast the line
     // if n = 0, end-of-file
     // error if label_active is set, since label wasn't encountered
-    // if original input file, code is done, return NULL
+    // if original input file, code is done
     // else go back to previous input file
 
     MPI_Bcast(&n,1,MPI_INT,0,world);
@@ -143,12 +142,20 @@ char *Input::next()
 	nfile--;
       }
       MPI_Bcast(&nfile,1,MPI_INT,0,world);
-      if (nfile == 0) return NULL;
+      if (nfile == 0) break;
       if (me == 0) infile = infiles[nfile-1];
       continue;
     }
 
     MPI_Bcast(line,n,MPI_CHAR,0,world);
+
+    // if n = MAXLINE, line is too long
+
+    if (n == MAXLINE) {
+      char str[MAXLINE+32];
+      sprintf(str,"Input line too long: %s",line);
+      error->all(str);
+    }
 
     // echo the command unless scanning for label
 
@@ -167,15 +174,9 @@ char *Input::next()
 
     if (label_active && strcmp(command,"label") != 0) continue;
 
-    // execute a single command
-    // flag =  0 = executed completely, stay in loop to read next command
-    // flag =  1 = not fully executed, return command name to top-level code
-    // flag = -1 = unrecognized command, error
+    // execute the command
 
-    flag = execute_command();
-
-    if (flag == 1) return command;
-    if (flag == -1) {
+    if (execute_command()) {
       char str[MAXLINE];
       sprintf(str,"Unknown command: %s",line);
       error->all(str);
@@ -184,16 +185,37 @@ char *Input::next()
 }
 
 /* ----------------------------------------------------------------------
-   execute a single command
-   parse the line and execute it here if possible
-   return NULL if command was fully executed here
-   else return command name to be executed by caller
-   special-case returns:
-     "include", "jump" = commands that must be handled by caller since
-                         it is reading input script
+   process all input from filename
 ------------------------------------------------------------------------- */
 
-char *Input::one(char *single)
+void Input::file(const char *filename)
+{
+  // error if another nested file still open
+  // if single open file is not stdin, close it
+  // open new filename and set infile, infiles[0]
+
+  if (me == 0) {
+    if (nfile > 1)
+      error->one("Another input script is already being processed");
+    if (infile != stdin) fclose(infile);
+    infile = fopen(filename,"r");
+    if (infile == NULL) {
+      char str[128];
+      sprintf(str,"Cannot open input script %s",filename);
+      error->one(str);
+    }
+    infiles[0] = infile;
+  } else infile = NULL;
+
+  file();
+}
+
+/* ----------------------------------------------------------------------
+   parse the command in single and execute it
+   return command name to caller
+------------------------------------------------------------------------- */
+
+char *Input::one(const char *single)
 {
   strcpy(line,single);
 
@@ -214,35 +236,25 @@ char *Input::one(char *single)
 
   if (label_active && strcmp(command,"label") != 0) return NULL;
 
-  // execute a single command
-  // flag =  0 = executed completely, return NULL
-  // flag =  1 = not fully executed, return command name to caller
-  // flag = -1 = unrecognized command, error
+  // execute the command and return its name
 
-  int flag = execute_command();
-
-  if (flag == 1) return command;
-  if (flag == -1) {
+  if (execute_command()) {
     char str[MAXLINE];
     sprintf(str,"Unknown command: %s",line);
     error->all(str);
   }
 
-  // commands the caller must handle since it is reading input script
-
-  if (!strcmp(command,"include") || !strcmp(command,"jump")) return command;
-
-  return NULL;
+  return command;
 }
 
 /* ----------------------------------------------------------------------
-   parse copy of line from the input script
+   parse copy of command line
    strip comment = all chars from # on
    replace all $ via variable substitution
    command = first word
    narg = # of args
    arg[] = individual args
-   treat multiple args between double quotes as one arg
+   treat text between double quotes as one arg
 ------------------------------------------------------------------------- */
 
 void Input::parse()
@@ -269,8 +281,9 @@ void Input::parse()
   }
 
   // perform $ variable substitution (print changes)
+  // except if searching for a label since earlier variable may not be defined
 
-  substitute(copy,1);
+  if (!label_active) substitute(copy,1);
 
   // command = 1st arg
 
@@ -290,10 +303,13 @@ void Input::parse()
     arg[narg] = strtok(NULL," \t\n\r\f");
     if (arg[narg] && arg[narg][0] == '\"') {
       arg[narg] = &arg[narg][1];
-      if (strchr(arg[narg],'\"')) error->all("Quotes in a single arg");
-      arg[narg][strlen(arg[narg])] = ' ';
-      ptr = strtok(NULL,"\"");
-      if (ptr == NULL) error->all("Unbalanced quotes in input line");
+      if (arg[narg][strlen(arg[narg])-1] == '\"')
+	arg[narg][strlen(arg[narg])-1] = '\0';
+      else {
+	arg[narg][strlen(arg[narg])] = ' ';
+	ptr = strtok(arg[narg],"\"");
+	if (ptr == NULL) error->all("Unbalanced quotes in input line");
+      }
     }
     if (arg[narg]) narg++;
     else break;
@@ -301,7 +317,7 @@ void Input::parse()
 }
 
 /* ----------------------------------------------------------------------
-   substitute for $ variables in a string
+   substitute for $ variables in str
    print updated string if flag is set and not searching for label
 ------------------------------------------------------------------------- */
 
@@ -324,7 +340,7 @@ void Input::substitute(char *str, int flag)
 	var = ptr+2;
 	int i = 0;
 	while (var[i] != '\0' && var[i] != '}') i++;
-	if (var[i] == '\0') error->one("Illegal variable name");
+	if (var[i] == '\0') error->one("Invalid variable name");
 	var[i] = '\0';
 	beyond = ptr + strlen(var) + 3;
       } else {
@@ -334,11 +350,15 @@ void Input::substitute(char *str, int flag)
 	beyond = ptr + strlen(var) + 1;
       }
       value = variable->retrieve(var);
-      if (value == NULL) error->one("Substitution for undefined variable");
+      if (value == NULL) error->one("Substitution for illegal variable");
 
       *ptr = '\0';
       strcpy(work,str);
+      if (strlen(work)+strlen(value) >= MAXLINE)
+	error->one("Input line too long after variable substitution");
       strcat(work,value);
+      if (strlen(work)+strlen(beyond) >= MAXLINE)
+	error->one("Input line too long after variable substitution");
       strcat(work,beyond);
       strcpy(str,work);
       ptr += strlen(value);
@@ -358,40 +378,40 @@ void Input::substitute(char *str, int flag)
 
 /* ----------------------------------------------------------------------
    process a single parsed command
-   return 0 if fully executed here
-   return 1 if command needs to be executed by caller
-   return -1 if command is unrecognized
+   return 0 if successful, -1 if did not recognize command
 ------------------------------------------------------------------------- */
 
 int Input::execute_command()
 {
   int flag = 1;
 
-  if (!strcmp(command,"balance")) balance();
+  if (!strcmp(command,"clear")) clear();
+  else if (!strcmp(command,"echo")) echo();
+  else if (!strcmp(command,"if")) ifthenelse();
+  else if (!strcmp(command,"include")) include();
+  else if (!strcmp(command,"jump")) jump();
+  else if (!strcmp(command,"label")) label();
+  else if (!strcmp(command,"log")) log();
+  else if (!strcmp(command,"next")) next_command();
+  else if (!strcmp(command,"print")) print();
+  else if (!strcmp(command,"variable")) variable_command();
+
+  else if (!strcmp(command,"balance")) balance();
   else if (!strcmp(command,"bin")) bin();
   else if (!strcmp(command,"boundary")) boundary();
-  else if (!strcmp(command,"cd")) cd();
   else if (!strcmp(command,"check")) check();
-  else if (!strcmp(command,"clear")) clear();
   else if (!strcmp(command,"count")) count();
   else if (!strcmp(command,"debug")) debug();
   else if (!strcmp(command,"diffusion")) diffusion();
   else if (!strcmp(command,"dimension")) dimension();
   else if (!strcmp(command,"dump")) dump();
   else if (!strcmp(command,"dump_modify")) dump_modify();
-  else if (!strcmp(command,"echo")) echo();
   else if (!strcmp(command,"fix")) fix();
   else if (!strcmp(command,"global")) global();
-  else if (!strcmp(command,"include")) include();
-  else if (!strcmp(command,"jump")) jump();
-  else if (!strcmp(command,"label")) label();
-  else if (!strcmp(command,"log")) log();
   else if (!strcmp(command,"move_style")) move_style();
-  else if (!strcmp(command,"next")) next_command();
   else if (!strcmp(command,"particles")) particles();
   else if (!strcmp(command,"permeable")) permeable();
   else if (!strcmp(command,"probability")) probability();
-  else if (!strcmp(command,"print")) print();
   else if (!strcmp(command,"react_modify")) react_modify();
   else if (!strcmp(command,"reaction")) reaction();
   else if (!strcmp(command,"region")) region();
@@ -406,18 +426,29 @@ int Input::execute_command()
   else if (!strcmp(command,"undump")) undump();
   else if (!strcmp(command,"unfix")) unfix();
   else if (!strcmp(command,"unreact")) unreact();
-  else if (!strcmp(command,"variable")) variable_command();
   else if (!strcmp(command,"volume")) volume();
   
   else flag = 0;
 
+  // return if command was listed above
+
   if (flag) return 0;
 
+  // check if command is added via style.h
+
+  if (0) return 0;      // dummy line to enable else-if macro expansion
+
 #define CommandClass
-#define CommandStyle(key,Class) \
-  if (strcmp(command,#key) == 0) return 1;
+#define CommandStyle(key,Class)         \
+  else if (strcmp(command,#key) == 0) { \
+    Class key;			\
+    key.command(narg,arg);              \
+    return 0;                           \
+  }
 #include "style.h"
 #undef CommandClass
+
+  // unrecognized command
 
   return -1;
 }
@@ -426,8 +457,188 @@ int Input::execute_command()
 /* ---------------------------------------------------------------------- */
 /* ---------------------------------------------------------------------- */
 
+/* ---------------------------------------------------------------------- */
+
+void Input::clear()
+{
+  if (narg > 0) error->all("Illegal clear command");
+  sleep(2);              // pause to insure RNG does not start with same RN
+  System::destroy();
+  System::create();
+}
+
+/* ---------------------------------------------------------------------- */
+
+void Input::echo()
+{
+  if (narg != 1) error->all("Illegal echo command");
+
+  if (strcmp(arg[0],"none") == 0) {
+    echo_screen = 0;
+    echo_log = 0;
+  } else if (strcmp(arg[0],"screen") == 0) {
+    echo_screen = 1;
+    echo_log = 0;
+  } else if (strcmp(arg[0],"log") == 0) {
+    echo_screen = 0;
+    echo_log = 1;
+  } else if (strcmp(arg[0],"both") == 0) {
+    echo_screen = 1;
+    echo_log = 1;
+  } else error->all("Illegal echo command");
+}
+
+/* ---------------------------------------------------------------------- */
+
+void Input::ifthenelse()
+{
+  if (narg != 5 && narg != 7) error->all("Illegal if command");
+
+  int flag = 0;
+  if (strcmp(arg[1],"==") == 0) {
+    if (atof(arg[0]) == atof(arg[2])) flag = 1;
+  } else if (strcmp(arg[1],"!=") == 0) {
+    if (atof(arg[0]) != atof(arg[2])) flag = 1;
+  } else if (strcmp(arg[1],"<") == 0) {
+    if (atof(arg[0]) < atof(arg[2])) flag = 1;
+  } else if (strcmp(arg[1],"<=") == 0) {
+    if (atof(arg[0]) <= atof(arg[2])) flag = 1;
+  } else if (strcmp(arg[1],">") == 0) {
+    if (atof(arg[0]) > atof(arg[2])) flag = 1;
+  } else if (strcmp(arg[1],">=") == 0) {
+    if (atof(arg[0]) >= atof(arg[2])) flag = 1;
+  } else error->all("Illegal if command");
+
+  if (strcmp(arg[3],"then") != 0) error->all("Illegal if command");
+  if (narg == 7 && strcmp(arg[5],"else") != 0) 
+    error->all("Illegal if command");
+
+  char str[128] = "\0";
+  if (flag) strcpy(str,arg[4]);
+  else if (narg == 7) strcpy(str,arg[6]);
+  strcat(str,"\n");
+
+  if (strlen(str) > 1) char *tmp = one(str);
+}
+
+/* ---------------------------------------------------------------------- */
+
+void Input::include()
+{
+  if (narg != 1) error->all("Illegal include command");
+
+  if (me == 0) {
+    if (nfile == maxfile) {
+      maxfile++;
+      infiles = (FILE **) 
+        memory->srealloc(infiles,maxfile*sizeof(FILE *),"input:infiles");
+    }
+    infile = fopen(arg[0],"r");
+    if (infile == NULL) {
+      char str[128];
+      sprintf(str,"Cannot open input script %s",arg[0]);
+      error->one(str);
+    }
+    infiles[nfile++] = infile;
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+
+void Input::jump()
+{
+  if (narg < 1 || narg > 2) error->all("Illegal jump command");
+
+  if (jump_skip) {
+    jump_skip = 0;
+    return;
+  }
+
+  if (me == 0) {
+    if (infile != stdin) fclose(infile);
+    infile = fopen(arg[0],"r");
+    if (infile == NULL) {
+      char str[128];
+      sprintf(str,"Cannot open input script %s",arg[0]);
+      error->one(str);
+    }
+    infiles[nfile-1] = infile;
+  }
+
+  if (narg == 2) {
+    label_active = 1;
+    if (labelstr) delete [] labelstr;
+    int n = strlen(arg[1]) + 1;
+    labelstr = new char[n];
+    strcpy(labelstr,arg[1]);
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+
+void Input::label()
+{
+  if (narg != 1) error->all("Illegal label command");
+  if (label_active && strcmp(labelstr,arg[0]) == 0) label_active = 0;
+}
+
+/* ---------------------------------------------------------------------- */
+
+void Input::log()
+{
+  if (narg != 1) error->all("Illegal log command");
+
+  if (me == 0) {
+    if (logfile) fclose(logfile);
+    if (strcmp(arg[0],"none") == 0) logfile = NULL;
+    else {
+      logfile = fopen(arg[0],"w");
+      if (logfile == NULL) {
+	char str[128];
+	sprintf(str,"Cannot open logfile %s",arg[0]);
+	error->one(str);
+      }
+    }
+    if (universe->nworlds == 1) universe->ulogfile = logfile;
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+
+void Input::next_command()
+{
+  if (variable->next(narg,arg)) jump_skip = 1;
+}
+
+/* ---------------------------------------------------------------------- */
+
+void Input::print()
+{
+  if (narg != 1) error->all("Illegal print command");
+
+  // substitute for $ variables (no printing)
+
+  substitute(arg[0],0);
+
+  if (me == 0) {
+    if (screen) fprintf(screen,"%s\n",arg[0]);
+    if (logfile) fprintf(logfile,"%s\n",arg[0]);
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+
+void Input::variable_command()
+{
+  variable->set(narg,arg);
+}
+
+/* ---------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------- */
+/* ---------------------------------------------------------------------- */
+
 /* ----------------------------------------------------------------------
-   one function for each input command
+   one function for each ChemCell-specific input script command
 ------------------------------------------------------------------------- */
 
 void Input::balance()
@@ -457,29 +668,11 @@ void Input::boundary()
 
 /* ---------------------------------------------------------------------- */
 
-void Input::cd()
-{
-  if (narg != 1) error->all("Illegal cd command");
-  chdir(arg[0]);
-}
-
-/* ---------------------------------------------------------------------- */
-
 void Input::check()
 {
   if (!simulator) error->all("Must set run_style first");
   if (!move) error->all("Run style does not support checking");
   move->set_check(narg,arg);
-}
-
-/* ---------------------------------------------------------------------- */
-
-void Input::clear()
-{
-  if (narg > 0) error->all("Illegal clear command");
-  sleep(2);              // pause to insure RNG does not start with same RN
-  System::destroy();
-  System::create();
 }
 
 /* ---------------------------------------------------------------------- */
@@ -541,27 +734,6 @@ void Input::dump_modify()
 
 /* ---------------------------------------------------------------------- */
 
-void Input::echo()
-{
-  if (narg != 1) error->all("Illegal echo command");
-
-  if (strcmp(arg[0],"none") == 0) {
-    echo_screen = 0;
-    echo_log = 0;
-  } else if (strcmp(arg[0],"screen") == 0) {
-    echo_screen = 1;
-    echo_log = 0;
-  } else if (strcmp(arg[0],"log") == 0) {
-    echo_screen = 0;
-    echo_log = 1;
-  } else if (strcmp(arg[0],"both") == 0) {
-    echo_screen = 1;
-    echo_log = 1;
-  } else error->all("Illegal echo command");
-}
-
-/* ---------------------------------------------------------------------- */
-
 void Input::fix()
 {
   if (!simulator) error->all("Must set run_style first");
@@ -580,105 +752,12 @@ void Input::global()
 
 /* ---------------------------------------------------------------------- */
 
-void Input::include()
-{
-  if (narg != 1) error->all("Illegal include command");
-
-  if (me == 0) {
-    if (nfile == maxfile) {
-      maxfile++;
-      infiles = (FILE **) 
-        memory->srealloc(infiles,maxfile*sizeof(FILE *),"input:infiles");
-    }
-    infile = fopen(arg[0],"r");
-    if (infile == NULL) {
-      char str[128];
-      sprintf(str,"Could not open new input file %s",arg[0]);
-      error->one(str);
-    }
-    infiles[nfile++] = infile;
-  }
-}
-
-/* ---------------------------------------------------------------------- */
-
-void Input::jump()
-{
-  if (narg < 1 || narg > 2) error->all("Illegal jump command");
-
-  if (jump_skip) {
-    jump_skip = 0;
-    return;
-  }
-
-  if (me == 0) {
-    if (infile != stdin) fclose(infile);
-    infile = fopen(arg[0],"r");
-    if (infile == NULL) {
-      char str[128];
-      sprintf(str,"Could not open new input file %s",arg[0]);
-      error->one(str);
-    }
-    infiles[nfile-1] = infile;
-  }
-
-  if (narg == 2) {
-    label_active = 1;
-    if (labelstr) delete [] labelstr;
-    int n = strlen(arg[1]) + 1;
-    labelstr = new char[n];
-    strcpy(labelstr,arg[1]);
-  }
-}
-
-/* ---------------------------------------------------------------------- */
-
-void Input::label()
-{
-  if (narg != 1) error->all("Illegal label command");
-  if (label_active && strcmp(labelstr,arg[0]) == 0) label_active = 0;
-}
-
-/* ---------------------------------------------------------------------- */
-
-void Input::log()
-{
-  if (narg != 1) error->all("Illegal log command");
-
-  if (me == 0) {
-    if (logfile) fclose(logfile);
-    if (strcmp(arg[0],"none") == 0) logfile = NULL;
-    else {
-      char fname[128];
-      strcpy(fname,arg[0]);
-      //if (universe->nworlds == 1) strcpy(fname,arg[0]);
-      //else sprintf(fname,"%s.%d",arg[0],universe->iworld);
-      logfile = fopen(fname,"w");
-      if (logfile == NULL) {
-	char str[128];
-	sprintf(str,"Cannot open logfile %s",fname);
-	error->one(str);
-      }
-    }
-    if (universe->nworlds == 1) universe->ulogfile = logfile;
-  }
-}
-
-/* ---------------------------------------------------------------------- */
-
 void Input::move_style()
 {
   if (!simulator) error->all("Must set run_style first");
   if (simulator->spatial_flag == 0)
     error->all("Cannot use move_style command with non-spatial simulation");
   move->set_style(narg,arg);
-}
-
-/* ---------------------------------------------------------------------- */
-
-void Input::next_command()
-{
-  if (variable->next(narg,arg)) jump_skip = 1;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -699,27 +778,6 @@ void Input::permeable()
   if (simulator->spatial_flag == 0)
     error->all("Cannot use permeable command with non-spatial simulation");
   move->set_permeable(narg,arg);
-}
-
-/* ---------------------------------------------------------------------- */
-
-void Input::print()
-{
-  if (narg < 1) error->all("Illegal print command");
-
-  char *str = new char[MAXLINE];
-  str[0] = '\0';
-  for (int iarg = 0; iarg < narg; iarg++) {
-    strcat(str,arg[iarg]);
-    strcat(str," ");
-  }
-  
-  if (me == 0) {
-    if (screen) fprintf(screen,"%s\n",str);
-    if (logfile) fprintf(logfile,"%s\n",str);
-  }
-
-  delete [] str;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -856,13 +914,6 @@ void Input::unreact()
   if (!simulator) error->all("Must set run_style first");
   if (narg != 1) error->all("Illegal unreact command");
   react->delete_reaction(arg[0]);
-}
-
-/* ---------------------------------------------------------------------- */
-
-void Input::variable_command()
-{
-  variable->set(narg,arg);
 }
 
 /* ---------------------------------------------------------------------- */

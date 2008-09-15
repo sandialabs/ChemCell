@@ -162,7 +162,7 @@ void Output::init()
   // init all dumps
 
   if (ndump && simulator->spatial_flag == 0)
-    error->all("Cannot write dump files for non-spatial style");
+    error->all("Cannot write dump files for non-spatial simulation");
 
   int idump;
   for (idump = 0; idump < ndump; idump++) dump[idump]->init();
@@ -193,7 +193,6 @@ void Output::init()
   if (restart_every == 0) next_restart = simulator->laststep + 1;
   if (restart_every && ntimestep % restart_every != 0)
     next_restart = (ntimestep/restart_every)*restart_every + restart_every;
-
   // next = next timestep any output will be done
 
   next = MIN(next_stats,next_restart);

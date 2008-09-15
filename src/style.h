@@ -11,12 +11,11 @@
    See the README file in the top-level ChemCell directory.
 ------------------------------------------------------------------------- */
 
-// universal classes for ChemCell styles
-
 #ifdef CommandInclude
 #include "move_test.h"
 #include "read_restart.h"
 #include "run.h"
+#include "shell.h"
 #include "write_restart.h"
 #endif
 
@@ -24,6 +23,7 @@
 CommandStyle(move_test,MoveTest)
 CommandStyle(read_restart,ReadRestart)
 CommandStyle(run,Run)
+CommandStyle(shell,Shell)
 CommandStyle(write_restart,WriteRestart)
 #endif
 

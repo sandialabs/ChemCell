@@ -11,26 +11,15 @@
    See the README file in the top-level ChemCell directory.
 ------------------------------------------------------------------------- */
 
-#include "string.h"
-#include "mpi.h"
+#ifndef SHELL_H
+#define SHELL_H
+
 #include "system.h"
-#include "input.h"
 
-/* ----------------------------------------------------------------------
-   main program to drive LAMMPS
-------------------------------------------------------------------------- */
+class Shell : public System {
+ public:
+  Shell() {}
+  void command(int, char **);
+};
 
-int main (int argc, char **argv)
-{
-  MPI_Init(&argc,&argv);
-  System sys;
-  sys.open(argc,argv,MPI_COMM_WORLD);
-  sys.create();
-
-  Input *input = sys.input;
-  input->file();
-
-  sys.destroy();
-  sys.close();
-  MPI_Finalize();
-}
+#endif

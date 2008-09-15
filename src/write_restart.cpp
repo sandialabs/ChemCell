@@ -37,7 +37,7 @@ void WriteRestart::command(int narg, char **arg)
   if (narg != 1) error->all("Illegal write_restart command");
   if (!simulator) error->all("Must set run_style first");
   if (simulator->spatial_flag == 0)
-    error->all("Cannot write restart files for non-spatial style");
+    error->all("Cannot write restart files for non-spatial simulation");
 
   // insure simulation is fully setup
 

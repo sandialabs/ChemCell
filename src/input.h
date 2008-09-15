@@ -17,18 +17,17 @@
 #include "stdio.h"
 #include "system.h"
 
-class Variable;
-
 class Input : public System {
  public:
   int narg;                      // # of command args
   char **arg;                    // parsed args for command
-  Variable *variable;            // defined variables
+  class Variable *variable;      // defined variables
 
   Input(int, char **);
   ~Input();
-  char *next();                  // return next executable command from script
-  char *one(char *);             // execute a single passed-in command
+  void file();                   // process all input
+  void file(const char *);       // process an input script
+  char *one(const char *);       // process a single command
   void substitute(char *, int);  // substitute for variables in a string
 
  private:
@@ -48,31 +47,33 @@ class Input : public System {
   void parse();                // parse an input text line
   int execute_command();       // execute a single command
 
-  void balance();              // individual commands
+  void clear();                // input script commands
+  void echo();
+  void ifthenelse();
+  void include();
+  void jump();
+  void label();
+  void log();
+  void next_command();
+  void print();
+  void variable_command();
+
+  void balance();              // ChemCell commands
   void bin();
   void boundary();
-  void cd();
   void check();
-  void clear();
   void count();
   void debug();
   void diffusion();
   void dimension();
   void dump();
   void dump_modify();
-  void echo();
   void fix();
   void global();
-  void include();
-  void jump();
-  void label();
-  void log();
   void move_style();
   void move_test();
-  void next_command();
   void particles();
   void permeable();
-  void print();
   void probability();
   void react_modify();
   void reaction();
@@ -89,7 +90,6 @@ class Input : public System {
   void undump();
   void unfix();
   void unreact();
-  void variable_command();
   void volume();
 };
 
