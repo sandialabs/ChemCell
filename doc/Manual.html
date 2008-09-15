@@ -14,25 +14,30 @@ Commands</A>
 
 <CENTER><H3>ChemCell Documentation 
 </H3></CENTER>
-<CENTER>(1 Jan 2007 version of ChemCell) 
+<CENTER>(10 Sept 2008 version of ChemCell) 
 </CENTER>
 <P>ChemCell is a particle-based reaction/diffusion simulator designed for
-modeling protein networks in biological cells.  Membrane surfaces are
-defined as geometric regions or connected triangles.  Particles of
-different species diffuse via Brownian motion in 3d and on 2d
-surfaces.  Particles react with nearby neighbors according to rules
-derived from chemical rate equations.  The <A HREF = "http://www.cs.sandia.gov/~sjplimp/pizza.html">Pizza.py package</A> of
-Python-based tools can create input files for ChemCell and visualize
-and plot its output.
+modeling protein networks in biological cells with spatial
+information.  Compartments within the cell are bounded by membrane
+surfaces defined as geometric regions or connected triangles.
+Particles of different species diffuse via Brownian motion in 3d and
+on 2d surfaces.  Particles react with nearby neighbors according to
+rules derived from chemical rate equations.  Non-spatial simulations
+can also be run using an ODE solver or the Gillespie Stochastic
+Simulation Algorithm (SSA).  Spatial simulations can be run in
+parallel if desired or a parallel machine can be used to run multiple
+serial simulations for statistical averaging.  The <A HREF = "http://www.cs.sandia.gov/~sjplimp/pizza.html">Pizza.py
+package</A> of Python-based tools can create input files for
+ChemCell and visualize and plot its output.
 </P>
 <P>ChemCell was developed at Sandia National Laboratories, a US
 Department of Energy facility, with funding from the DOE.  It is an
 open-source code, distributed freely under the terms of the GNU Public
 License (GPL).
 </P>
-<P>The primary authors of the code are <A HREF = "http://www.cs.sandia.gov/~sjplimp">Steve Plimpton</A> and Alex
-Slepoy, who can be contacted at sjplimp@sandia.gov and
-aslepoy@sandia.gov.  The <A HREF = "http://www.cs.sandia.gov/~sjplimp/chemcell.html">ChemCell WWW Site</A> at
+<P>The authors of the code are <A HREF = "http://www.cs.sandia.gov/~sjplimp">Steve Plimpton</A> and Alex Slepoy, who
+can be contacted at sjplimp at sandia.gov and alexander.sleopy at
+nnsa.doe.gov.  The <A HREF = "http://www.cs.sandia.gov/~sjplimp/chemcell.html">ChemCell WWW Site</A> at
 www.cs.sandia.gov/~sjplimp/chemcell.html has more information about
 the code and its uses.
 </P>

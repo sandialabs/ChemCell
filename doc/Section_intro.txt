@@ -10,25 +10,38 @@ Section"_Section_start.html :c
 
 1. Introduction :h3
 
+These sections provide an overview of what ChemCell can do, describe
+what it means for ChemCell to be an open-source code, and acknowledge
+the funding and people who have contributed to ChemCell.
+
+1.1 "What is ChemCell"_#1_1
+1.2 "Open source distribution"_#1_2
+1.3 "Acknowledgments"_#1_3 :all(b)
+
 1.1 What is ChemCell :link(1_1),h4
 
 ChemCell is a particle-based reaction/diffusion simulator designed to
 model signaling, regulatory, or metabolic networks in biological
-cells.
+cells.  It can be run as a spatial simulator where the particles
+diffuse within the specified geometry of a cell, or as a non-spatial
+simulator where there is no diffusion and the network of chemical
+reactions is time-integrated as a set of ODEs or stochastically via
+the Gillespie Stochastic Simulation Algorithm (SSA).
 
-In ChemCell a single protein, protein complex, or other biomolecule is
-represented as a dimensionless particle.  The geometry of a cell
-(membranes, organelles, etc) is represented as simple geometrical
-objects (spheres, boxes, etc) or as triangulated surfaces.  Particles
-diffuse randomly via Brownian motion, either in 3d or on 2d surfaces.
-Biochemical reactions occur in accord with chemical rate equations,
-which are inputs to ChemCell.  Monte Carlo rules are used to perform
-reactions each timestep.  One option is to treat the system of
-particles as well-mixed with no spatial information (no diffusion
-takes place) and reactions are performed via the Gillespie spatial
-stochastic algorithm (SSA).  Alternatively, spatial information is
-tracked, and heuristic rules are used to perform binary reactions
-between pairs of nearby particles.
+For spatial simulations, a single protein, protein complex, or other
+biomolecule is represented as a dimensionless particle.  The geometry
+of a cell (membranes, organelles, etc) is represented as simple
+geometrical objects (spheres, boxes, etc) or as triangulated surfaces.
+Particles diffuse randomly via Brownian motion, either in 3d or on 2d
+surfaces.  Biochemical reactions occur in accord with chemical rate
+equations, which are inputs to ChemCell.  Monte Carlo rules are used
+to perform reactions each timestep between pairs of nearby particles.
+
+For non-spatial simulations, the cell is treated as a well-mixed
+chemical reactor, and the chemical rate equations can be
+time-integrated either by a fixed-step or adaptive-timestep ODE solver
+or by the direct-method variant of the Gillespie Stochastic Simulation
+Algorithm (SSA) using the Gibson/Bruck methodology.
 
 ChemCell runs on single-processor desktop or laptop machines, but can
 also be run in parallel.  Multiple runs can be performed on a
@@ -48,24 +61,18 @@ discussion of the open-source philosophy.
 :link(gnu,http://www.gnu.org/copyleft/gpl.html)
 
 ChemCell is designed to be easy to modify or extend with new
-capabilities, such as new reaction rules or boundary conditions.  See
-"this section"_Section_modify.html for more details.
+capabilities, such as modified reaction rules or boundary conditions.
+See "this section"_Section_modify.html for more details.
 
 ChemCell is written in C++ and can be downloaded from the "ChemCell
-WWW Site"_lws.  No additional software is needed to run ChemCell on a
-desktop machine.  ChemCell will run on any parallel machine that
-compiles C++ and supports the "MPI"_mpi message-passing library.  This
-includes distributed- or shared-memory parallel machines and
-Beowulf-style clusters.  To run with spatial parallelism, the "Zoltan
-library" must also be installed.
+WWW Site"_lws.  No additional software is needed to run ChemCell in
+serial on a desktop machine.  ChemCell will run on any parallel
+machine that compiles C++ and supports the "MPI"_mpi message-passing
+library.  This includes distributed- or shared-memory parallel
+machines and Beowulf-style clusters.  To run with spatial parallelism,
+the "Zoltan library" must also be installed.
 
 :link(zoltan,http://www.cs.sandia.gov/zoltan.html)
-
-ChemCell was originally developed with funding from the US Department
-of Energy's "Genomes-to-Life program"_gtl.  It is distributed by
-"Sandia National Labs"_snl.  See "this section"_#1_3 for more
-information on ChemCell funding and individuals who have contributed
-to ChemCell.
 
 :link(snl,http://www.sandia.gov)
 
@@ -81,16 +88,18 @@ from "the Pizza.py WWW site"_pizza.
 :link(python,http://www.python.org)
 
 These are other simulation codes, similar in spirit to ChemCell, which
-model biochemical networks of diffusing particles within a spatial
-geometry:
+model biochemical networks of reacting/diffusing chemical species
+within a spatial geometry:
 
-"MCell"_mcell - by Joel Stiles (PSC) and Tom Bartol (Salk)
-"MesoRD"_meso - by European group
-"Smoldyn"_smoldyn - by Steve Andrews (LBNL) :ul
+"VCell"_vcell - by Jim Schaaf and Les Loew (NRCAM, U Conn Health Center)
+"MCell"_mcell - by Joel Stiles (PSC) and Tom Bartol (Salk Institute)
+"MesoRD"_meso - by Johan Hattne (EMBL) and Johan Elf (Uppsala Univ)
+"Smoldyn"_smoldyn - by Steve Andrews (TMSI) :ul
 
+:link(vcell,http://www.nrcam.uchc.edu/index.html)
 :link(mcell,http://www.mcell.cnl.salk.edu)
 :link(meso,http://mesord.sourceforge.net)
-:link(smoldyn,http://genomics.lbl.gov/~sandrews/software.html)
+:link(smoldyn,http://www.smoldyn.org)
 
 :line
 
@@ -125,50 +134,27 @@ of the GPL.
 source file headers (including the copyright and GPL notices) should
 remain part of the code.
 
-In the spirit of an open-source code, these are various ways you can
-contribute to making ChemCell better.  You can send email on any of
-these items.
-
-Point prospective users to the "ChemCell WWW Site"_cws.  Mention it in
-talks or link to it from your WWW site. :ulb,l
-
-If you find an error or omission in this manual or on the "ChemCell WWW
-Site"_cws, or have a suggestion for something to clarify or include,
-send an email. :l
-
-If you find a bug, "this section"_Section_errors.html#7_2 describes
-how to report it. :l
-
-If you publish a paper using ChemCell results, send the citation (and
-any cool pictures or movies if you like) to add to the Publications,
-Pictures, and Movies pages of the "ChemCell WWW Site"_cws, with links
-and attributions back to you. :l
-
-Create a new Makefile.machine that can be added to the src/MAKE
-directory. :l
-
-ChemCell is designed to be easy to extend with new code for features
-like boundary conditions or diagnostic computations.  "This
-section"_Section_modify.html gives details.  If you add a feature of
-general interest, it can be added to the ChemCell distribution. :l
-
-Cash.  Small denominations, unmarked bills preferred.  Paper sack OK.
-Leave on desk.  "VISA"_email also accepted.  Chocolate chip cookies
-encouraged. :ule,l
+In the spirit of an open-source code, if you use ChemCell for
+something useful or if you fix a bug or add a new feature or
+applicaton to the code, let us know.  We would like to include your
+contribution in the released version of the code and/or advertise your
+success on our WWW page.
 
 :line
 
-1.3 Acknowledgements and citations :h4,link(1_3)
+1.3 Acknowledgements :h4,link(1_3)
 
+ChemCell is distributed by "Sandia National Laboratories"_sandia.
 ChemCell development has been funded by the "US Department of
-Energy"_doe (DOE), through its "Genomes-to-Life program"_gtl via the
-"OASCR"_oascr and "OBER"_ober offices, and also by DOE's LDRD program.
+Energy"_doe (DOE), through its LDRD program and through its
+"Genomes-to-Life program"_gtl via the "ASCR"_oascr and "BER"_ober
+offices.
 
-The original version of ChemCell was funded by the US Department of
-Energy's Genomics:GTL program ("www.doegenomestolife.org"_gtl) under
-the "project"_ourgtl, "Carbon Sequestration in Synechococcus Sp.: From
-Molecular Machines to Hierarchical Modeling".
+The original version of ChemCell was part of the "GTL project"_ourgtl
+"Carbon Sequestration in Synechococcus Sp.: From Molecular Machines to
+Hierarchical Modeling".
 
+:link(sandia,http://www.sandia.gov)
 :link(doe,http://www.doe.gov)
 :link(gtl,http://www.doegenomestolife.org)
 :link(ourgtl,http://www.genomes2life.org)
@@ -176,26 +162,21 @@ Molecular Machines to Hierarchical Modeling".
 :link(ober,http://www.er.doe.gov/production/ober/ober_top.html)
 
 If you use ChemCell results in your published work, please provide a
-link to the ChemCell WWW page and cite this technical report:
-
-SAND report
-
-The report describes the original version of ChemCell.  Papers that
-describe the serial and parallel algorithms used in the current
-version are still being written.  Citations for them will be put on
-the WWW page when available.
+link to the "ChemCell WWW page"_cws and cite one of the ChemCell
+papers listed there.
 
 If you send information about your publication, we'll be pleased to
 add it to the Publications page of the "ChemCell WWW Site"_cws.  Ditto
 for a picture or movie for the Pictures or Movies pages.
 
-The primary authors of ChemCell are "Steve Plimpton"_sjp and Alex
-Slepoy of Sandia National Labs who can be contacted via email
-at sjplimp@sandia.gov or aslepoy@sandia.gov.
+The authors of ChemCell are "Steve Plimpton"_sjp and Alex Slepoy of
+Sandia National Labs who can be contacted via email at sjplimp at
+sandia.gov or alexander.slepoy at nnsa.doe.gov.
 
 :link(sjp,http://www.cs.sandia.gov/~sjplimp)
 
-We also thank Dan Gillespie for constructive feedback on ChemCell
-algorithms and Steve Andrews (LBNL) for helping us understand and
-implement portions of his Smoldyn algorithms into the current version
-of ChemCell.  Thank TMSI collaborators.
+We thank Larry Lok and Roger Brent at the Molecular Sciences Institute
+(TMSI) for help in designing ChemCell.  We also thank Dan Gillespie
+for constructive feedback on algorithms and Steve Andrews (LBNL, now
+TMSI) for helping us understand and use output from his Smoldyn code
+in ChemCell.
