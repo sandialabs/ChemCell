@@ -30,7 +30,8 @@ Fix::Fix(int narg, char **arg)
   // mask settings - same as define settings in modify.cpp
 
   INITIAL = 1;
-  CLEANUP = 2;
+  FINAL   = 2;
+  CLEANUP = 4;
 }
 
 /* ---------------------------------------------------------------------- */

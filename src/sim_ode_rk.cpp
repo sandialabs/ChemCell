@@ -103,6 +103,8 @@ void SimODERK::run()
     chem->reactions();
     timer->stamp(TIME_REACT);
 
+    if (modify->n_final) modify->final();
+
     if (output->next == ntimestep) {
       output->write(ntimestep);
       timer->stamp(TIME_OUTPUT);

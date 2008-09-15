@@ -388,12 +388,12 @@ int Input::execute_command()
   else if (!strcmp(command,"log")) log();
   else if (!strcmp(command,"move_style")) move_style();
   else if (!strcmp(command,"next")) next_command();
+  else if (!strcmp(command,"particles")) particles();
   else if (!strcmp(command,"permeable")) permeable();
   else if (!strcmp(command,"probability")) probability();
+  else if (!strcmp(command,"print")) print();
   else if (!strcmp(command,"react_modify")) react_modify();
   else if (!strcmp(command,"reaction")) reaction();
-  else if (!strcmp(command,"particles")) particles();
-  else if (!strcmp(command,"print")) print();
   else if (!strcmp(command,"region")) region();
   else if (!strcmp(command,"restart")) restart();
   else if (!strcmp(command,"run_style")) run_style();

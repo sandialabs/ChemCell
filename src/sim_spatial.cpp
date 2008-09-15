@@ -124,6 +124,8 @@ void SimSpatial::run()
     chem->reactions();
     timer->stamp(TIME_REACT);
 
+    if (modify->n_final) modify->final();
+
     if (grid->next_balance == ntimestep) {
       grid->dynamic();
       chem->setup_stencil();

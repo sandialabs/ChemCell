@@ -20,13 +20,14 @@ class Fix : public System {
  public:
   char *id,*style;
 
-  int INITIAL,CLEANUP;                   // mask settings
+  int INITIAL,FINAL,CLEANUP;                   // mask settings
 
   Fix(int, char **);
   virtual ~Fix();
   virtual int setmask() = 0;
   virtual void init() {}
   virtual void initial() {}
+  virtual void final() {}
   virtual void cleanup() {}
 };
 

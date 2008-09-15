@@ -23,13 +23,14 @@ class Modify : public System {
  public:
   int nfix;
   int maxfix;
-  int n_initial,n_cleanup;
+  int n_initial,n_final,n_cleanup;
   Fix **fix;                 // list of fixes
 
   Modify();
   ~Modify();
   void init();
   void initial();
+  void final();
   void cleanup();
 
   void add_fix(int, char **);
@@ -38,7 +39,9 @@ class Modify : public System {
  private:
   int *fmask;                // bit mask of when fix is applied
   int *list_initial;         // lists of fixes to apply at different times
+  int *list_final;
   int *list_cleanup;
+
   void list_init(int, int &, int *&);
 };
 

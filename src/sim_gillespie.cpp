@@ -123,6 +123,8 @@ void SimGillespie::run()
     else if (!outflag && simulator->ctime > stats_time) flag = 1;
     else if (doneflag) flag = 1;
 
+    if (modify->n_final) modify->final();
+
     if (flag) {
       output->stats();
       if (outflag) output->next_stats += output->stats_every;
