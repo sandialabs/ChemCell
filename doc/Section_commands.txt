@@ -52,7 +52,7 @@ In the first case, statistics are printed every 10 timesteps during
 two simulations of 100 timesteps each.  In the 2nd case, the default
 statistics setting (0) is used for the 1st 100 step simulation and the
 setting of 10 is used for the 2nd one.  Thus statistics during the 1st
-run will only be printed at the beginning and end or the run.
+run will only be printed at the beginning and end of the run.
 
 (2) Some commands are only valid when they follow other commands.  For
 example you cannot setup a reaction until the particle species it
@@ -133,9 +133,9 @@ Run a simulation :ol
 The last 2 stages can be repeated as many times as desired.  I.e. run
 a simulation, change some settings, run some more, etc.  The "Define
 bins" and "Define geometry" stages are not used for non-spatial
-(Gillespie) simulations.  Each of the stages is now described in
-more detail.  Remember that almost all the commands need only be used
-if a non-default value is desired.
+simulations (ODE or Gillespie).  Each of the stages is now described
+in more detail.  Remember that almost all the commands need only be
+used if a non-default value is desired.
 
 (1) Initialization
 
@@ -184,8 +184,8 @@ using these commands:
 
 (7) Run a simulation
 
-A reaction/diffusion or Gillespie simulation is run using the
-"run"_run.html command.
+A spatial or non-spatial simulation is run using the "run"_run.html
+command.
 
 :line
 
@@ -261,6 +261,7 @@ This section lists all ChemCell commands alphabetically.  The
 "global"_global.html,
 "include"_include.html,
 "jump"_jump.html,
+"label"_label.html,
 "log"_log.html,
 "move_style"_move_style.html,
 "move_test"_move_test.html,
@@ -287,3 +288,13 @@ This section lists all ChemCell commands alphabetically.  The
 "variable"_variable.html,
 "volume"_volume.html,
 "write_restart"_write_restart.html :tb(c=6)
+
+:line
+
+Fix styles.  See the "fix"_fix.html command for one-line descriptions
+of each style or click on the style itself for a full description:
+
+"conc/random"_fix_addforce.html,
+"conc/set"_fix_aveforce.html,
+"ave/dna/toggle"_fix_ave_atom.html,
+"rate/saturate"_fix_ave_spatial.html :tb(c=6)

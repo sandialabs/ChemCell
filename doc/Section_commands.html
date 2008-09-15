@@ -55,7 +55,7 @@ run      100
 two simulations of 100 timesteps each.  In the 2nd case, the default
 statistics setting (0) is used for the 1st 100 step simulation and the
 setting of 10 is used for the 2nd one.  Thus statistics during the 1st
-run will only be printed at the beginning and end or the run.
+run will only be printed at the beginning and end of the run.
 </P>
 <P>(2) Some commands are only valid when they follow other commands.  For
 example you cannot setup a reaction until the particle species it
@@ -136,9 +136,9 @@ Site</A>.
 <P>The last 2 stages can be repeated as many times as desired.  I.e. run
 a simulation, change some settings, run some more, etc.  The "Define
 bins" and "Define geometry" stages are not used for non-spatial
-(Gillespie) simulations.  Each of the stages is now described in
-more detail.  Remember that almost all the commands need only be used
-if a non-default value is desired.
+simulations (ODE or Gillespie).  Each of the stages is now described
+in more detail.  Remember that almost all the commands need only be
+used if a non-default value is desired.
 </P>
 <P>(1) Initialization
 </P>
@@ -187,8 +187,8 @@ using these commands:
 </P>
 <P>(7) Run a simulation
 </P>
-<P>A reaction/diffusion or Gillespie simulation is run using the
-<A HREF = "run.html">run</A> command.
+<P>A spatial or non-spatial simulation is run using the <A HREF = "run.html">run</A>
+command.
 </P>
 <HR>
 
@@ -250,12 +250,21 @@ using these commands:
 <DIV ALIGN=center><TABLE  BORDER=1 >
 <TR><TD ><A HREF = "balance.html">balance</A></TD><TD ><A HREF = "bin.html">bin</A></TD><TD ><A HREF = "boundary.html">boundary</A></TD><TD ><A HREF = "cd.html">cd</A></TD><TD ><A HREF = "check.html">check</A></TD><TD ><A HREF = "clear.html">clear</A></TD></TR>
 <TR><TD ><A HREF = "count.html">count</A></TD><TD ><A HREF = "debug.html">debug</A></TD><TD ><A HREF = "diffusion.html">diffusion</A></TD><TD ><A HREF = "dimension.html">dimension</A></TD><TD ><A HREF = "dump.html">dump</A></TD><TD ><A HREF = "dump_modify.html">dump_modify</A></TD></TR>
-<TR><TD ><A HREF = "echo.html">echo</A></TD><TD ><A HREF = "fix.html">fix</A></TD><TD ><A HREF = "global.html">global</A></TD><TD ><A HREF = "include.html">include</A></TD><TD ><A HREF = "jump.html">jump</A></TD><TD ><A HREF = "log.html">log</A></TD></TR>
-<TR><TD ><A HREF = "move_style.html">move_style</A></TD><TD ><A HREF = "move_test.html">move_test</A></TD><TD ><A HREF = "next.html">next</A></TD><TD ><A HREF = "particles.html">particles</A></TD><TD ><A HREF = "permeable.html">permeable</A></TD><TD ><A HREF = "probability.html">probability</A></TD></TR>
-<TR><TD ><A HREF = "react_modify.html">react_modify</A></TD><TD ><A HREF = "reaction.html">reaction</A></TD><TD ><A HREF = "read_restart.html">read_restart</A></TD><TD ><A HREF = "region.html">region</A></TD><TD ><A HREF = "restart.html">restart</A></TD><TD ><A HREF = "run.html">run</A></TD></TR>
-<TR><TD ><A HREF = "run_style.html">run_style</A></TD><TD ><A HREF = "seed.html">seed</A></TD><TD ><A HREF = "species.html">species</A></TD><TD ><A HREF = "stats.html">stats</A></TD><TD ><A HREF = "stats_modify.html">stats_modify</A></TD><TD ><A HREF = "timestep.html">timestep</A></TD></TR>
-<TR><TD ><A HREF = "triangles.html">triangles</A></TD><TD ><A HREF = "undump.html">undump</A></TD><TD ><A HREF = "unfix.html">unfix</A></TD><TD ><A HREF = "unreact.html">unreact</A></TD><TD ><A HREF = "variable.html">variable</A></TD><TD ><A HREF = "volume.html">volume</A></TD></TR>
-<TR><TD ><A HREF = "write_restart.html">write_restart</A> 
+<TR><TD ><A HREF = "echo.html">echo</A></TD><TD ><A HREF = "fix.html">fix</A></TD><TD ><A HREF = "global.html">global</A></TD><TD ><A HREF = "include.html">include</A></TD><TD ><A HREF = "jump.html">jump</A></TD><TD ><A HREF = "label.html">label</A></TD></TR>
+<TR><TD ><A HREF = "log.html">log</A></TD><TD ><A HREF = "move_style.html">move_style</A></TD><TD ><A HREF = "move_test.html">move_test</A></TD><TD ><A HREF = "next.html">next</A></TD><TD ><A HREF = "particles.html">particles</A></TD><TD ><A HREF = "permeable.html">permeable</A></TD></TR>
+<TR><TD ><A HREF = "probability.html">probability</A></TD><TD ><A HREF = "react_modify.html">react_modify</A></TD><TD ><A HREF = "reaction.html">reaction</A></TD><TD ><A HREF = "read_restart.html">read_restart</A></TD><TD ><A HREF = "region.html">region</A></TD><TD ><A HREF = "restart.html">restart</A></TD></TR>
+<TR><TD ><A HREF = "run.html">run</A></TD><TD ><A HREF = "run_style.html">run_style</A></TD><TD ><A HREF = "seed.html">seed</A></TD><TD ><A HREF = "species.html">species</A></TD><TD ><A HREF = "stats.html">stats</A></TD><TD ><A HREF = "stats_modify.html">stats_modify</A></TD></TR>
+<TR><TD ><A HREF = "timestep.html">timestep</A></TD><TD ><A HREF = "triangles.html">triangles</A></TD><TD ><A HREF = "undump.html">undump</A></TD><TD ><A HREF = "unfix.html">unfix</A></TD><TD ><A HREF = "unreact.html">unreact</A></TD><TD ><A HREF = "variable.html">variable</A></TD></TR>
+<TR><TD ><A HREF = "volume.html">volume</A></TD><TD ><A HREF = "write_restart.html">write_restart</A> 
+</TD></TR></TABLE></DIV>
+
+<HR>
+
+<P>Fix styles.  See the <A HREF = "fix.html">fix</A> command for one-line descriptions
+of each style or click on the style itself for a full description:
+</P>
+<DIV ALIGN=center><TABLE  BORDER=1 >
+<TR><TD ><A HREF = "fix_addforce.html">conc/random</A></TD><TD ><A HREF = "fix_aveforce.html">conc/set</A></TD><TD ><A HREF = "fix_ave_atom.html">ave/dna/toggle</A></TD><TD ><A HREF = "fix_ave_spatial.html">rate/saturate</A> 
 </TD></TR></TABLE></DIV>
 
 </HTML>
