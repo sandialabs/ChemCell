@@ -1,7 +1,6 @@
 <HTML>
 <CENTER><A HREF = "Section_modify.html">Previous Section</A> - <A HREF = "http://www.cs.sandia.gov/~sjplimp/chemcell.html">ChemCell WWW Site</A> -
-<A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell Commands</A> - <A HREF = "Section_history.html">Next
-Section</A> 
+<A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell Commands</A> 
 </CENTER>
 
 
@@ -127,413 +126,694 @@ from multiple places in the code.
 
 <DT><I>%d local particles on proc %d are in ghost cells after compact</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>%d particles assigned to procs</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>2d particle move hit a triangle vertex</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Alias %s already exists</I> 
 
-<DT><I>All universe variables must have same # of values</I> 
+<P>Cannot re-use a species name.
+</P>
+<DT><I>All universe/uloop variables must have same # of values</I> 
+
+<DD>Self-explanatory. 
 
 <DT><I>All variables in next command must be same style</I> 
 
+<DD>Self-explanatory. 
+
 <DT><I>Bin size of 0.0</I> 
+
+<DD>Self-explanatory. 
 
 <DT><I>Bins are already setup</I> 
 
+<P>Cannot use the global or boundary or bin command if bins have already
+been initialized by the bin command.
+</P>
+<DD>** ADD TEXT 
+
 <DT><I>Cannot add triangles to a region surface</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Cannot change dimension of existing particles</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Cannot check for a 2d species</I> 
 
-<DT><I>Cannot have 0-reactant reactions with spatial simulation</I> 
+<DD>** ADD TEXT 
 
 <DT><I>Cannot do move_test with timestep = 0</I> 
 
+<DD>** ADD TEXT 
+
+<DT><I>Cannot evaluate variable equal command</I> 
+
+<DD>** ADD TEXT 
+
+<DT><I>Cannot have 0-reactant reactions with spatial simulation</I> 
+
+<DD>** ADD TEXT 
+
 <DT><I>Cannot open file %s</I> 
 
-<DT><I>Cannot open fix conc file %s</I> 
+<DD>** ADD TEXT 
+
+<DT><I>Cannot open fix conc/random file %s</I> 
+
+<DD>** ADD TEXT 
+
+<DT><I>Cannot open fix conc/set file %s</I> 
+
+<DD>** ADD TEXT 
+
+<DT><I>Cannot open logfile %s</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Cannot open restart file %s</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Cannot perform match with two or more wildcard *</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Cannot redefine variable as a different style</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Cannot set permeability for a 2d species</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Cannot use balance command with non-spatial simulation</I> 
 
+<DD>Self-explanatory. 
+
 <DT><I>Cannot use bin command with non-spatial simulation</I> 
+
+<DD>Self-explanatory. 
 
 <DT><I>Cannot use count command with spatial simulation</I> 
 
+<DD>Self-explantory. 
+
 <DT><I>Cannot use diffusion command with non-spatial simulation</I> 
+
+<DD>Self-explantory. 
 
 <DT><I>Cannot use dimension command with non-spatial simulation</I> 
 
+<DD>Self-explantory. 
+
 <DT><I>Cannot use dump command with non-spatial simulation</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Cannot use fix conc/random with non-spatial simulations</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Cannot use fix conc/set with spatial simulations</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Cannot use fix dna/toggle with spatial simulations</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Cannot use fix rate/saturate with spatial simulations</I> 
+
+<DD>Self-explantory. 
 
 <DT><I>Cannot use global command with non-spatial simulation</I> 
 
+<DD>Self-explantory. 
+
 <DT><I>Cannot use move_style command with non-spatial simulation</I> 
+
+<DD>Self-explantory. 
 
 <DT><I>Cannot use move_test command with non-spatial simulation</I> 
 
+<DD>Self-explantory. 
+
 <DT><I>Cannot use particle command with non-spatial simulation</I> 
+
+<DD>Self-explantory. 
 
 <DT><I>Cannot use permeable command with non-spatial simulation</I> 
 
+<DD>Self-explantory. 
+
 <DT><I>Cannot use probability command with non-spatial simulation</I> 
+
+<DD>Self-explantory. 
 
 <DT><I>Cannot use region command with non-spatial simulation</I> 
 
+<DD>Self-explantory. 
+
 <DT><I>Cannot use this run style in parallel</I> 
 
-<DT><I>Cannot use timestep command with non-spatial simulation</I> 
+<DD>Only some run styles support parallel execution. 
+
+<DT><I>Cannot use timestep command with gillespie simulation</I> 
+
+<DD>Stochastic simulations set the timestep for each reaction. 
 
 <DT><I>Cannot use triangles command with non-spatial simulation</I> 
 
+<DD>Self-explantory. 
+
 <DT><I>Cannot use vectors in parallel</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Cannot use volume command with spatial simulation</I> 
 
-<DT><I>Cannot write dump files for Gillespie style</I> 
+<DD>Self-explantory. 
 
-<DT><I>Cannot write restart files for Gillespie style</I> 
+<DT><I>Cannot write dump files for non-spatial simulation</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Cannot write restart files for non-spatial style</I> 
+
+<DD>Self-explantory. 
 
 <DT><I>Code is not compiled with move debug option</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Command-line variable already exists</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Could not find reaction ID</I> 
 
+<DD>Self-explantory. 
+
 <DT><I>Could not find undump ID</I> 
+
+<DD>Self-explantory. 
 
 <DT><I>Could not find unfix ID</I> 
 
+<DD>Self-explantory. 
+
 <DT><I>Could not find unreact ID</I> 
+
+<DD>Self-explantory. 
 
 <DT><I>Could not open balance file</I> 
 
+<DD>The output file used by the balance command could not be opened. 
+
 <DT><I>Could not open dump file</I> 
+
+<DD>The output file used by the dump command could not be opened. 
 
 <DT><I>Could not open input script</I> 
 
+<DD>Self-explantory. 
+
 <DT><I>Could not open log.ccell</I> 
 
-<DT><I>Could not open logfile %s</I> 
+<DD>Self-explantory. 
 
 <DT><I>Could not open logfile</I> 
 
+<DD>Self-explantory. 
+
 <DT><I>Could not open move_test file</I> 
+
+<DD>The output file used by the move_test command could not be opened. 
 
 <DT><I>Could not open new input file %s</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Could not open screen file</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Could not open universe log file</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Could not open universe screen file</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Cound not find dump_modify ID</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Did not assign all particles correctly</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Did not find matching reaction particle</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Dump species count does not match particle species count</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Failed to allocate %d bytes for array %s</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Failed to reallocate %d bytes for array %s</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Global bin does not map to local domain</I> 
 
-<DT><I>Illegal $ variable</I> 
+<DD>** ADD TEXT 
 
-<DT><I>Illegal balance command</I> 
+<DT><I>Illegal ... command</I> 
 
-<DT><I>Illegal bin command</I> 
-
-<DT><I>Illegal boundary command</I> 
-
-<DT><I>Illegal cd command</I> 
-
-<DT><I>Illegal check command</I> 
-
-<DT><I>Illegal clear command</I> 
-
-<DT><I>Illegal command-line argument</I> 
-
-<DT><I>Illegal count command</I> 
-
-<DT><I>Illegal debug command</I> 
-
-<DT><I>Illegal diffusion command</I> 
+<DD>Self-explanatory.  Check the input script syntax and compare to the
+documentation for the command.  You can use -echo screen as a
+command-line option when running LAMMPS to see the offending line. 
 
 <DT><I>Illegal diffusion constant</I> 
 
-<DT><I>Illegal dimension command</I> 
+<DD>** ADD TEXT 
 
 <DT><I>Illegal dimensionality</I> 
 
-<DT><I>Illegal dump command</I> 
+<DD>** ADD TEXT 
 
 <DT><I>Illegal dump frequency</I> 
 
-<DT><I>Illegal dump_modify command</I> 
-
-<DT><I>Illegal echo command</I> 
-
-<DT><I>Illegal fix command</I> 
-
-<DT><I>Illegal fix conc command</I> 
+<DD>** ADD TEXT 
 
 <DT><I>Illegal fix style</I> 
 
-<DT><I>Illegal global command</I> 
-
-<DT><I>Illegal include command</I> 
-
-<DT><I>Illegal jump command</I> 
-
-<DT><I>Illegal keyword in bin command</I> 
-
-<DT><I>Illegal label command</I> 
-
-<DT><I>Illegal log command</I> 
-
-<DT><I>Illegal move_style command</I> 
-
-<DT><I>Illegal move_test command</I> 
-
-<DT><I>Illegal next command</I> 
-
-<DT><I>Illegal particles command</I> 
-
-<DT><I>Illegal permeable command</I> 
-
-<DT><I>Illegal print command</I> 
-
-<DT><I>Illegal probability command</I> 
-
-<DT><I>Illegal react_modify command</I> 
-
-<DT><I>Illegal reaction command</I> 
-
-<DT><I>Illegal read_restart command</I> 
+<DD>** ADD TEXT 
 
 <DT><I>Illegal region arguments</I> 
 
-<DT><I>Illegal region command</I> 
+<DD>** ADD TEXT 
 
 <DT><I>Illegal region style</I> 
 
-<DT><I>Illegal restart command</I> 
-
-<DT><I>Illegal run command</I> 
+<DD>** ADD TEXT 
 
 <DT><I>Illegal run style</I> 
 
-<DT><I>Illegal seed command</I> 
+<DD>** ADD TEXT 
 
-<DT><I>Illegal species command</I> 
+<DT><I>Invalid variable name</I> 
 
-<DT><I>Illegal stats command</I> 
-
-<DT><I>Illegal surface command</I> 
-
-<DT><I>Illegal timestep command</I> 
-
-<DT><I>Illegal undump command</I> 
-
-<DT><I>Illegal unfix command</I> 
-
-<DT><I>Illegal unreact command</I> 
-
-<DT><I>Illegal variable command</I> 
-
-<DT><I>Illegal variable in command-line argument</I> 
-
-<DT><I>Illegal variable in next command</I> 
-
-<DT><I>Illegal variable in variable command</I> 
-
-<DT><I>Illegal volume command</I> 
-
-<DT><I>Illegal write_restart command</I> 
+<DD>Variable name used in an input script line is invalid. 
 
 <DT><I>Incorrect args in dump_modify command</I> 
 
+<DD>** ADD TEXT 
+
+<DT><I>Incorrect args in stats_modify command</I> 
+
+<DD>** ADD TEXT 
+
 <DT><I>Invalid 2d particle move</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Invalid args in move_test command</I> 
 
+<DD>** ADD TEXT 
+
+<DT><I>Invalid command-line argument</I> 
+
+<DD>** ADD TEXT 
+
 <DT><I>Invalid flag in header of restart file</I> 
+
+<DD>** ADD TEXT 
+
+<DT><I>Invalid reaction ID in fix dna/toggle command</I> 
+
+<DD>** ADD TEXT 
+
+<DT><I>Invalid reaction ID in fix rate/saturate command</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Invalid region arguments</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Invalid settings for reaction %s</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Invalid species %s in stats command</I> 
 
-<DT><I>Invalid species ID in fix_conc command</I> 
+<DD>** ADD TEXT 
 
-<DT><I>Invalid value for variable equal command</I> 
+<DT><I>Invalid species ID in fix conc/random command</I> 
+
+<DD>** ADD TEXT 
+
+<DT><I>Invalid species ID in fix conc/set command</I> 
+
+<DD>** ADD TEXT 
+
+<DT><I>Invalid species ID in fix dna/toggle command</I> 
+
+<DD>** ADD TEXT 
+
+<DT><I>Invalid species ID in fix rate/saturate command</I> 
+
+<DD>** ADD TEXT 
+
+<DT><I>Invalid variable in next command</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Invalid variable style with next command</I> 
 
+<DD>** ADD TEXT 
+
+<DT><I>Invalid vector in variable equal command</I> 
+
+<DD>** ADD TEXT 
+
 <DT><I>Label wasn't found in input script</I> 
+
+<DD>Self-explanatory. 
 
 <DT><I>Max 2d move distance > bin size</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Max 3d move distance > bin size</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Max reaction distance > bin size</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Move to next bin out of range</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Must be 2 or more bins in periodic dimensions</I> 
 
+<DD>** ADD TEXT 
+
+<DT><I>Must print stats in count units for spatial simulation</I> 
+
+<DD>** ADD TEXT 
+
 <DT><I>Must set bins before defining region</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Must set bins before read restart</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Must set bins before reading particles</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Must set bins before reading surface</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Must set bins before run</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Must set global domain before bins</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Must set run_style first</I> 
+
+<DD>Cannot use this command before the run style is set 
 
 <DT><I>Must set simulation domain via global command</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Must set volume for run style gillespie</I> 
+
+<DD>** ADD TEXT 
+
+<DT><I>Must set volume for run style ode/rk</I> 
+
+<DD>** ADD TEXT 
+
+<DT><I>Must set volume for run style ode</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Must use -in switch with multiple partitions</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>No matching move style parameters</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>No particle species match dump species</I> 
 
+<DD>** ADD TEXT 
+
+<DT><I>Part,spec %d,%d on step %d exceeds MAXITER</I> 
+
+<DD>** ADD TEXT 
+
 <DT><I>Particle %d is outside global domain</I> 
 
-<DT><I>Particle %d on timestep %d exceeds MAXITER</I> 
+<DD>** ADD TEXT 
 
 <DT><I>Particle %d's triangle does not exist</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Particle is outside global domain</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Particles surf-ID does not exist</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Permeability is set for 2d species</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Permeable probabilities do not sum to 1.0</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Permeable stick species is not 2d</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Post-migrate: %d particles on proc %d are not in correct bin</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Pre-migrate: %d particles on proc %d are not in correct bin</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Probability %g for reaction %s is too large</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Processor partitions are inconsistent</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Quotes in a single arg</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Reaction ID %s already exists</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Reaction cannot have more than MAX_PRODUCT products</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Reaction has no numeric rate</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Reaction must have 0,1,2 reactants</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Reading 2d particles for a 3d species</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Reading 3d particles for a 2d species</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Region extends outside global domain</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Region intersects bin next to periodic boundary</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Region surf-ID already exists</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Replacing a fix, but new style != old style</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Reuse of dump ID</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Run style does not support checking</I> 
 
+<DD>Not all run styles can use check command. 
+
 <DT><I>Simulation domain is already set</I> 
 
-<DT><I>Species %s listed twice in stats command</I> 
+<DD>** ADD TEXT 
 
 <DT><I>Species already exists and no new aliases are defined</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Sticking species is not 2d</I> 
 
-<DT><I>Substitution for undefined variable</I> 
+<DD>** ADD TEXT 
+
+<DT><I>Substitution for illegal variable</I> 
+
+<DD>Input script line contained a variable that could not be substituted
+for. 
 
 <DT><I>Summed probability %g for species %s & %s is too large</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Summed probability %g for species %s is too large</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Triangle intersects bin next to periodic boundary</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Two or more wildcard * in count species ID</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Two or more wildcard * in diffusion species ID</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Two or more wildcard * in dimension species ID</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Two or more wildcard * in stats species ID</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Unbalanced quotes in input line</I> 
+
+<DD>No matching end double quote was found following a leading double
+quote. 
 
 <DT><I>Unexpected end of file</I> 
 
-<DT><I>Universe variable count < # of partitions</I> 
+<DD>** ADD TEXT 
+
+<DT><I>Universe/uloop variable count < # of partitions</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Unknown command: %s</I> 
 
-<DT><I>Unknown function for variable equal command</I> 
+<DD>The command is not known to ChemCell.  Check the input script. 
 
 <DT><I>Unknown keyword for variable equal command</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Unknown species %s in check command</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Unknown species %s in permeable command</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Unknown species in count command</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Unknown species in diffusion command</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Unknown species in dimension command</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Unknown species in move_test command</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Unknown species in particles command</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Unknown species in reaction command</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Unknown surface %s in check command</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Unknown surface %s in permeable command</I> 
 
-<DT><I>Unknown vector for variable equal command</I> 
+<DD>** ADD TEXT 
 
 <DT><I>Using variable equal keyword before sim box is defined</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Vertex %d in surf %s is outside global domain</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>World variable count doesn't match # of partitions</I> 
+
+<DD>** ADD TEXT 
 
 
 </DL>
@@ -543,13 +823,23 @@ from multiple places in the code.
 
 <DT><I>Particle is inside surface</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Particle is outside surface</I> 
+
+<DD>** ADD TEXT 
 
 <DT><I>Restart file used different # of processors</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Restart file version does not match ChemCell version</I> 
 
+<DD>** ADD TEXT 
+
 <DT><I>Run styles do not match</I> 
+
+<DD>** ADD TEXT 
 
 
 </DL>

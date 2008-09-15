@@ -68,7 +68,7 @@ ChemCell documentation.
   3.4 "Commands listed by category"_3_4 :b
   3.5 "Commands listed alphabetically"_3_5 :ule,b
 "Example problems"_Section_example.html :l
-"Pizza.py package for pre- and post-processing"_Section_tools.html :l
+"Additional tools"_Section_tools.html :l
 "Modifying & Extending ChemCell"_Section_modify.html :l
 "Errors"_Section_errors.html :l
   7.1 "Common problems"_7_1 :ulb,b

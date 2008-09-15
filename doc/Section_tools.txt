@@ -1,4 +1,4 @@
-"Previous Section"_Section_perf.html - "ChemCell WWW Site"_cws -
+"Previous Section"_Section_example.html - "ChemCell WWW Site"_cws -
 "ChemCell Documentation"_cd - "ChemCell Commands"_cc - "Next
 Section"_Section_modify.html :c
 
@@ -8,7 +8,7 @@ Section"_Section_modify.html :c
 
 :line
 
-5. Pizza.py package for pre- and post-processing :h3
+5. Additional tools :h3
 
 ChemCell is designed to be a computational kernel for performing
 reaction/diffusion computations.  Additional pre- and post-processing

@@ -25,13 +25,12 @@ that do actual computations are written in vanilla C-style code and
 typically operate on simple C-style data structures (vectors and
 arrays).
 </P>
-<P>Most of the new features described in this section require you to
-write a new C++ class.  Creating a new class requires 2 files, a
-source code file (*.cpp) and a header file (*.h).  Their contents are
-briefly discussed below.  Enabling ChemCell to invoke the new class is
-as simple as adding two definition lines to the style.h file, in the
-same syntax as the existing ChemCell classes are defined in the
-style.h file.
+<P>The new features described in this section require you to write a new
+C++ class.  Creating a new class requires 2 files, a source code file
+(*.cpp) and a header file (*.h).  Their contents are briefly discussed
+below.  Enabling ChemCell to invoke the new class is as simple as
+adding two definition lines to the style.h file, in the same syntax as
+the existing ChemCell classes are defined in the style.h file.
 </P>
 <P>The power of C++ and its object-orientation is that usually, all the
 code and variables needed to define the new feature are contained in
@@ -93,17 +92,7 @@ set = 0 are ones you must define in your new class to give it the
 functionality ChemCell expects.  Virtual functions that are not set to 0
 are functions you can optionally define.
 </P>
-<P>Here are some additional guidelines for modifying ChemCell and adding
-new functionality:
-</P>
-<P>Think about whether what you want to do would be better as a pre- or
-post-processing step.  Many computations are more easily and more
-quickly done that way.
-</P>
-<P>If you add something useful, send me an <A HREF = "mailto:sjplimp@sandia.gov">email</A>.  We might be
-interested in adding it to the ChemCell distribution.
-</P>
-
+<HR>
 
 <HR>
 
@@ -135,80 +124,24 @@ Region class.  They implement the <I>sphere</I> style of the
 <A NAME = "fix"></A><H4>Fix options 
 </H4>
 <P>In ChemCell, a "fix" is any operation that is computed during
-timestepping that alters some property of the system.  Essentially
-everything that happens during a simulation besides force computation,
-neighbor list manipulation, and output, is a "fix".  This includes
-time integration (update of velocity and coordinates), force
-constraints (SHAKE or walls), and diagnostics (compute a diffusion
-coefficient).  See the fix.h file for a list of methods these classes
-defines.
+timestepping that alters some property of the system.  It could be
+alteration of a rate or a rate equation, implementation of a boundary
+condition, or calculation of some diagnostic property.  See the fix.h
+file for a list of methods these classes defines.
 </P>
-<P>There are dozens of fix options in ChemCell; choose one as a template
-that is similar to what you want to implement.  They can be as simple
-as zeroing out forces (see <A HREF = "fix_enforce2d.html">fix enforce2d</A> which
-corresponds to the <I>enforce2d</I> style) or as complicated as applying
-SHAKE constraints on bonds and angles (see <A HREF = "fix_shake.html">fix shake</A>
-which corresponds to the <I>shake</I> style) which involves many extra
-computations.
-</P>
-<P>Here is a brief description of the class methods in fix.h:
+<P>Here is a brief description of the class methods.  All of these
+methods are optional.
 </P>
 <DIV ALIGN=center><TABLE  BORDER=1 >
-<TR><TD >setmask</TD><TD > determines when the fix is called during the timestep</TD></TR>
-<TR><TD >init</TD><TD > initialization before a run</TD></TR>
-<TR><TD >setup</TD><TD > called immediately before the 1st timestep</TD></TR>
-<TR><TD >initial_integrate</TD><TD > called at very beginning of each timestep</TD></TR>
-<TR><TD >pre_exchange</TD><TD > called before atom exchange on re-neighboring steps</TD></TR>
-<TR><TD >pre_neighbor</TD><TD > called before neighbor list build</TD></TR>
-<TR><TD >post_force</TD><TD > called after pair & molecular forces are computed</TD></TR>
-<TR><TD >final_integrate</TD><TD > called at end of each timestep</TD></TR>
-<TR><TD >end_of_step</TD><TD > called at very end of timestep</TD></TR>
-<TR><TD >write_restart</TD><TD > dumps fix info to restart file</TD></TR>
-<TR><TD >restart</TD><TD > uses info from restart file to re-initialize the fix</TD></TR>
-<TR><TD >grow_arrays</TD><TD > allocate memory for atom-based arrays used by fix</TD></TR>
-<TR><TD >copy_arrays</TD><TD > copy atom info when an atom migrates to a new processor</TD></TR>
-<TR><TD >memory_usage</TD><TD > report memory used by fix</TD></TR>
-<TR><TD >pack_exchange</TD><TD > store atom's data in a buffer</TD></TR>
-<TR><TD >unpack_exchange</TD><TD > retrieve atom's data from a buffer</TD></TR>
-<TR><TD >pack_restart</TD><TD > store atom's data for writing to restart file</TD></TR>
-<TR><TD >unpack_restart</TD><TD > retrieve atom's data from a restart file buffer</TD></TR>
-<TR><TD >size_restart</TD><TD > size of atom's data</TD></TR>
-<TR><TD >maxsize_restart</TD><TD > max size of atom's data</TD></TR>
-<TR><TD >initial_integrate_respa</TD><TD > same as initial_integrate, but for rRESPA</TD></TR>
-<TR><TD >post_force_respa</TD><TD > same as post_force, but for rRESPA</TD></TR>
-<TR><TD >final_integrate_respa</TD><TD > same as final_integrate, but for rRESPA</TD></TR>
-<TR><TD >pack_comm</TD><TD > pack a buffer to communicate a per-atom quantity</TD></TR>
-<TR><TD >unpack_comm</TD><TD > unpack a buffer to communicate a per-atom quantity</TD></TR>
-<TR><TD >pack_reverse_comm</TD><TD > pack a buffer to reverse communicate a per-atom quantity</TD></TR>
-<TR><TD >unpack_reverse_comm</TD><TD > unpack a buffer to reverse communicate a per-atom quantity</TD></TR>
-<TR><TD >thermo_fields</TD><TD > define quantities for thermodynamic output</TD></TR>
-<TR><TD >thermo_compute</TD><TD > compute thermodynamic quantities 
+<TR><TD >init</TD><TD > called before timestepping</TD></TR>
+<TR><TD >initial</TD><TD > called at the beginning of each timestep</TD></TR>
+<TR><TD >final</TD><TD > called at the end of each timestep</TD></TR>
+<TR><TD >cleanup</TD><TD > called after timestepping 
 </TD></TR></TABLE></DIV>
 
-<P>Typically, only a small fraction of these methods are defined for a
-particular fix.  Setmask is mandatory, as it determines when the fix
-will be invoked during the timestep.  Fixes that perform time
-integration (<I>nve</I>, <I>nvt</I>, <I>npt</I>) implement initial_integrate and
-final_integrate to perform velocity Verlet updates.  Fixes that
-constrain forces implement post_force.  Fixes that perform diagnostics
-typically implement end_of_step.
-</P>
-<P>If the fix needs to store information for each atom that persists from
-timestep to timestep, it can manage that memory and migrate it with
-the atoms as they move from processors to processor by implementing
-the grow_arrays, copy_arrays, pack_exchange, and unpack_exchange
-methods.  Similary, the pack_restart and unpack_restart methods can be
-implemented to store information about the fix in restart files.  If
-you wish a integrator or force constraint fix to work with rRESPA (see
-the <A HREF = "run_style.html">run_style</A> command), the initial_integrate,
-post_force_integrate, and final_integrate_respa methods can be
-implemented.  The thermo_fields and thermo_compute methods enable a
-fix to contribute values to thermodynamic output, as printed
-quantities and/or to be summed to the potential energy of the system.
-</P>
 <HR>
 
-<A NAME = "atom"></A><H4>Atom options 
+<A NAME = "simulator"></A><H4>Simulator options 
 </H4>
 <P>All classes that define an atom style are sub-classes of the Atom
 class.  See the atom.h file for a list of methods these classes
@@ -221,54 +154,27 @@ then a new atom class can be created.
 class.  They implement the <I>atomic</I> style of the
 <A HREF = "atom_style.html">atom_style</A> command.
 </P>
-<P>Here is a brief description of the class methods in atom.h:
+<P>Here is a brief description of the class methods required:
 </P>
 <DIV ALIGN=center><TABLE  BORDER=1 >
-<TR><TD >copy</TD><TD > copy info for one atom to another atom's array location</TD></TR>
-<TR><TD >pack_comm</TD><TD > store an atom's info in a buffer communicated every timestep</TD></TR>
-<TR><TD >unpack_comm</TD><TD > retrieve an atom's info from the buffer</TD></TR>
-<TR><TD >pack_reverse</TD><TD > store an atom's info in a buffer communicating partial forces</TD></TR>
-<TR><TD >unpack_reverse</TD><TD > retrieve an atom's info from the buffer</TD></TR>
-<TR><TD >pack_border</TD><TD > store an atom's info in a buffer communicated on neighbor re-builds</TD></TR>
-<TR><TD >unpack_border</TD><TD > retrieve an atom's info from the buffer</TD></TR>
-<TR><TD >pack_exchange</TD><TD > store all an atom's info to migrate to another processor</TD></TR>
-<TR><TD >unpack_exchange</TD><TD > retrieve an atom's info from the buffer</TD></TR>
-<TR><TD >
+<TR><TD >init</TD><TD > setup a simulation</TD></TR>
+<TR><TD >run</TD><TD > the timestepper 
 </TD></TR></TABLE></DIV>
 
-<P>There are also several methods in atom.cpp you will need to augment
-with information about your new atom class, following the patterns of
-the other atom styles.  These routines are so similar for all classes,
-that it was simpler to just have one master routine for all classes.
-</P>
-<DIV ALIGN=center><TABLE  BORDER=1 >
-<TR><TD >constructor</TD><TD > create style variable and atom array ptrs to NULL</TD></TR>
-<TR><TD >destructor</TD><TD > free memory for atom arrays</TD></TR>
-<TR><TD >set_style</TD><TD > set style variable</TD></TR>
-<TR><TD >check_style</TD><TD > check for pure style vs hybrid style</TD></TR>
-<TR><TD >style2arg</TD><TD > convert style variables to keywords</TD></TR>
-<TR><TD >grow</TD><TD > re-allocate atom arrays to longer lengths</TD></TR>
-<TR><TD >unpack_data</TD><TD > parse atom lines from data file</TD></TR>
-<TR><TD >create_one</TD><TD > create an individual atom of this style</TD></TR>
-<TR><TD >size_restart</TD><TD > number of restart quantities associated with proc's atoms</TD></TR>
-<TR><TD >pack_restart</TD><TD > pack atom quantities into a buffer</TD></TR>
-<TR><TD >unpack_restart</TD><TD > unpack atom quantities from a buffer</TD></TR>
-<TR><TD >memory_usage</TD><TD > memory allocated by atom arrays</TD></TR>
-<TR><TD >
-</TD></TR></TABLE></DIV>
+<HR>
 
 <A NAME = "command"></A><H4>New Top-level Commands 
 </H4>
 <P>It is possible to add a new command to a ChemCell input script as
-opposed to adding a new style to an existing command (atom_style,
-pair_style, fix, etc).  For example the create_atoms, read_data,
-velocity, and run commands are all top-level ChemCell commands that are
-listed in the Command section of style.h.  When such a command is
-encountered in the ChemCell input script, the topmost level of ChemCell
-(ChemCell.cpp) simply creates a class with the corresponding name,
-invokes the "command" method of the class, and passes it the arguments
-from the input script.  The command method can perform whatever
-operations it wishes on the ChemCell data structures.
+opposed to adding a new style to an existing command (region, fix,
+simulator).  For example the run and write_restart commands are
+top-level ChemCell commands that are listed in the Command section of
+style.h.  When such a command is encountered in the ChemCell input
+script, the topmost level of ChemCell (ChemCell.cpp) simply creates a
+class with the corresponding name, invokes the "command" method of the
+class, and passes it the arguments from the input script.  The command
+method can perform whatever operations it wishes on the ChemCell data
+structures.
 </P>
 <P>Thus to add a new command, you simply need to add a *.cpp and *.h file
 containing a single class:

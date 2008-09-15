@@ -1,6 +1,6 @@
-"Previous Section"_Section_howto.html - "ChemCell WWW Site"_cws -
+"Previous Section"_Section_commands.html - "ChemCell WWW Site"_cws -
 "ChemCell Documentation"_cd - "ChemCell Commands"_cc - "Next
-Section"_Section_perf.html :c
+Section"_Section_tools.html :c
 
 :link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
 :link(cd,Manual.html)
@@ -21,7 +21,7 @@ pre-processing tool using the *.py scripts in the same directory.
 Plots can be made from the log files using the "clog" and plotting
 tools in Pizza.py.  Images and movies can be made from the dump and
 data files using the "cdata", "dump", and various visualization tools
-in Pizza.py.  Examples are shown on the "ChemCell WWW Site"_lws.
+in Pizza.py.  Examples are shown on the "ChemCell WWW Site"_cws.
 
 These are the sample problems in the examples sub-directories:
 
@@ -36,7 +36,7 @@ cd kinase
 cp ../../src/ccell_linux .         # copy ChemCell executable to this dir
 ccell_linux < in.kinase            # run the problem :pre
 
-Running the simulation produces the files {dump.indent} and
+Running the simulation produces the files {dump.kinase} and
 {log.ccell}.  Assuming you have Pizza.py installed, you could
 visualize the dump file as follows:
 

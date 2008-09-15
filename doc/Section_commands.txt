@@ -1,6 +1,6 @@
 "Previous Section"_Section_start.html - "ChemCell WWW Site"_cws -
 "ChemCell Documentation"_cd - "ChemCell Commands"_cc - "Next
-Section"_Section_howto.html :c
+Section"_Section_example.html :c
 
 :link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
 :link(cd,Manual.html)
@@ -233,9 +233,10 @@ Actions:
 
 Miscellaneous:
 
-"cd"_cd.html, "clear"_clear.html, "echo"_echo.html,
-"include"_include.html, "jump"_jump.html, "log"_log.html,
-"next"_next.html, "variable"_variable.html
+"clear"_clear.html, "echo"_echo.html,
+"include"_include.html, "jump"_jump.html,
+"label"_label.html,"log"_log.html, "next"_next.html,
+"print"_print.html, "shell"_shell.html, "variable"_variable.html
 
 :line
 
@@ -247,7 +248,6 @@ This section lists all ChemCell commands alphabetically.  The
 "balance"_balance.html,
 "bin"_bin.html,
 "boundary"_boundary.html,
-"cd"_cd.html,
 "check"_check.html,
 "clear"_clear.html,
 "count"_count.html,
@@ -269,6 +269,7 @@ This section lists all ChemCell commands alphabetically.  The
 "particles"_particles.html,
 "permeable"_permeable.html,
 "probability"_probability.html,
+"print"_print.html,
 "react_modify"_react_modify.html,
 "reaction"_reaction.html,
 "read_restart"_read_restart.html,
@@ -277,6 +278,7 @@ This section lists all ChemCell commands alphabetically.  The
 "run"_run.html,
 "run_style"_run_style.html,
 "seed"_seed.html,
+"shell"_shell.html,
 "species"_species.html,
 "stats"_stats.html,
 "stats_modify"_stats_modify.html,
@@ -294,7 +296,7 @@ This section lists all ChemCell commands alphabetically.  The
 Fix styles.  See the "fix"_fix.html command for one-line descriptions
 of each style or click on the style itself for a full description:
 
-"conc/random"_fix_addforce.html,
-"conc/set"_fix_aveforce.html,
-"ave/dna/toggle"_fix_ave_atom.html,
-"rate/saturate"_fix_ave_spatial.html :tb(c=6)
+"conc/random"_fix_conc_random.html,
+"conc/set"_fix_conc_set.html,
+"dna/toggle"_fix_dna_toggle.html,
+"rate/saturate"_fix_rate_saturate.html :tb(c=6)
