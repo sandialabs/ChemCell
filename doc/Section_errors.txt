@@ -454,7 +454,7 @@ This is a hard (very large) limit defined in the input.cpp file. :dd
 {Invalid command-line argument} :dt
 
 One or more command-line arguments is invalid.  Check the syntax of
-the command you are using to launch LAMMPS. :dd
+the command you are using to launch ChemCell. :dd
 
 {Invalid flag in header of restart file} :dt
 
@@ -665,7 +665,7 @@ The -in command-line option must be used to specify a file. :dd
 {Processor partitions are inconsistent} :dt
 
 The total number of processors in all partitions must match the number
-of processors LAMMPS is running on. :dd
+of processors ChemCell is running on. :dd
 
 {Reaction ID %s already exists} :dt
 

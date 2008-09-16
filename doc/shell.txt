@@ -1,8 +1,9 @@
-"SPPARKS WWW Site"_sws - "SPPARKS Documentation"_sd - "SPPARKS Commands"_sc :c
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
 
-:link(sws,http://www.cs.sandia.gov/~sjplimp/spparks.html)
-:link(sd,Manual.html)
-:link(sc,Section_commands.html#comm)
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
 
 :line
 
@@ -43,7 +44,7 @@ commands are executed by only a single processor, so that
 files/directories are not being manipulated by multiple processors.
 
 The {cd} style executes the Unix "cd" command to change the working
-directory.  All subsequent SPPARKS commands that read/write files will
+directory.  All subsequent ChemCell commands that read/write files will
 use the new directory.  All processors execute this command.
 
 The {mkdir} style executes the Unix "mkdir" command to create
@@ -61,9 +62,9 @@ removed.
 
 [Restrictions:]
 
-SPPARKS does not detect errors or print warnings when any of these Unix
-commands execute.  E.g. if the specified directory does not exist,
-executing the {cd} command will silently not do anything.
+ChemCell does not detect errors or print warnings when any of these
+Unix commands execute.  E.g. if the specified directory does not
+exist, executing the {cd} command will silently not do anything.
 
 [Related commands:] none
 
