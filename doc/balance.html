@@ -16,8 +16,9 @@ Commands</A>
 </P>
 <P>balance style arg(s) file
 </P>
-<PRE>style = <I>static</I> or <I>dynamic</I>
-  <I>static</I> args: <I>bin</I> or <I>particle</I>
+<LI>style = <I>static</I> or <I>dynamic</I> 
+
+<PRE>  <I>static</I> args: <I>bin</I> or <I>particle</I>
     bin = balance by bin count
     particle = balance by particle count
   <I>dynamic</I> args: N threshhold
@@ -55,9 +56,14 @@ processors, so an imbalance factor or 1.0 is perfect balance.
 </P>
 <P>File is an optional argument.  If specified the load balance
 partitions are written to the file each time the balancer is invoked,
-formatted as a surface of triangles
+formatted as a surface of triangles which can be visualized with
+the <A HREF = "http://www.cs.sandia.gov/~sjplimp/pizza.html">Pizza.py toolkit</A>.
 </P>
-<P><B>Restrictions:</B> none
+
+
+<P><B>Restrictions:</B>
+</P>
+<P>This command can only be used for spatial simulations.
 </P>
 <P><B>Related commands:</B> none
 </P>

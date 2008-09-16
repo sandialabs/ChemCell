@@ -26,7 +26,10 @@ Define the lower-left and upper-right corners of the global simulation
 domain for a spatial simulation.  All particles and cellular geometry
 must be inside this domain.
 
-[Restrictions:] none
+[Restrictions:]
+
+This command can only be used by a spatial simulation.  See the
+"volume"_volume.html command for non-spatial simulations.
 
 [Related commands:]
 

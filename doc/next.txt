@@ -13,24 +13,35 @@ next command :h3
 
 next variables :pre
 
-variables = one or more lower-case single-character variable names :ul
+variables = one or more variable names :ul
 
 [Examples:]
 
 next x
-next a t x :pre
+next a t x myTemp :pre
 
 [Description:]
 
 This command is used with variables defined by the
 "variable"_variable.html command.  It assigns the next value to the
-variable from the variable's list, so that when $X is subsequently
-substituted for in an input script command, the new value is used.  X
-is a single lower-case character from "a" to "z".
+variable from the list of values defined for that variable by the
+"variable"_variable.html command.  Thus when that variable is
+subsequently substituted for in an input script command, the new value
+is used. 
 
-All variables in a single next command must be the same style:
-{index}, {loop}, or {universe}.  {Equal}- or {world}-style variables
-cannot be incremented by a next command.
+See the "variable"_variable.html command for info on how to define and
+use different kinds of variables in ChemCell input scripts.  If a
+variable name is a single lower-case character from "a" to "z", it can
+be used in an input script command as $a or $z.  If it is multiple
+letters, it can be used as $\{myTemp\}.
+
+If multiple variables are used as arguments to the {next} command,
+then all must be of the same variable style: {index}, {loop},
+{universe}, or {uloop}.  An exception is that {universe}- and
+{uloop}-style variables can be mixed in the same {next} command.
+{Atom}- or {equal}- or {world}-style variables cannot be incremented
+by a next command.  All the variables specified are incremented by one
+value from their respective lists.
 
 When any of the variables in the next command has no more values, a
 flag is set that causes the input script to skip the next
@@ -39,15 +50,15 @@ a next command to exit.
 
 When the next command is used with {index}- or {loop}-style variables,
 the next value is assigned to the variable for all processors.  When
-the next command is used with {universe}-style variables, the next
-value is assigned to whichever processor partition executes the
-command first.  All processors in the partition are assigned the same
-value.  Running ChemCell on multiple partitions of processors via the
-"-partition" command-line switch is described in "this
-section"_Section_start.html#2_4 of the manual.  {Universe}-style
-variables are incremented using the files "tmp.ccell.variable" and
-"tmp.ccell.variable.lock" which you will see in your directory during
-such a ChemCell run.
+the next command is used with {universe}- or {uloop}-style variables,
+the next value is assigned to whichever processor partition executes
+the command first.  All processors in the partition are assigned the
+same value.  Running ChemCell on multiple partitions of processors via
+the "-partition" command-line switch is described in "this
+section"_Section_start.html#2_6 of the manual.  {Universe}- and
+{uloop}-style variables are incremented using the files
+"tmp.ccell.variable" and "tmp.ccell.variable.lock" which you will
+see in your directory during such a ChemCell run.
 
 Here is an example of running a series of simulations using the next
 command with an {index}-style variable.  If this input script is named
@@ -55,10 +66,10 @@ in.abc, 8 simulations would be run using data files from
 directories run1 thru run8.
 
 variable d index run1 run2 run3 run4 run5 run6 run7 run8
-cd $d
+shell cd $d
 include abc.model
 run 10000
-cd ..
+shell cd ..
 clear
 next d
 jump in.abc :pre
@@ -83,12 +94,13 @@ run 10000
 next j
 jump in.script
 next i
-jump in.script
+jump in.script :pre
 
 [Restrictions:] none
 
 [Related commands:]
 
-"variable"_variable.html, "jump"_jump.html, "include"_include.html
+"jump"_jump.html, "include"_include.html, "shell"_shell.html,
+"variable"_variable.html,
 
 [Default:] none

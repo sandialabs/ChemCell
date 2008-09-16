@@ -14,7 +14,7 @@ fix command :h3
 fix ID style args :pre
 
 ID = user-assigned name for the fix
-style = one of list of style names (see below)
+style = style name of fix (see possible styles below)
 args = arguments used by a particular style :ul
 
 [Examples:]
@@ -25,11 +25,11 @@ fix 1 conc 100 data.file 2 CheA CheAa 2 CheAa CheA :pre
 
 Set a fix that will be applied during a simulation.  In ChemCell, a
 "fix" is any operation that is applied to the system during
-timestepping.  Examples include setting particle species types,
-applying boundary conditions, or computing diagnostics.  There is
-currently only a small number of fixes defined in ChemCell, but any
-number can be added - see "this section"_Section_modify.html of the
-documentation for a discussion.
+timestepping.  Examples include adjusting reaction rates, applying
+boundary conditions, or computing diagnostics.  There is currently
+only a small number of fixes defined in ChemCell, but others can be
+added - see "this section"_Section_modify.html of the documentation
+for a discussion.
 
 Each fix style has its own documentation page which describes its
 arguments and what it does.  For example, see the "fix

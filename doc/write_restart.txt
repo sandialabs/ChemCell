@@ -7,7 +7,7 @@ Commands"_cc :c
 
 :line
 
-permeable command :h3
+write_restart command :h3
 
 [Syntax:]
 

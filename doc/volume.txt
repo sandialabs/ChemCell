@@ -21,9 +21,14 @@ volume 8.0e-15
 
 [Description:]
 
-Set the volume of the system for a Gillepsie (non-spatial) simulation.
+Set the volume of the system for a non-spatial simulation.  This will
+be the well-mixed volume within which reactions take place, e.g. for
+a stochastic Gillespie or continuum ODE simulation.
 
-[Restrictions:] none
+[Restrictions:]
+
+This command can only be used for non-spatial simulations.  See the
+"global"_global.html command for spatial simulations.
 
 [Related commands:]
 

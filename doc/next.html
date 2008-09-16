@@ -16,24 +16,35 @@ Commands</A>
 </P>
 <PRE>next variables 
 </PRE>
-<UL><LI>variables = one or more lower-case single-character variable names 
+<UL><LI>variables = one or more variable names 
 </UL>
 <P><B>Examples:</B>
 </P>
 <PRE>next x
-next a t x 
+next a t x myTemp 
 </PRE>
 <P><B>Description:</B>
 </P>
 <P>This command is used with variables defined by the
 <A HREF = "variable.html">variable</A> command.  It assigns the next value to the
-variable from the variable's list, so that when $X is subsequently
-substituted for in an input script command, the new value is used.  X
-is a single lower-case character from "a" to "z".
+variable from the list of values defined for that variable by the
+<A HREF = "variable.html">variable</A> command.  Thus when that variable is
+subsequently substituted for in an input script command, the new value
+is used. 
 </P>
-<P>All variables in a single next command must be the same style:
-<I>index</I>, <I>loop</I>, or <I>universe</I>.  <I>Equal</I>- or <I>world</I>-style variables
-cannot be incremented by a next command.
+<P>See the <A HREF = "variable.html">variable</A> command for info on how to define and
+use different kinds of variables in ChemCell input scripts.  If a
+variable name is a single lower-case character from "a" to "z", it can
+be used in an input script command as $a or $z.  If it is multiple
+letters, it can be used as ${myTemp}.
+</P>
+<P>If multiple variables are used as arguments to the <I>next</I> command,
+then all must be of the same variable style: <I>index</I>, <I>loop</I>,
+<I>universe</I>, or <I>uloop</I>.  An exception is that <I>universe</I>- and
+<I>uloop</I>-style variables can be mixed in the same <I>next</I> command.
+<I>Atom</I>- or <I>equal</I>- or <I>world</I>-style variables cannot be incremented
+by a next command.  All the variables specified are incremented by one
+value from their respective lists.
 </P>
 <P>When any of the variables in the next command has no more values, a
 flag is set that causes the input script to skip the next
@@ -42,15 +53,15 @@ a next command to exit.
 </P>
 <P>When the next command is used with <I>index</I>- or <I>loop</I>-style variables,
 the next value is assigned to the variable for all processors.  When
-the next command is used with <I>universe</I>-style variables, the next
-value is assigned to whichever processor partition executes the
-command first.  All processors in the partition are assigned the same
-value.  Running ChemCell on multiple partitions of processors via the
-"-partition" command-line switch is described in <A HREF = "Section_start.html#2_4">this
-section</A> of the manual.  <I>Universe</I>-style
-variables are incremented using the files "tmp.ccell.variable" and
-"tmp.ccell.variable.lock" which you will see in your directory during
-such a ChemCell run.
+the next command is used with <I>universe</I>- or <I>uloop</I>-style variables,
+the next value is assigned to whichever processor partition executes
+the command first.  All processors in the partition are assigned the
+same value.  Running ChemCell on multiple partitions of processors via
+the "-partition" command-line switch is described in <A HREF = "Section_start.html#2_6">this
+section</A> of the manual.  <I>Universe</I>- and
+<I>uloop</I>-style variables are incremented using the files
+"tmp.ccell.variable" and "tmp.ccell.variable.lock" which you will
+see in your directory during such a ChemCell run.
 </P>
 <P>Here is an example of running a series of simulations using the next
 command with an <I>index</I>-style variable.  If this input script is named
@@ -58,10 +69,10 @@ in.abc, 8 simulations would be run using data files from
 directories run1 thru run8.
 </P>
 <PRE>variable d index run1 run2 run3 run4 run5 run6 run7 run8
-cd $d
+shell cd $d
 include abc.model
 run 10000
-cd ..
+shell cd ..
 clear
 next d
 jump in.abc 
@@ -76,7 +87,7 @@ finished.
 <P>Jump and next commands can also be nested to enable multi-level loops.
 For example, this script will run 15 simulations in a double loop.
 </P>
-<P>variable i loop 3
+<PRE>variable i loop 3
 variable j loop 5
 clear
 ...
@@ -86,13 +97,14 @@ run 10000
 next j
 jump in.script
 next i
-jump in.script
-</P>
+jump in.script 
+</PRE>
 <P><B>Restrictions:</B> none
 </P>
 <P><B>Related commands:</B>
 </P>
-<P><A HREF = "variable.html">variable</A>, <A HREF = "jump.html">jump</A>, <A HREF = "include.html">include</A>
+<P><A HREF = "jump.html">jump</A>, <A HREF = "include.html">include</A>, <A HREF = "shell.html">shell</A>,
+<A HREF = "variable.html">variable</A>,
 </P>
 <P><B>Default:</B> none
 </P>

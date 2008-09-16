@@ -123,19 +123,22 @@ Errors: :h4,link(error)
 
 {%d local particles on proc %d are in ghost cells after compact} :dt
 
-** ADD TEXT :dd
+Debug test to insure particles have moved to correct processors.
+This error should not occur. :dd
 
 {%d particles assigned to procs} :dt
 
-** ADD TEXT :dd
+Particles read from file, but not all assigned correctly to
+processors. :dd
 
 {2d particle move hit a triangle vertex} :dt
 
-** ADD TEXT :dd
+Particle moving on a surface went exactly through a triangle vertex.
+Should not occur. :dd
 
 {Alias %s already exists} :dt
 
-Cannot reuse a species name.
+Cannot reuse a species name. :dd
 
 {All universe/uloop variables must have same # of values} :dd
 
@@ -167,24 +170,25 @@ command can only be used once. :dd
 
 {Cannot add triangles to a region surface} :dt
 
-** ADD TEXT :dd
+Triangles can only be added to a trianguated surface. :dd
 
 {Cannot change dimension of existing particles} :dt
 
-** ADD TEXT :dd
+Particles are either 2d or 3d.  Cannot be changed. :dd
 
 {Cannot check for a 2d species} :dt
 
-** ADD TEXT :dd
+Check command for inside/outside a surface can only be done
+for 3d species. :dd
 
 {Cannot do move_test with timestep = 0} :dt
 
-** ADD TEXT :dd
+Timestep must be non-zero to perform a move test. :dd
 
 {Cannot have 0-reactant reactions with spatial simulation} :dt
 
 This is because the volume within which to create the particles
-is not well-defined.
+is not well-defined. :dd
 
 {Cannot open fix conc/random file %s} :dt
 
@@ -315,7 +319,8 @@ used for non-spatial simulations. :dd
 
 {Code is not compiled with move debug option} :dt
 
-** ADD TEXT :dd
+Debug command cannot be used unless ChemCell was compiled with
+-DDEBUG_MOVE flag. :dd
 
 {Could not find reaction ID} :dt
 
@@ -381,11 +386,13 @@ Self-explanatory. :dd
 
 {Did not assign all particles correctly} :dt
 
-** ADD TEXT :dd
+Reading of restart file did not assign all particles to processors
+correctly. :dd
 
 {Did not find matching reaction particle} :dt
 
-** ADD TEXT :dd
+After particle communication, matching particle on another processor
+could not be found.  This error should not occur. :dd
 
 {Divide by 0 in variable formula} :dt
 
@@ -393,7 +400,7 @@ Self-explanatory. :dd
 
 {Dump species count does not match particle species count} :dt
 
-** ADD TEXT :dd
+Species count has changed since dump file was defined. :dd
 
 {Failed to allocate %d bytes for array %s} :dt
 
@@ -407,7 +414,8 @@ smaller simulation or on more processors. :dd
 
 {Global bin does not map to local domain} :dt
 
-** ADD TEXT :dd
+Problem with converting global bin ID to a local bin ID.  This
+error should not occur. :dd
 
 {Illegal ... command} :dt
 
@@ -449,7 +457,8 @@ This is a hard (very large) limit defined in the input.cpp file. :dd
 
 {Invalid 2d particle move} :dt
 
-** ADD TEXT :dd
+Problem occured with 2d particle moving on a triangle.  This error
+should not occur. :dd
 
 {Invalid command-line argument} :dt
 
@@ -458,7 +467,8 @@ the command you are using to launch ChemCell. :dd
 
 {Invalid flag in header of restart file} :dt
 
-** ADD TEXT :dd
+Format of restart file was not recognized.  This error should not
+occur unless restart file is corrupted. :dd
 
 {Invalid math function in variable formula} :dt
 
@@ -466,11 +476,11 @@ The math or group function is not recognized. :dd
 
 {Invalid reaction ID in fix dna/toggle command} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
 {Invalid reaction ID in fix rate/saturate command} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
 {Invalid region arguments} :dt
 
@@ -478,7 +488,8 @@ Number of arguments doesn't match region style. :dd
 
 {Invalid settings for reaction %s} :dt
 
-** ADD TEXT :dd
+One or more settings for a reaction are invalid.  This error
+should not occur. :dd
 
 {Invalid species %s in stats command} :dt
 
@@ -535,51 +546,56 @@ Self-explanatory. :dd
 
 {Max 2d move distance > bin size} :dt
 
-** ADD TEXT :dd
+Move distance exceeds bin size.  Must increase bin size or reduce move
+size. :dd
 
 {Max 3d move distance > bin size} :dt
 
-** ADD TEXT :dd
+Move distance exceeds bin size.  Must increase bin size or reduce move
+size. :dd
 
 {Max reaction distance > bin size} :dt
 
-** ADD TEXT :dd
+Binary reaction distance exceeds bin size.  Must increase bin size or
+reduce reaction distance. :dd
 
 {Move to next bin out of range} :dt
 
-** ADD TEXT :dd
+Particle moved into bin not owned by this processor.  This error
+should not occur.  :dd
 
 {Must be 2 or more bins in periodic dimensions} :dt
 
-** ADD TEXT :dd
+Binning of global domain has resulted in only one bin in a particular
+dimension. :dd
 
 {Must print stats in count units for spatial simulation} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
 {Must set bins before defining region} :dt
 
-** ADD TEXT :dd
+Use bin command before using region command. :dd
 
 {Must set bins before read restart} :dt
 
-** ADD TEXT :dd
+Use bin command before using read_restart command. :dd
 
 {Must set bins before reading particles} :dt
 
-** ADD TEXT :dd
+Use bin command before using particles command. :dd
 
 {Must set bins before reading surface} :dt
 
-** ADD TEXT :dd
+Use bin command before using triangles command. :dd
 
 {Must set bins before run} :dt
 
-** ADD TEXT :dd
+Use bin command before using run command. :dd
 
 {Must set global domain before bins} :dt
 
-** ADD TEXT :dd
+Use global command before using bin command. :dd
 
 {Must set run_style first} :dt
 
@@ -587,11 +603,12 @@ Cannot use this command before the run style is set :dd
 
 {Must set simulation domain via global command} :dt
 
-** ADD TEXT :dd
+Global command has not been used before a simulation is being
+initialized. :dd
 
 {Must set volume for run style gillespie} :dt
 
-** ADD TEXT :dd
+This run style requires that the volume command be used. :dd
 
 {Must set volume for run style ode/rk} :dt
 
@@ -608,59 +625,65 @@ The -in command-line option must be used to specify a file. :dd
 
 {No matching move style parameters} :dt
 
-** ADD TEXT :dd
+Style of requested move does not exist. :dd
 
 {No particle species match dump species} :dt
 
-** ADD TEXT :dd
+Requested dump species does not exist. :dd
 
 {Part,spec %d,%d on step %d exceeds MAXITER} :dt
 
-** ADD TEXT :dd
+Movement of particle has exceeded preset iteration count.  This error
+should not occur unless there is a problem with the move. :dd
 
 {Particle %d is outside global domain} :dt
 
-** ADD TEXT :dd
+Particle being read from file is outside the global domain. :dd
 
 {Particle %d's triangle does not exist} :dt
 
-** ADD TEXT :dd
+Could not successfully assign a read-in particle to a triangle on a 2d
+surface.  Probably because it is too far from any triangle. :dd
 
 {Particle is outside global domain} :dt
 
-** ADD TEXT :dd
+Particle being read from restart file is outside the global domain. :dd
 
 {Particles surf-ID does not exist} :dt
 
-** ADD TEXT :dd
+2d particles read from file are assigned to a surface ID that does
+not exist. :dd
 
 {Permeability is set for 2d species} :dt
 
-** ADD TEXT :dd
+Permeability can only be set for 3d species. :dd
 
 {Permeable probabilities do not sum to 1.0} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
 {Permeable stick species is not 2d} :dt
 
-** ADD TEXT :dd
+When a 3d species sticks to a surface, it must become a 2d species. :dd
 
 {Post-migrate: %d particles on proc %d are not in correct bin} :dt
 
-** ADD TEXT :dd
+Particle migration to a new processor has resulted in incorrect bin
+assignments.  This error shoud not occur. :dd
 
 {Power by 0 in variable formula} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
 {Pre-migrate: %d particles on proc %d are not in correct bin} :dt
 
-** ADD TEXT :dd
+Particle migration to a new processor is occuring with incorrect bin
+assignments.  This error shoud not occur. :dd
 
 {Probability %g for reaction %s is too large} :dt
 
-** ADD TEXT :dd
+The computed probability exceeds 1.0.  You need to reduce the reaction
+distance so the probability will shrink. :dd
 
 {Processor partitions are inconsistent} :dt
 
@@ -669,39 +692,40 @@ of processors ChemCell is running on. :dd
 
 {Reaction ID %s already exists} :dt
 
-** ADD TEXT :dd
+A reaction ID can only be used once. :dd
 
 {Reaction cannot have more than MAX_PRODUCT products} :dt
 
-** ADD TEXT :dd
+This is a hard limit in react.cpp. :dd
 
 {Reaction has no numeric rate} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
 {Reaction must have 0,1,2 reactants} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
 {Reading 2d particles for a 3d species} :dt
 
-** ADD TEXT :dd
+3d particles cannot be assigned to a surface. :dd
 
 {Reading 3d particles for a 2d species} :dt
 
-** ADD TEXT :dd
+2d particles must be assigned to a surface. :dd
 
 {Region extends outside global domain} :dt
 
-** ADD TEXT :dd
+Self-explantory. :dd
 
 {Region intersects bin next to periodic boundary} :dt
 
-** ADD TEXT :dd
+For a periodic dimension, there must be a bin at each boundary which
+has no region interesecting it. :dd
 
 {Region surf-ID already exists} :dt
 
-** ADD TEXT :dd
+Surface IDs must be unique. :dd
 
 {Replacing a fix, but new style != old style} :dt
 
@@ -720,11 +744,11 @@ Not all run styles can use check command. :dd
 
 {Simulation domain is already set} :dt
 
-** ADD TEXT :dd
+Cannot use global command twice. :dd
 
 {Species already exists and no new aliases are defined} :dt
 
-** ADD TEXT :dd
+Cannot use a species name more than once. :dd
 
 {Sqrt of negative in variable formula} :dt
 
@@ -732,7 +756,7 @@ Self-explanatory. :dd
 
 {Sticking species is not 2d} :dt
 
-** ADD TEXT :dd
+A membrane-bound species must be defined as dimension = 2d. :dd
 
 {Substitution for illegal variable} :dt
 
@@ -741,15 +765,16 @@ for. :dd
 
 {Summed probability %g for species %s & %s is too large} :dt
 
-** ADD TEXT :dd
+Probabilities for all reactions involving this pair of species > 1.0 :dd
 
 {Summed probability %g for species %s is too large} :dt
 
-** ADD TEXT :dd
+Probabilities for all reactions involving this species > 1.0 :dd
 
 {Triangle intersects bin next to periodic boundary} :dt
 
-** ADD TEXT :dd
+For a periodic dimension, there must be a bin at each boundary which
+has no trinagles interesecting it. :dd
 
 {Two or more wildcard * in count species ID} :dt
 
@@ -832,7 +857,8 @@ Self-explanatory. :dd
 
 {Vertex %d in surf %s is outside global domain} :dt
 
-** ADD TEXT :dd
+One or more vertices in triangles being read in are outside global
+domain. :dd
 
 {World variable count doesn't match # of partitions} :dt
 
@@ -847,22 +873,26 @@ Warnings: :h4,link(warn)
 
 {Particle is inside surface} :dt
 
-** ADD TEXT :dd
+Check determined a particle is inside surface when it should be
+outside. :dd
 
 {Particle is outside surface} :dt
 
-** ADD TEXT :dd
+Check determined a particle is outside surface when it should be
+inside. :dd
 
 {Restart file used different # of processors} :dt
 
-** ADD TEXT :dd
+The restart file was written by a simulation run on a different
+number of processors. :dd
 
 {Restart file version does not match ChemCell version} :dt
 
-** ADD TEXT :dd
+The restart file was written with an older version of ChemCell. :dd
 
 {Run styles do not match} :dt
 
-** ADD TEXT :dd
+The restart file was written by a simulation that defined a different
+run style. :dd
 
 :dle

@@ -47,10 +47,13 @@ bin size is set to the maximum of the values induced by each keyword.
 <P>The <I>diff</I> keyword sets the bin size to the maximum distance a
 particle will move in one timestep using the specified D and the
 <A HREF = "timestep.html">timestep</A> and <A HREF = "move_style.html">move_style</A> settings.
+You may need to run ChemCell once to see the move distances printed
+out at setup.
 </P>
 <P>The <I>react</I> keyword sets the bin size by the specified distance,
 assumed to be the largest distance at which a binary reaction between
-2 particles will occur.
+2 particles will occur.  You may need to run ChemCell once to see the
+reaction distances printed out at setup.
 </P>
 <P>The <I>size</I> keyword sets the bin size in each dimension to the
 specified values.
@@ -64,10 +67,10 @@ values determined by the <I>diff</I>, <I>react</I>, or <I>size</I> keywords.
 </P>
 <P><B>Restrictions:</B> 
 </P>
-<P>This command is not used for non-spatial (Gillespie) simulations.
+<P>This command can only be used for spatial simulations.
 </P>
-<P>The <A HREF = "global.html">global</A> command must be used first, to specify the
-extent of the simulation domain.
+<P>The <A HREF = "global.html">global</A> command must be used before this command, to
+specify the extent of the spatial simulation domain.
 </P>
 <P><B>Related commands:</B> none
 </P>

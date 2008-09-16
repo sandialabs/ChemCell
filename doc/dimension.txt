@@ -11,7 +11,7 @@ dimension command :h3
 
 [Syntax:]
 
-dimension species-ID value
+dimension species-ID value :pre
 
 species-ID = particle species
 value = dimensionality of species = 2 or 3 :ul
@@ -35,7 +35,9 @@ be *, ab*, *ab, ab*cd.
 [Restrictions:]
 
 The dimensionality of a species cannot be changed if particles of that
-species already exist
+species already exist.
+
+This command can only be used for spatial simulations.
 
 [Related commands:] none
 

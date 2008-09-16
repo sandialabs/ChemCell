@@ -11,29 +11,31 @@ diffusion command :h3
 
 [Syntax:]
 
-diffusion species-ID value
+diffusion species-ID value :pre
 
 species-ID = particle species
 value = diffusion coefficient (cm^2/sec) :ul
 
 [Examples:]
 
-diffusion Ca 0.5e-7
+diffusion Ca 0.0
 diffusion A* 1.0e-6 :pre
 
 [Description:]
 
 Set the diffusion coefficient for one or more particle species.
+A value of 0.0 means the particles will be stationary.
 
 The species-ID can contain a single wildcard character * which will
 match species and alias names in the usual way.  E.g. species-ID can
 be *, ab*, *ab, ab*cd.
 
-[Restrictions:] none
+[Restrictions:]
+
+This command can only be used for spatial simlulations.
 
 [Related commands:] none
 
 [Default:]
 
-Diffusion coefficient = 0 for all species.
-
+Diffusion coefficient = 0.0 for all species.

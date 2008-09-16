@@ -14,10 +14,10 @@ Commands</A>
 </H3>
 <P><B>Syntax:</B>
 </P>
-<P>count species-ID N
-</P>
+<PRE>count species-ID N 
+</PRE>
 <UL><LI>species-ID = particle species to populate
-<LI>N = number of particles (Gillespie) or     concentration (molarity) for ODE models 
+<LI>N = number of particles for stochastic models or     concentration (molarity) for ODE models 
 </UL>
 <P><B>Examples:</B>
 </P>
@@ -27,8 +27,9 @@ count receptor* 500
 <P><B>Description:</B>
 </P>
 <P>Set the initial particle count for a non-spatial models.  For
-Gillespie models N is the particle count.  For deterministic models
-(ODEs) it is the particle concentration in molarity.
+stochastic models (Gillespie), N is the particle count.  For
+deterministic models (ODEs), N is the particle concentration in
+molarity.
 </P>
 <P>The species-ID can contain a single wildcard character * which will
 match species and alias names in the usual way.  E.g. species-ID can
@@ -36,8 +37,7 @@ be *, ab*, *ab, ab*cd.
 </P>
 <P><B>Restrictions:</B> none
 </P>
-<P>This command can only be used for non-spatial simulations where
-particles do not have coordinates.
+<P>This command can only be used for non-spatial simulations.
 </P>
 <P><B>Related commands:</B>
 </P>

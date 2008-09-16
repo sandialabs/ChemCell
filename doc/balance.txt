@@ -13,7 +13,7 @@ balance command :h3
 
 balance style arg(s) file
 
-style = {static} or {dynamic}
+style = {static} or {dynamic} :l
   {static} args: {bin} or {particle}
     bin = balance by bin count
     particle = balance by particle count
@@ -52,9 +52,14 @@ processors, so an imbalance factor or 1.0 is perfect balance.
 
 File is an optional argument.  If specified the load balance
 partitions are written to the file each time the balancer is invoked,
-formatted as a surface of triangles
+formatted as a surface of triangles which can be visualized with
+the "Pizza.py toolkit"_pizza.
 
-[Restrictions:] none
+:link(pizza,http://www.cs.sandia.gov/~sjplimp/pizza.html)
+
+[Restrictions:]
+
+This command can only be used for spatial simulations.
 
 [Related commands:] none
 
