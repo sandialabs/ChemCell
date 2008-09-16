@@ -1,6 +1,0 @@
-c = cdata("data.ecoli")
-c.unselect()
-c.line("line",3.2442,0.747427,1.25672,3.24901,0.77003,1.27103)
-c.surftri("newsurf","cell",2076)
-g = gl(c)
-v = vcr(g)
