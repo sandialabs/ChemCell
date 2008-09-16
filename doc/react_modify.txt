@@ -11,11 +11,11 @@ react_modify command :h3
 
 [Syntax:]
 
-react_modify reaction-ID keyword value(s) ...
+react_modify reaction-ID keyword value(s) ... :pre
 
 reaction-ID = ID of reaction to modify :ulb,l
 one or more keyword/value pairs can be specified :l
-  keywords = {rate} or {loc} or {dist} or {prob}
+  keywords = {rate} or {loc} or {dist} or {prob} or {weight}
   {rate} value = rate
     rate = reaction rate (same units as in "reaction"_react.html command)
   {loc} values = product styleflag whichflag dirflag
@@ -23,16 +23,14 @@ one or more keyword/value pairs can be specified :l
     styleflag = {def} or {at} or {near}
     whichflag = {def} or {1} or {2} or {1/2}
     dirflag = {def} or {in} or {out} or {in/out}
-  {dist} = r
-    r = distance at which reactants will react (microns)
-  {prob} = p
-    p = probability (0-1) with which reactants react :pre
+  {dist} = R
+    R = distance at which reactants will react (microns)
+  {prob} = P
+    P = probability (0-1) with which reactants react
   {weight} values = which index ratio
     which = {reactant} or {product}
     index = which reactant or product (1-N)
-    styleflag = {def} or {at} or {near}
-    whichflag = {def} or {1} or {2} or {1/2}
-    dirflag = {def} or {in} or {out} or {in/out}
+    ratio = weighting factor to apply :pre
 :ule
 
 [Examples:]
@@ -47,8 +45,8 @@ Reset one or more parameters of a specific reaction.
 The {rate} keyword resets the reaction rate.
 
 The {loc} keyword sets the location at which a product of the reaction
-is placed.  The {prod} setting determines which product (1 to N).  A
-value of -1 means all products.  The {styleflag} setting refers to
+is placed.  The {product} setting determines which product (1 to N).
+A value of -1 means all products.  The {styleflag} setting refers to
 placing the product at or near a reactant's location.  The {whichflag}
 setting refers to which reactant (1 to N) to place the product at or
 near.  A value of {1/2} means to randomly choose which reactant each
@@ -56,7 +54,8 @@ time a reaction occurs.  The {dirflag} setting only applies to 3d
 products placed near 2d reactants and refers to which side of the
 surface (inside or outside) to place the product on.  A value of
 {in/out} means to randomly choose the side each time a reaction
-occurs.  A value of {def} should be used if {dirflag} does not apply.
+occurs.  A value of {def} for default should be used if {dirflag} does
+not apply.
 
 Depending on the kind of reaction (1 or 2 reactants) and whether the
 reactants are 3d diffusing species or 2d (on a surface), certain
@@ -64,7 +63,7 @@ combinations of settings are invalid and will generate errors.  Note
 that only 3d products can be placed at a 3d reactant's location.  Only
 2d products can be placed at a 2d reactant's location.  And only 3d
 products can be placed near a 2d reactant's location, which means to
-place it a distance epsilong from the surface the 2d reactant is on.
+place it a distance epsilon from the surface the 2d reactant is on.
 
 These are the default rules for reactions with a single reactant:
 
@@ -106,21 +105,33 @@ the cutoff distance).  Normally, ChemCell sets this probability itself
 the {prob} value to -1.0 turns off the explicit setting; ChemCell will
 again compute the probability.
 
-Note that setting the probability to 1.0 and the cutoff distance to
-the binding radius computed by the Smoldyn algorithms described in
-"(Andrews)"_#Andrews enables a "Smoldyn-style"_smoldyn spatial
-simulation to be run.
+Note that the {dist} and {prob} keywords give you the option of
+setting reaction parameters directly, using your own formulation or
+algorithms and settings from another code.  For example, the
+"Smoldyn"_smoldyn simulator calculates a variety of reaction
+parameterizations for different kinds of reactions, as described in
+"(Andrews)"_#Andrews.  Essentially it computes reaction cutoff
+distances (binding radii in Smoldyn nomenclature) as a function of
+diffusion coefficients of the reactants, timestep, and reaction rate.
+The Smoldyn formulation spans the spectrum from diffusion-limited to
+reaction-limited reactions and thus produces reaction cutoff distances
+which are more accurate and complete than the simple heuristic that
+ChemCell uses by default.
 
 The {weight} keyword sets a volume weighting factor for a specific
-reactant or product.  This is used by non-spatial, non-stochastic
-simulations (ODEs) to weight the effects of a reaction.  The weighting
-factor can be thought of as a volume ratio between 2 compartments, so
-these factors can be set to enable a multi-compartment ODE solution
-where each compartment has its own volume.
+reactant or product which adjusts its concentration the reaction
+occurs and the species is removed or produced.  This can be used by
+non-spatial, continuum simulations (ODEs) to weight the effects of a
+reaction.  The weighting factor can be thought of as a volume ratio
+between 2 compartments, so a factor can be set to enable a
+multi-compartment ODE solution where each compartment has its own
+volume.
 
 [Restrictions:] none
 
-The {dist} and {prob} keywords only apply to spatial simulations.
+The {loc} and {dist} and {prob} keywords only apply to spatial
+simulations.  The {weight} keyword only applies to non-spatial,
+continuum (ODE) simulations.
 
 [Related commands:]
 
@@ -133,4 +144,4 @@ The {dist} and {prob} keywords only apply to spatial simulations.
 :link(Andrews)
 [(Andrews)] Andrews and Bray, Phys Biol, 1, 137-151 (2004).
 
-:link(smoldyn,http://genomics.lbl.gov/~sandrews/software.html)
+:link(smoldyn,http://www.smoldyn.org)

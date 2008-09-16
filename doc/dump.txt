@@ -31,6 +31,8 @@ Dump a snapshot of particle coordinates and species types to a file
 every so often as a simulation runs.  The species list is optional; if
 not specified, all particles are dumped.
 
+The ID of a dump can contain alphanumeric characters and underscores.
+
 The frequency of output can be specied in timesteps or elapsed
 simulation time.  Using an integer versus a floating-point value (with
 a decimal point) determines how the argument is interpreted.

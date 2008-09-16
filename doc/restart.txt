@@ -35,15 +35,16 @@ ecoli.restart.1000, ecoli.restart.2000, ecoli.restart.3000, etc.
 Using two filenames will produce only 2 restart files.  ChemCell will
 toggle between the 2 names as it writes successive restart files.
 
-See the "read_restart"_read_restart.html command for information about
-what is stored in a restart file.
+Only particle information is stored in a restart file.
 
 Restart files can be read by a "read_restart"_read_restart.html
 command to restart a simulation from a particular state.  Because the
 file is binary (to enable exact restarts), it may not be readable on
 another machine.
 
-[Restrictions:] none
+[Restrictions:]
+
+This command can only be used for spatial simulations.
 
 [Related commands:]
 

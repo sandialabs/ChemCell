@@ -13,8 +13,7 @@ move_style command :h3
 
 move_style option1 option2 ... :pre
 
-options = {cube} or {sphere} or {square} or {circle} or {uniform} or
-{brownian} :ul
+options = {cube} or {sphere} or {square} or {circle} or {uniform} or {brownian} :ul
 
 [Examples:]
 
@@ -26,29 +25,32 @@ move_style circle uniform :pre
 Set one or more options that determine how particles move in a spatial
 simulation.
 
-The {cube} option means the particle samples points in a small cube
-around its location.  The {sphere} option means the particle samples
-points in a small sphere around its location.
+The {cube} option means particle will sample points in a small cube
+around their locations.  The {sphere} option means particles will
+sample points in a small sphere around their location.
 
-The {square} option means the particle only moves in 2d and samples
-points in a small xy square around its location.  The {cirlce} option
-means the particle only moves in 2d and samples points in a small xy
-circle around its location.  These options can be used with a
-"global"_global.html simulation domain that is small in the
-z-dimension to setup an effectively 2d simulation.
+The {square} option means particles will only move in 2d and sample
+points in a small xy square around their locations.  The {cirlce}
+option means particles will only move in 2d and samples points in a
+small xy circle around their locations.  These options can be used
+with a "global"_global.html simulation domain that is small in the
+z-dimension to effectively setup a 2d simulation.
 
 The {uniform} option means the sampling of volumetric (or planar)
-space is uniform.  The {brownian} option means the sampling is a
-Gaussian corresponding to Brownian motion
+space is uniform.  The {brownian} option means the sampling is from a
+Gaussian so that particles move in Brownian motion.
 
 For 2d particles diffusing on regions or triangulated surfaces, only
-the uniform/brownian options are relevant since the particle always
-samples within a circle tangential to the surface.
+the uniform/brownian options are relevant since particles always
+effectively move in 2d, sampling within a circle tangential to the
+surface.
 
-[Restrictions:] none
+[Restrictions:]
+
+This command can only be used for spatial simulations.
 
 [Related commands:] none
 
 [Default:]
 
-The default move_style is cube brownian.
+The default move style is cube brownian.

@@ -13,7 +13,7 @@ seed command :h3
 
 seed N :pre
 
-N = integer random number seed (8 digits or less) :ul
+N = integer random number seed (positive integer) :ul
 
 [Examples:]
 
@@ -21,13 +21,13 @@ seed 5982983
 
 [Description:]
 
-Set the random # seed used for the simulation.  For non-spatial
-simulations (Gillespie) random numbers are used to pick reactions and
-variable timesteps.  For spatial simulations, random numbers are
-assigned to particles when they are read in and used thereafter for
-diffusive motion and reaction probabilities.
+Set the random # seed used for the simulation.  For stochastic
+non-spatial (Gillespie) simulatoins, random numbers are used to pick
+reactions and timesteps.  For spatial simulations, random numbers are
+assigned to particles when they are read in and used thereafter to
+compute diffusive motion and reaction probabilities.
 
-[Restrictions:] none
+[Restrictions:]
 
 For spatial simulations, this command must be used before particles
 are read in, else it will have no effect.

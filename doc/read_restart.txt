@@ -21,19 +21,21 @@ read_restart save.10000 :pre
 
 [Description:]
 
-Read in a previously saved problem from a restart file.  This allows
-continuation of a previous run.
+Read in a previously saved set of particles from a restart file.  This
+allows continuation of a previous spatial simulation.
 
 Only particle information is stored in the restart file.  Thus before
 reading a restart file, you should re-define species and geometry
-information, and must setup bins (via the "bin"_bin.html command).
+information, and must setup bins via the "bin"_bin.html command.
 
 Because restart files are binary, they may not be portable to other
 machines.
 
 [Restrictions:] none
 
-The "bin command"_bin.html must be used before reading a restart file.
+The "bin"_bin.html command must be used before reading a restart file.
+
+This command can only be used for spatial simulations.
 
 [Related commands:]
 

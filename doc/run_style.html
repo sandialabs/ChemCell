@@ -16,7 +16,7 @@ Commands</A>
 </P>
 <PRE>run_style style 
 </PRE>
-<UL><LI>style = <I>spatial</I> or <I>gillespie</I> or <I>ode</I> 
+<UL><LI>style = <I>spatial</I> or <I>gillespie</I> or <I>ode</I> or <I>ode/rk</I> 
 </UL>
 <P><B>Examples:</B>
 </P>
@@ -46,22 +46,26 @@ probability to 1.0 and the cutoff distance to the binding radius
 computed by the Smoldyn algorithms described in <A HREF = "#Andrews">(Andrews)</A>
 enables a <A HREF = "http://genomics.lbl.gov/~sandrews/software.html">Smoldyn-style</A> spatial simulation to be run.
 </P>
-<P>The <I>gillespie</I> option runs the "Direct Method" version of Gillespie's
-stochastic simulation algorithm (SSA) as described in
-<A HREF = "#Gillespie">(Gillespie)</A>, with computational enhancments outlined in
-<A HREF = "#Gibson">(Gibson)</A>.  Reactions and associated rates are set via the
+<P>The <I>gillespie</I> option runs the "direct method" version of Gillespie's
+Stochastic Simulation Algorithm (SSA) as described in
+<A HREF = "#Gillespie">(Gillespie)</A>, with computational enhancements outlined in
+<A HREF = "#Gibson">(Gibson/Bruck)</A>.  Reactions and associated rates are set via
+the <A HREF = "reaction.html">reaction</A> command.  The volume of the system is set
+via the <A HREF = "volume.html">volume</A> command.  Initial particle counts are set
+via the <A HREF = "count.html">count</A> command.  This is a non-spatial simulation,
+so particle coordinates are not defined, nor is any geometric
+information.
+</P>
+<P>The <I>ode</I> and <I>ode/rk</I> options solve the system of coupled reactions
+with a continuum ODE time integration scheme.  For style <I>ode</I> a
+fixed-size timestep is used.  For style <I>ode/rk</I> an adaptive timestep
+Runge-Kutta algorithm is used as described in <A HREF = "#Shampine">(Shampine)</A>.
+Reactions and associated rates are set via the
 <A HREF = "reaction.html">reaction</A> command.  The volume of the system is set via
 the <A HREF = "volume.html">volume</A> command.  Initial particle counts are set via
 the <A HREF = "count.html">count</A> command.  This is a non-spatial simulation, so
-particle coordinates are not defined, nor are any geometric surfaces.
-</P>
-<P>The <I>ode</I> option solves the system of coupled reaction ODEs with a
-simple time integration scheme.  Reactions and associated rates are
-set via the <A HREF = "reaction.html">reaction</A> command.  The volume of the
-system is set via the <A HREF = "volume.html">volume</A> command.  Initial particle
-counts are set via the <A HREF = "count.html">count</A> command.  This is a
-non-spatial simulation, so particle coordinates are not defined, nor
-are any geometric surfaces.
+particle coordinates are not defined, nor is any geometric
+information.
 </P>
 <P><B>Restrictions:</B> none
 </P>
@@ -71,17 +75,22 @@ are any geometric surfaces.
 </P>
 <HR>
 
+<A NAME = "Andrews"></A>
+
+<P><B>(Andrews)</B> Andrews and Bray, Phys Biol, 1, 137-151 (2004).
+</P>
+<A NAME = "Gibson"></A>
+
+<P><B>(Gibson/Bruck)</B> Gibson and Bruck, J Phys Chem A, 104, 1876-1889 (2000).
+</P>
 <A NAME = "Gillespie"></A>
 
 <P><B>(Gillespie)</B> Gillespie, J Phys Chem, 81, 2340 (1977).
 </P>
-<A NAME = "Gibson"></A>
+<A NAME = "Shampine"></A>
 
-<P><B>(Gibson)</B> Gibson and Bruck, J Phys Chem A, 104, 1876-1889 (2000).
-</P>
-<A NAME = "Andrews"></A>
-
-<P><B>(Andrews)</B> Andrews and Bray, Phys Biol, 1, 137-151 (2004).
+<P><B>(Shampine)</B> Shampine, Watts, and Davenport, SIAM Review, 18, 376-411
+(1976).
 </P>
 
 

@@ -26,9 +26,13 @@ species C8x432 Ca Ca_input Ca_known :pre
 Define a particle species and alternate names by which it can be
 referred to in any command that takes a species-ID.
 
+The ID of a species and its aliases can contain alphanumeric
+characters and underscores and dashes.
+
 If species-ID does not exist, it is created with default dimension,
 diffusivity, and permeability settings.  If species-ID already exists,
-add new aliases for it.  If any alias already exists, it is an error.
+then additional unique aliases must be specified which are associated
+with that species-ID.
 
 [Restrictions:] none
 

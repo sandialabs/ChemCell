@@ -13,7 +13,7 @@ run_style command :h3
 
 run_style style :pre
 
-style = {spatial} or {gillespie} or {ode} :ul
+style = {spatial} or {gillespie} or {ode} or {ode/rk} :ul
 
 [Examples:]
 
@@ -43,22 +43,26 @@ probability to 1.0 and the cutoff distance to the binding radius
 computed by the Smoldyn algorithms described in "(Andrews)"_#Andrews
 enables a "Smoldyn-style"_smoldyn spatial simulation to be run.
 
-The {gillespie} option runs the "Direct Method" version of Gillespie's
-stochastic simulation algorithm (SSA) as described in
-"(Gillespie)"_#Gillespie, with computational enhancments outlined in
-"(Gibson)"_#Gibson.  Reactions and associated rates are set via the
+The {gillespie} option runs the "direct method" version of Gillespie's
+Stochastic Simulation Algorithm (SSA) as described in
+"(Gillespie)"_#Gillespie, with computational enhancements outlined in
+"(Gibson/Bruck)"_#Gibson.  Reactions and associated rates are set via
+the "reaction"_reaction.html command.  The volume of the system is set
+via the "volume"_volume.html command.  Initial particle counts are set
+via the "count"_count.html command.  This is a non-spatial simulation,
+so particle coordinates are not defined, nor is any geometric
+information.
+
+The {ode} and {ode/rk} options solve the system of coupled reactions
+with a continuum ODE time integration scheme.  For style {ode} a
+fixed-size timestep is used.  For style {ode/rk} an adaptive timestep
+Runge-Kutta algorithm is used as described in "(Shampine)"_#Shampine.
+Reactions and associated rates are set via the
 "reaction"_reaction.html command.  The volume of the system is set via
 the "volume"_volume.html command.  Initial particle counts are set via
 the "count"_count.html command.  This is a non-spatial simulation, so
-particle coordinates are not defined, nor are any geometric surfaces.
-
-The {ode} option solves the system of coupled reaction ODEs with a
-simple time integration scheme.  Reactions and associated rates are
-set via the "reaction"_reaction.html command.  The volume of the
-system is set via the "volume"_volume.html command.  Initial particle
-counts are set via the "count"_count.html command.  This is a
-non-spatial simulation, so particle coordinates are not defined, nor
-are any geometric surfaces.
+particle coordinates are not defined, nor is any geometric
+information.
 
 [Restrictions:] none
 
@@ -68,13 +72,17 @@ are any geometric surfaces.
 
 :line
 
+:link(Andrews)
+[(Andrews)] Andrews and Bray, Phys Biol, 1, 137-151 (2004).
+
+:link(Gibson)
+[(Gibson/Bruck)] Gibson and Bruck, J Phys Chem A, 104, 1876-1889 (2000).
+
 :link(Gillespie)
 [(Gillespie)] Gillespie, J Phys Chem, 81, 2340 (1977).
 
-:link(Gibson)
-[(Gibson)] Gibson and Bruck, J Phys Chem A, 104, 1876-1889 (2000).
-
-:link(Andrews)
-[(Andrews)] Andrews and Bray, Phys Biol, 1, 137-151 (2004).
+:link(Shampine)
+[(Shampine)] Shampine, Watts, and Davenport, SIAM Review, 18, 376-411
+(1976).
 
 :link(smoldyn,http://genomics.lbl.gov/~sandrews/software.html)

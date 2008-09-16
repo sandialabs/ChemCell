@@ -32,8 +32,14 @@ Define a reaction that turns reactants into products at a specified
 reaction rate.  The reaction can have zero, one, or two reactants and
 0 or more products.
 
-The units of the reaction rate are molarity/sec for reactions with
-0 reactants, 1/sec for unary reactions, and 1/molarity-sec for binary
+The ID of a reaction can contain alphanumeric characters and
+underscores and dashes.
+
+The species-IDs of all reactants and products must have been
+previously defined using the "species"_species.html command.
+
+The units of the reaction rate K are molarity/sec for reactions with 0
+reactants, 1/sec for unary reactions, and 1/molarity-sec for binary
 reactions.
 
 The "react_modify"_react_modify.html command can be used to specify
@@ -42,8 +48,12 @@ attributes.
 
 [Restrictions:]
 
-Reactions with 0 reactants can only be specified for Gillespie-style
-(non-spatial) simulations.
+Reactions with 0 reactants can only be specified for non-spatial
+simulations.
+
+The maximum number of product species for any one reaction is
+hard-wired in src/react.cpp via the MAX_PRODUCT setting.  Currently it
+is set to 5.
 
 [Related commands:]
 

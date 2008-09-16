@@ -14,13 +14,13 @@ Commands</A>
 </H3>
 <P><B>Syntax:</B>
 </P>
-<P>react_modify reaction-ID keyword value(s) ...
-</P>
+<PRE>react_modify reaction-ID keyword value(s) ... 
+</PRE>
 <UL><LI>reaction-ID = ID of reaction to modify 
 
 <LI>one or more keyword/value pairs can be specified 
 
-<PRE>  keywords = <I>rate</I> or <I>loc</I> or <I>dist</I> or <I>prob</I>
+<PRE>  keywords = <I>rate</I> or <I>loc</I> or <I>dist</I> or <I>prob</I> or <I>weight</I>
   <I>rate</I> value = rate
     rate = reaction rate (same units as in <A HREF = "react.html">reaction</A> command)
   <I>loc</I> values = product styleflag whichflag dirflag
@@ -28,17 +28,15 @@ Commands</A>
     styleflag = <I>def</I> or <I>at</I> or <I>near</I>
     whichflag = <I>def</I> or <I>1</I> or <I>2</I> or <I>1/2</I>
     dirflag = <I>def</I> or <I>in</I> or <I>out</I> or <I>in/out</I>
-  <I>dist</I> = r
-    r = distance at which reactants will react (microns)
-  <I>prob</I> = p
-    p = probability (0-1) with which reactants react 
-</PRE>
+  <I>dist</I> = R
+    R = distance at which reactants will react (microns)
+  <I>prob</I> = P
+    P = probability (0-1) with which reactants react
   <I>weight</I> values = which index ratio
     which = <I>reactant</I> or <I>product</I>
     index = which reactant or product (1-N)
-    styleflag = <I>def</I> or <I>at</I> or <I>near</I>
-    whichflag = <I>def</I> or <I>1</I> or <I>2</I> or <I>1/2</I>
-    dirflag = <I>def</I> or <I>in</I> or <I>out</I> or <I>in/out</I>
+    ratio = weighting factor to apply 
+</PRE>
 
 </UL>
 <P><B>Examples:</B>
@@ -53,8 +51,8 @@ react_modify channel 2 near 2 out
 <P>The <I>rate</I> keyword resets the reaction rate.
 </P>
 <P>The <I>loc</I> keyword sets the location at which a product of the reaction
-is placed.  The <I>prod</I> setting determines which product (1 to N).  A
-value of -1 means all products.  The <I>styleflag</I> setting refers to
+is placed.  The <I>product</I> setting determines which product (1 to N).
+A value of -1 means all products.  The <I>styleflag</I> setting refers to
 placing the product at or near a reactant's location.  The <I>whichflag</I>
 setting refers to which reactant (1 to N) to place the product at or
 near.  A value of <I>1/2</I> means to randomly choose which reactant each
@@ -62,7 +60,8 @@ time a reaction occurs.  The <I>dirflag</I> setting only applies to 3d
 products placed near 2d reactants and refers to which side of the
 surface (inside or outside) to place the product on.  A value of
 <I>in/out</I> means to randomly choose the side each time a reaction
-occurs.  A value of <I>def</I> should be used if <I>dirflag</I> does not apply.
+occurs.  A value of <I>def</I> for default should be used if <I>dirflag</I> does
+not apply.
 </P>
 <P>Depending on the kind of reaction (1 or 2 reactants) and whether the
 reactants are 3d diffusing species or 2d (on a surface), certain
@@ -70,7 +69,7 @@ combinations of settings are invalid and will generate errors.  Note
 that only 3d products can be placed at a 3d reactant's location.  Only
 2d products can be placed at a 2d reactant's location.  And only 3d
 products can be placed near a 2d reactant's location, which means to
-place it a distance epsilong from the surface the 2d reactant is on.
+place it a distance epsilon from the surface the 2d reactant is on.
 </P>
 <P>These are the default rules for reactions with a single reactant:
 </P>
@@ -102,21 +101,33 @@ the cutoff distance).  Normally, ChemCell sets this probability itself
 the <I>prob</I> value to -1.0 turns off the explicit setting; ChemCell will
 again compute the probability.
 </P>
-<P>Note that setting the probability to 1.0 and the cutoff distance to
-the binding radius computed by the Smoldyn algorithms described in
-<A HREF = "#Andrews">(Andrews)</A> enables a <A HREF = "http://genomics.lbl.gov/~sandrews/software.html">Smoldyn-style</A> spatial
-simulation to be run.
+<P>Note that the <I>dist</I> and <I>prob</I> keywords give you the option of
+setting reaction parameters directly, using your own formulation or
+algorithms and settings from another code.  For example, the
+<A HREF = "http://www.smoldyn.org">Smoldyn</A> simulator calculates a variety of reaction
+parameterizations for different kinds of reactions, as described in
+<A HREF = "#Andrews">(Andrews)</A>.  Essentially it computes reaction cutoff
+distances (binding radii in Smoldyn nomenclature) as a function of
+diffusion coefficients of the reactants, timestep, and reaction rate.
+The Smoldyn formulation spans the spectrum from diffusion-limited to
+reaction-limited reactions and thus produces reaction cutoff distances
+which are more accurate and complete than the simple heuristic that
+ChemCell uses by default.
 </P>
 <P>The <I>weight</I> keyword sets a volume weighting factor for a specific
-reactant or product.  This is used by non-spatial, non-stochastic
-simulations (ODEs) to weight the effects of a reaction.  The weighting
-factor can be thought of as a volume ratio between 2 compartments, so
-these factors can be set to enable a multi-compartment ODE solution
-where each compartment has its own volume.
+reactant or product which adjusts its concentration the reaction
+occurs and the species is removed or produced.  This can be used by
+non-spatial, continuum simulations (ODEs) to weight the effects of a
+reaction.  The weighting factor can be thought of as a volume ratio
+between 2 compartments, so a factor can be set to enable a
+multi-compartment ODE solution where each compartment has its own
+volume.
 </P>
 <P><B>Restrictions:</B> none
 </P>
-<P>The <I>dist</I> and <I>prob</I> keywords only apply to spatial simulations.
+<P>The <I>loc</I> and <I>dist</I> and <I>prob</I> keywords only apply to spatial
+simulations.  The <I>weight</I> keyword only applies to non-spatial,
+continuum (ODE) simulations.
 </P>
 <P><B>Related commands:</B>
 </P>

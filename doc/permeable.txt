@@ -14,15 +14,14 @@ permeable command :h3
 permeable species-ID surface-ID flag keyword value ... :pre
 
 species-ID = ID of particle species :ulb,l
-surface=ID = ID of region or triangulated surface :l
+surface-ID = ID of region or triangulated surface :l
 flag = {in} or {out} or {both} :l
 one or more keyword/value pairs can be specified :l
-  keywords = {reflect} or {near} or {stick} or {far} or {thru} or \
-             {rsp} or {nsp} or {ssp} or {fsp} or {tsp}
+  keywords = {reflect} or {near} or {stick} or {far} or {thru} or {rsp} or {nsp} or {ssp} or {fsp} or {tsp}
   {reflect}, {near}, {stick}, {far}, {thru} value = probability
     probability = value between 0.0 and 1.0 (inclusive)
   {rsp}, {nsp}, {ssp}, {fsp}, {tsp} value = species-ID
-    species-ID = what particle will become if event takes place :pre
+    species-ID = what the permeating particle will become if event takes place :pre
 :ule
 
 [Examples:]
@@ -33,7 +32,7 @@ permeable Ca_cyto cell reflect 1.0 :pre
 [Description:]
 
 Set the permeability for a species when it encounters a surface
-(region or triangulated surface) during a move.  The flag value
+(region or triangulated surface) during a move.  The {flag} value
 in/out/both refers to which side of the surface.  Each triangle in a
 triangulated surface has an "outside" determined by applying the
 right-hand rule to its 3 ordered vertices.
@@ -45,11 +44,11 @@ and become a 2d species, end its move by being placed EPSILON away
 from the surface on the far side, or pass thru the surface unimpeded.
 
 Each of the 5 cases is assigned a fractional probability P, the sum of
-which must be 1.0.  When a particle moves and a surface is struck, a
-random number is generated which is used to select which of the 5
-cases occurs.
+which must be 1.0.  When a particle moves and a surface is
+encountered, a random number is generated which is used to select
+which of the 5 cases occurs.
 
-Each of the 5 surface interactions will also cause the particle to
+Each of the 5 surface interactions can also cause the particle to
 become a new species, if the corresponding keyword
 (rsp,nsp,ssp,fsp,tsp) is specified.
 
@@ -59,9 +58,11 @@ This command cannot be used for 2d species.  If the stick probability
 is non-zero, the {ssp} keyword must be specified, else the 3d species
 cannot become a 2d species.
 
+This command can only be used for spatial simulations.
+
 [Related commands:] none
 
 [Default:]
 
-By default, all 3d species have a reflection probability of 1.0 with
-all surfaces with no species change.
+By default, all 3d species interact with all surfaces with a
+reflection probability of 1.0 and with no species change.

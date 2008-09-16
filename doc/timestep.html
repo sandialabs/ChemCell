@@ -25,11 +25,12 @@ timestep 0.003
 </PRE>
 <P><B>Description:</B>
 </P>
-<P>Set the timestep size for spatial or ode simulations.
+<P>Set the timestep size for spatial or non-spatial ODE simulations.
 </P>
 <P><B>Restrictions:</B>
 </P>
-<P>You cannot set the timestep for a Gillespie simulation.
+<P>This command cannot be used for a stochastic non-spatial (Gillespie)
+simulation, since it chooses the timestep for each reaction itself.
 </P>
 <P><B>Related commands:</B>
 </P>

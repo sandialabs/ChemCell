@@ -31,6 +31,8 @@ only a small number of fixes defined in ChemCell, but others can be
 added - see "this section"_Section_modify.html of the documentation
 for a discussion.
 
+The ID of a fix can contain alphanumeric characters and underscores.
+
 Each fix style has its own documentation page which describes its
 arguments and what it does.  For example, see the "fix
 conc"_fix_conc.html page for information on style {conc}.

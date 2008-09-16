@@ -17,8 +17,8 @@ Commands</A>
 <PRE>stats N species1-ID species2-ID ...
 stats delta species1-ID species2-ID ... 
 </PRE>
-<UL><LI>N = print stats every N timesteps (integer)
-<LI>delta = print stats every delta seconds (floating point)
+<UL><LI>N = print stats every N timesteps (integer value)
+<LI>delta = print stats every delta seconds (floating point value)
 <LI>speciesN-ID = optional list of species IDs 
 </UL>
 <P><B>Examples:</B>
@@ -34,8 +34,12 @@ beginning and end of the run.  The units for the particle stats are
 specified by the <A HREF = "stats_modify.html">stats_modify</A> command.  The
 default is particle count.
 </P>
-<P>For Gillepsie simulations, N refers to a number of reactions, since
-there is one timestep/reaction.
+<P>The frequency of output can be specied in timesteps or elapsed
+simulation time.  Using an integer versus a floating-point value (with
+a decimal point) determines how the argument is interpreted.
+</P>
+<P>For stochastic non-spatial (Gillepsie) simulations, N refers to a
+number of reactions, since there is one timestep/reaction.
 </P>
 <P>The list of species is optional.  If not specified, counts for all
 species will be printed.

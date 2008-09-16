@@ -14,8 +14,8 @@ run command :h3
 run N
 run delta :pre
 
-N = run for N timesteps (integer)
-delta = run for delta seconds (floating point) :ul
+N = run for N timesteps (integer value)
+delta = run for delta seconds (floating point value) :ul
 
 [Examples:]
 
@@ -26,6 +26,13 @@ run 5.0 :pre
 
 Run a simulation for N timesteps or delta seconds.  If a previous run
 was made, this command continues the simulation.
+
+The length of the run can be specied in timesteps or elapsed
+simulation time.  Using an integer versus a floating-point value (with
+a decimal point) determines how the argument is interpreted.
+
+For stochastic non-spatial (Gillepsie) simulations, N refers to a
+number of reactions, since there is one timestep/reaction.
 
 [Restrictions:] none
 

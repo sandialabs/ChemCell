@@ -29,11 +29,13 @@ Test the diffusive movement of a species by performing N moves of a
 single particle, and binning the result in distance.  The histogram
 statistics are written to the specified file.
 
-This is useful to test the distribution of move distances for a
+This is useful for testing the distribution of move distances for a
 particular diffusion coefficient and timestep size.
 
 [Restrictions:] none
 
-[Related commands:] none
+[Related commands:]
+
+"move_style"_move_style.html
 
 [Default:] none

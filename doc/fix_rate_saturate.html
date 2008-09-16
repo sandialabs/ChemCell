@@ -33,18 +33,18 @@ Commands</A>
 <P>Adjust one or more reaction rates based on the current concentration
 of a chosen species.  This is a way to have a time-dependent rate for
 a reaction that goes to zero as the concentration of one of its
-reactants increases, so that the amount of product produced saturates
-rather than increases forever.  For example, it can be used to model
-gene transcription resulting in mRNA production.
+reactants increases, so that the amount of product produced
+effectively saturates rather than increases forever.  For example, it
+can be used to model gene transcription resulting in mRNA production.
 </P>
 <P>Here is how the fix operates.  Every N timesteps, the rates for the
 listed reactions are scaled to new values in the following way:
 </P>
 <PRE>r_new = r_initial * half / (half + [species-ID]) 
 </PRE>
-<P>R(t) is the new scaled reaction rate.  R_initial is the rate set for
-this reaction initially in the input script.  Half is the
-concentration value set for this command.  [Species-ID] is the
+<P>R_new(t) is the new scaled reaction rate.  R_initial is the rate set
+for this reaction initially in the input script.  Half is the
+concentration value set by this command.  [Species-ID] is the
 current concentration of the selected species.
 </P>
 <P>For continuum ODE simulations this concentration is stored directly by

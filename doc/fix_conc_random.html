@@ -19,7 +19,7 @@ Commands</A>
 <UL><LI>ID is documented in <A HREF = "fix.html">fix</A> command
 <LI>conc/random = style name of this fix command
 <LI>N = apply fix every this many timesteps
-<LI>file = filename in which time course data is specified
+<LI>file = filename in which time-course data is specified
 <LI>Nin = # of input species
 <LI>insp1,insp2,etc = IDs of input species
 <LI>Nout = # of output species
@@ -33,7 +33,7 @@ Commands</A>
 </P>
 <P>Randomize the species type of certain particles at specified time
 increments in a spatial simulation.  This is an effective way of
-coupling ChemCell to another model or simulation that produced
+coupling ChemCell to another model or simulation that pre-computed
 concentration vs time profiles of certain species.
 </P>
 <P>Here is how the fix operates.  Every N timesteps, the list of current
@@ -45,13 +45,13 @@ sum to 1.0.  The assignment of a particle to a new species is done
 randomly, in accord with those probabilities.
 </P>
 <P>The probabilities for new species can be time-dependent and are
-read-in from the time course data file, which has the following
+read-in from the time-course data file, which has the following
 format.  Lines beginning with a "#" character are ignored.  Other
 lines must begin with a time value (in seconds), followed by Nout-1
 values (between 0.0 and 1.0) which sum to a value <= 1.0.  These are
 the probabilities for each of the Nout species.  The value for the
-last Nout species is 1.0 - sum.  The time stamp for successive lines
-in the file should be monotonically increasing.
+last Nout species is set to 1.0 - sum.  The time stamp for successive
+lines in the file should be monotonically increasing.
 </P>
 <P>On a timestep when the fix is applied, the file line with a time stamp
 just smaller (or equal) to the current time is used to set the Nout

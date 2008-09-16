@@ -35,8 +35,14 @@ reaction influx 1.0e-8 Ca
 reaction rate.  The reaction can have zero, one, or two reactants and
 0 or more products.
 </P>
-<P>The units of the reaction rate are molarity/sec for reactions with
-0 reactants, 1/sec for unary reactions, and 1/molarity-sec for binary
+<P>The ID of a reaction can contain alphanumeric characters and
+underscores and dashes.
+</P>
+<P>The species-IDs of all reactants and products must have been
+previously defined using the <A HREF = "species.html">species</A> command.
+</P>
+<P>The units of the reaction rate K are molarity/sec for reactions with 0
+reactants, 1/sec for unary reactions, and 1/molarity-sec for binary
 reactions.
 </P>
 <P>The <A HREF = "react_modify.html">react_modify</A> command can be used to specify
@@ -45,8 +51,12 @@ attributes.
 </P>
 <P><B>Restrictions:</B>
 </P>
-<P>Reactions with 0 reactants can only be specified for Gillespie-style
-(non-spatial) simulations.
+<P>Reactions with 0 reactants can only be specified for non-spatial
+simulations.
+</P>
+<P>The maximum number of product species for any one reaction is
+hard-wired in src/react.cpp via the MAX_PRODUCT setting.  Currently it
+is set to 5.
 </P>
 <P><B>Related commands:</B>
 </P>

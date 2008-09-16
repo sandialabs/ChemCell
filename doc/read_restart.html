@@ -24,19 +24,21 @@ Commands</A>
 </PRE>
 <P><B>Description:</B>
 </P>
-<P>Read in a previously saved problem from a restart file.  This allows
-continuation of a previous run.
+<P>Read in a previously saved set of particles from a restart file.  This
+allows continuation of a previous spatial simulation.
 </P>
 <P>Only particle information is stored in the restart file.  Thus before
 reading a restart file, you should re-define species and geometry
-information, and must setup bins (via the <A HREF = "bin.html">bin</A> command).
+information, and must setup bins via the <A HREF = "bin.html">bin</A> command.
 </P>
 <P>Because restart files are binary, they may not be portable to other
 machines.
 </P>
 <P><B>Restrictions:</B> none
 </P>
-<P>The <A HREF = "bin.html">bin command</A> must be used before reading a restart file.
+<P>The <A HREF = "bin.html">bin</A> command must be used before reading a restart file.
+</P>
+<P>This command can only be used for spatial simulations.
 </P>
 <P><B>Related commands:</B>
 </P>

@@ -13,9 +13,9 @@ probability command :h3
 
 probability style value :pre
 
-style = {max} or {diff}
-  {max} value = fraction between 0.0 and 1.0
-  {diff} value = multiplier on sum of diffusive distances
+style = {max} or {diff} :l
+  {max} value = Pmax = fraction between 0.0 and 1.0
+  {diff} value = M = multiplier on sum of diffusive distances :pre
 
 [Examples:]
 
@@ -25,23 +25,30 @@ probability diff 1.5 :pre
 [Description:]
 
 Set parameters that determine how binary reactions are computed for
-spatial simulations.  A binary reactions occurs in a timestep with a
+spatial simulations.  A binary reaction occurs in a timestep with a
 probability P when a pair of reactant particles are within a cutoff
 distance R.
 
-The {max} style sets one distance R for all reactions so that the
-fastest reaction (max value of k) will occur with probability P and
-give the desired k for a well-mixed system.  Since other reactions
-should happen less frequently (smaller k values) their P values are
-set smaller than the specified P.
+The {max} style uses the specifed Pmax to set one distance R for all
+reactions so that the fastest reaction (maximum rate constant) will
+occur with probability Pmax and give the desired k for a well-mixed
+system with diffusion-limited reactions.  Since other reactions happen
+less frequently (smaller rate constants) their P values are set
+smaller than the specified Pmax.
 
 The {diff} style sets a distance R for each reaction based on the
-diffusion coefficients of its 2 reactants.  The sum of the RMS value
-for each reactant is multipled by the specified factor to compute R.
-The P for each reaction is then chosen so that each reaction happens
-at the desired frequency for a well-mixed system.
+diffusion coefficients of its 2 reactants.  The sum of the root-mean
+squared value for each reactant is multipled by the specified M factor
+to compute R.  The P for each reaction is then set so that each
+reaction happens at the desired frequency for a well-mixed system with
+diffusion-limitd reactions.
 
-[Restrictions:] none
+Note that values of P and R for individual reactions can be overridden
+via the "react_modify"_react_modify command.
+
+[Restrictions:]
+
+This command can only be used for spatial simulations.
 
 [Related commands:] none
 

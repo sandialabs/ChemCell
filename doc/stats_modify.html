@@ -24,8 +24,7 @@ Commands</A>
     molarity = concentration in molarity = moles/liter
     um = concentration in micro-molar
     nm = concentration in nano-molar
-  <I>format</I> arg = C-style format string
- 
+  <I>format</I> arg = C-style format string 
 </PRE>
 <P><B>Examples:</B>
 </P>
@@ -40,8 +39,8 @@ via the <A HREF = "stats.html">stats</A> command.
 <P>The <I>units</I> keyword sets the style of units used to print particle
 statistics.  Style <I>count</I> is the only allowed option for spatial
 simulations, since the enclosing volume is arbitrary.  For non-spatial
-simulations, the output can be done in concentration units (molarity,
-uM, nM) since a volume is explicitly specified.
+simulations, output can be in concentration units (molarity, uM, nM)
+since a volume is explicitly specified.
 </P>
 <P>The <I>format</I> keyword sets the precision for how each particle species
 is printed.  For unit style <I>count</I> this should be an integer setting,
@@ -57,6 +56,6 @@ setting, e.g. %7.2g.
 <P><B>Default:</B>
 </P>
 <P>The option defaults are units = count, format = %d (for count units)
-or format = %g (for molarity units).
+or format = %g (for any of the molarity units).
 </P>
 </HTML>
