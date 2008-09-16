@@ -135,15 +135,26 @@ Errors: :h4,link(error)
 
 {Alias %s already exists} :dt
 
-Cannot re-use a species name.
+Cannot reuse a species name.
 
-{All universe/uloop variables must have same # of values} :dt
-
-Self-explanatory. :dd
+{All universe/uloop variables must have same # of values} :dd
 
 {All variables in next command must be same style} :dt
 
 Self-explanatory. :dd
+
+{Another input script is already being processed} :dt
+
+Cannot attempt to open a 2nd input script, when the original file is
+still being processed. :dd
+
+{Arccos of invalid value in variable formula} :dt
+
+Argument of arccos() must be between -1 and 1. :dd
+
+{Arcsin of invalid value in variable formula} :dt
+
+Argument of arcsin() must be between -1 and 1. :dd
 
 {Bin size of 0.0} :dt
 
@@ -151,10 +162,8 @@ Self-explanatory. :dd
 
 {Bins are already setup} :dt
 
-Cannot use the global or boundary or bin command if bins have already
-been initialized by the bin command.
-
-** ADD TEXT :dd
+Global and boundary command must be used before bins command.  Bins
+command can only be used once. :dd
 
 {Cannot add triangles to a region surface} :dt
 
@@ -172,45 +181,44 @@ been initialized by the bin command.
 
 ** ADD TEXT :dd
 
-{Cannot evaluate variable equal command} :dt
-
-** ADD TEXT :dd
-
 {Cannot have 0-reactant reactions with spatial simulation} :dt
 
-** ADD TEXT :dd
-
-{Cannot open file %s} :dt
-
-** ADD TEXT :dd
+This is because the volume within which to create the particles
+is not well-defined.
 
 {Cannot open fix conc/random file %s} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
 {Cannot open fix conc/set file %s} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
+
+{Cannot open input script %s} :dt
+
+Self-explanatory. :dd
 
 {Cannot open logfile %s} :dt
 
-** ADD TEXT :dd
+The ChemCell log file specified in the input script cannot be opened.
+Check that the path and name are correct. :dd
 
 {Cannot open restart file %s} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
 {Cannot perform match with two or more wildcard *} :dt
 
-** ADD TEXT :dd
+A string with a wildcard character "*" can only have one wildcard. :dd
 
 {Cannot redefine variable as a different style} :dt
 
-** ADD TEXT :dd
+An equal-style variable can be re-defined but only if it was
+originally an equal-style variable. :dd
 
 {Cannot set permeability for a 2d species} :dt
 
-** ADD TEXT :dd
+Permeability only makes sense for a 3d species hitting a surface. :dd
 
 {Cannot use balance command with non-spatial simulation} :dt
 
@@ -292,10 +300,6 @@ Stochastic simulations set the timestep for each reaction. :dd
 
 Self-explantory. :dd
 
-{Cannot use vectors in parallel} :dt
-
-** ADD TEXT :dd
-
 {Cannot use volume command with spatial simulation} :dt
 
 Self-explantory. :dd
@@ -304,15 +308,12 @@ Self-explantory. :dd
 
 Self-explantory. :dd
 
-{Cannot write restart files for non-spatial style} :dt
+{Cannot write restart files for non-spatial simulation} :dt
 
-Self-explantory. :dd
+Restart files only contain particle info, so they are not
+used for non-spatial simulations. :dd
 
 {Code is not compiled with move debug option} :dt
-
-** ADD TEXT :dd
-
-{Command-line variable already exists} :dt
 
 ** ADD TEXT :dd
 
@@ -356,25 +357,27 @@ Self-explantory. :dd
 
 The output file used by the move_test command could not be opened. :dd
 
-{Could not open new input file %s} :dt
-
-** ADD TEXT :dd
-
 {Could not open screen file} :dt
 
-** ADD TEXT :dd
+The screen file specified as a command-line argument cannot be
+opened.  Check that the directory you are running in allows for files
+to be created. :dd
 
 {Could not open universe log file} :dt
 
-** ADD TEXT :dd
+For a multi-partition run, the master log file cannot be opened.
+Check that the directory you are running in allows for files to be
+created. :dd
 
 {Could not open universe screen file} :dt
 
-** ADD TEXT :dd
+For a multi-partition run, the master screen file cannot be opened.
+Check that the directory you are running in allows for files to be
+created. :dd
 
 {Cound not find dump_modify ID} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
 {Did not assign all particles correctly} :dt
 
@@ -384,17 +387,23 @@ The output file used by the move_test command could not be opened. :dd
 
 ** ADD TEXT :dd
 
+{Divide by 0 in variable formula} :dt
+
+Self-explanatory. :dd
+
 {Dump species count does not match particle species count} :dt
 
 ** ADD TEXT :dd
 
 {Failed to allocate %d bytes for array %s} :dt
 
-** ADD TEXT :dd
+Your ChemCell simulation has run out of memory.  You need to run a
+smaller simulation or on more processors. :dd
 
 {Failed to reallocate %d bytes for array %s} :dt
 
-** ADD TEXT :dd
+Your ChemCell simulation has run out of memory.  You need to run a
+smaller simulation or on more processors. :dd
 
 {Global bin does not map to local domain} :dt
 
@@ -404,63 +413,56 @@ The output file used by the move_test command could not be opened. :dd
 
 Self-explanatory.  Check the input script syntax and compare to the
 documentation for the command.  You can use -echo screen as a
-command-line option when running LAMMPS to see the offending line. :dd
+command-line option when running ChemCell to see the offending line. :dd
 
-{Illegal diffusion constant} :dt
+{Invalid diffusion constant} :dt
 
-** ADD TEXT :dd
+Diffusion coefficient must be >= 0. :dd
 
-{Illegal dimensionality} :dt
+{Invalid dimensionality} :dt
 
-** ADD TEXT :dd
+Dimensionality must be 2 or 3. :dd
 
-{Illegal dump frequency} :dt
+{Invalid dump frequency} :dt
 
-** ADD TEXT :dd
+Dump frequency must be 1 or greater. :dd
 
-{Illegal fix style} :dt
+{Invalid fix style} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
-{Illegal region arguments} :dt
+{Invalid region style} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
-{Illegal region style} :dt
+{Invalid run style} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
-{Illegal run style} :dt
+{Input line too long after variable substitution} :dt
 
-** ADD TEXT :dd
+This is a hard (very large) limit defined in the input.cpp file. :dd
 
-{Invalid variable name} :dt
+{Input line too long: %s} :dt
 
-Variable name used in an input script line is invalid. :dd
-
-{Incorrect args in dump_modify command} :dt
-
-** ADD TEXT :dd
-
-{Incorrect args in stats_modify command} :dt
-
-** ADD TEXT :dd
+This is a hard (very large) limit defined in the input.cpp file. :dd
 
 {Invalid 2d particle move} :dt
 
 ** ADD TEXT :dd
 
-{Invalid args in move_test command} :dt
-
-** ADD TEXT :dd
-
 {Invalid command-line argument} :dt
 
-** ADD TEXT :dd
+One or more command-line arguments is invalid.  Check the syntax of
+the command you are using to launch LAMMPS. :dd
 
 {Invalid flag in header of restart file} :dt
 
 ** ADD TEXT :dd
+
+{Invalid math function in variable formula} :dt
+
+The math or group function is not recognized. :dd
 
 {Invalid reaction ID in fix dna/toggle command} :dt
 
@@ -472,7 +474,7 @@ Variable name used in an input script line is invalid. :dd
 
 {Invalid region arguments} :dt
 
-** ADD TEXT :dd
+Number of arguments doesn't match region style. :dd
 
 {Invalid settings for reaction %s} :dt
 
@@ -480,37 +482,54 @@ Variable name used in an input script line is invalid. :dd
 
 {Invalid species %s in stats command} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
 {Invalid species ID in fix conc/random command} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
 {Invalid species ID in fix conc/set command} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
 {Invalid species ID in fix dna/toggle command} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
 {Invalid species ID in fix rate/saturate command} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
+
+{Invalid syntax in variable formula} :dt
+
+Self-explanatory. :dd
+
+{Invalid variable evaluation in variable formula} :dt
+
+A variable used in a formula could not be evaluated. :dd
 
 {Invalid variable in next command} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
+
+{Invalid variable name in variable formula} :dt
+
+Variable name is not recognized. :dd
+
+{Invalid variable name} :dt
+
+Variable name used in an input script line is invalid. :dd
 
 {Invalid variable style with next command} :dt
 
-** ADD TEXT :dd
-
-{Invalid vector in variable equal command} :dt
-
-** ADD TEXT :dd
+Variable styles {equal} and {world} cannot be used in a next
+command. :dd
 
 {Label wasn't found in input script} :dt
+
+Self-explanatory. :dd
+
+{Log of zero/negative in variable formula} :dt
 
 Self-explanatory. :dd
 
@@ -576,15 +595,16 @@ Cannot use this command before the run style is set :dd
 
 {Must set volume for run style ode/rk} :dt
 
-** ADD TEXT :dd
+This run style requires that the volume command be used. :dd
 
 {Must set volume for run style ode} :dt
 
-** ADD TEXT :dd
+This run style requires that the volume command be used. :dd
 
 {Must use -in switch with multiple partitions} :dt
 
-** ADD TEXT :dd
+A multi-partition simulation cannot read the input script from stdin.
+The -in command-line option must be used to specify a file. :dd
 
 {No matching move style parameters} :dt
 
@@ -630,6 +650,10 @@ Cannot use this command before the run style is set :dd
 
 ** ADD TEXT :dd
 
+{Power by 0 in variable formula} :dt
+
+** ADD TEXT :dd
+
 {Pre-migrate: %d particles on proc %d are not in correct bin} :dt
 
 ** ADD TEXT :dd
@@ -640,11 +664,8 @@ Cannot use this command before the run style is set :dd
 
 {Processor partitions are inconsistent} :dt
 
-** ADD TEXT :dd
-
-{Quotes in a single arg} :dt
-
-** ADD TEXT :dd
+The total number of processors in all partitions must match the number
+of processors LAMMPS is running on. :dd
 
 {Reaction ID %s already exists} :dt
 
@@ -684,11 +705,14 @@ Cannot use this command before the run style is set :dd
 
 {Replacing a fix, but new style != old style} :dt
 
-** ADD TEXT :dd
+A fix ID can be used a 2nd time, but only if the style matches the
+previous fix.  In this case it is assumed you with to reset a fix's
+parameters.  This error may mean you are mistakenly re-using a fix ID
+when you do not intend to. :dd
 
 {Reuse of dump ID} :dt
 
-** ADD TEXT :dd
+A dump ID cannot be used twice. :dd
 
 {Run style does not support checking} :dt
 
@@ -701,6 +725,10 @@ Not all run styles can use check command. :dd
 {Species already exists and no new aliases are defined} :dt
 
 ** ADD TEXT :dd
+
+{Sqrt of negative in variable formula} :dt
+
+Self-explanatory. :dd
 
 {Sticking species is not 2d} :dt
 
@@ -725,19 +753,19 @@ for. :dd
 
 {Two or more wildcard * in count species ID} :dt
 
-** ADD TEXT :dd
+A string with a wildcard character "*" can only have one wildcard. :dd
 
 {Two or more wildcard * in diffusion species ID} :dt
 
-** ADD TEXT :dd
+A string with a wildcard character "*" can only have one wildcard. :dd
 
 {Two or more wildcard * in dimension species ID} :dt
 
-** ADD TEXT :dd
+A string with a wildcard character "*" can only have one wildcard. :dd
 
 {Two or more wildcard * in stats species ID} :dt
 
-** ADD TEXT :dd
+A string with a wildcard character "*" can only have one wildcard. :dd
 
 {Unbalanced quotes in input line} :dt
 
@@ -746,63 +774,61 @@ quote. :dd
 
 {Unexpected end of file} :dt
 
-** ADD TEXT :dd
+ChemCell hit the end of the file while attempting to read particles or
+surface info.  Something is wrong with the format of the file. :dd
 
 {Universe/uloop variable count < # of partitions} :dt
 
-** ADD TEXT :dd
+A universe or uloop style variable must specify a number of values >= to the
+number of processor partitions. :dd
 
 {Unknown command: %s} :dt
 
 The command is not known to ChemCell.  Check the input script. :dd
 
-{Unknown keyword for variable equal command} :dt
-
-** ADD TEXT :dd
-
 {Unknown species %s in check command} :dt
 
-** ADD TEXT :dd
+Self-explantory. :dd
 
 {Unknown species %s in permeable command} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
 {Unknown species in count command} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
 {Unknown species in diffusion command} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
 {Unknown species in dimension command} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
 {Unknown species in move_test command} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
 {Unknown species in particles command} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
 {Unknown species in reaction command} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
 {Unknown surface %s in check command} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
 {Unknown surface %s in permeable command} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
-{Using variable equal keyword before sim box is defined} :dt
+{Variable name must be alphanumeric or underscore characters} :dt
 
-** ADD TEXT :dd
+Self-explanatory. :dd
 
 {Vertex %d in surf %s is outside global domain} :dt
 
@@ -810,7 +836,8 @@ The command is not known to ChemCell.  Check the input script. :dd
 
 {World variable count doesn't match # of partitions} :dt
 
-** ADD TEXT :dd
+A world-style variable must specify a number of values equal to the
+number of processor partitions. :dd
 
 :dle
 
