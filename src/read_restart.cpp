@@ -1,6 +1,7 @@
 /* ----------------------------------------------------------------------
    ChemCell - Cell simulator for particle diffusion and reactions
-   Steve Plimpton (sjplimp@sandia.gov), Alex Slepoy (aslepoy@sandia.gov)
+   Steve Plimpton (sjplimp@sandia.gov)
+   Alex Slepoy (alexander.slepoy@nnsa.doe.gov)
    Sandia National Laboratories, www.cs.sandia.gov/~sjplimp/chemcell.html
 
    Copyright (2004) Sandia Corporation.  Under the terms of Contract
@@ -115,7 +116,7 @@ void ReadRestart::header()
       }
       delete [] version;
 
-      // check run_style, warn if different
+    // check run_style, warn if different
 
     } else if (flag == 1) {
       char *style = read_char();
@@ -126,7 +127,7 @@ void ReadRestart::header()
     } else if (flag == 2) {
       simulator->ntimestep = read_int();
 
-      // read nprocs_file from restart file, warn if different
+    // read nprocs_file from restart file, warn if different
 
     } else if (flag == 3) {
       nprocs_file = read_int();

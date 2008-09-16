@@ -1,6 +1,7 @@
 /* ----------------------------------------------------------------------
    ChemCell - Cell simulator for particle diffusion and reactions
-   Steve Plimpton (sjplimp@sandia.gov), Alex Slepoy (aslepoy@sandia.gov)
+   Steve Plimpton (sjplimp@sandia.gov)
+   Alex Slepoy (alexander.slepoy@nnsa.doe.gov)
    Sandia National Laboratories, www.cs.sandia.gov/~sjplimp/chemcell.html
 
    Copyright (2004) Sandia Corporation.  Under the terms of Contract
