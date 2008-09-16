@@ -320,7 +320,8 @@ used for non-spatial simulations. :dd
 {Code is not compiled with move debug option} :dt
 
 Debug command cannot be used unless ChemCell was compiled with
--DDEBUG_MOVE flag. :dd
+-DDEBUG_MOVE flag or with the "#define DEBUG_MOVE" line uncommented at
+the top of src/move.cpp. :dd
 
 {Could not find reaction ID} :dt
 

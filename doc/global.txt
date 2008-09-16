@@ -28,7 +28,7 @@ must be inside this domain.
 
 [Restrictions:]
 
-This command can only be used by a spatial simulation.  See the
+This command can only be used for spatial simulations.  See the
 "volume"_volume.html command for non-spatial simulations.
 
 [Related commands:]
