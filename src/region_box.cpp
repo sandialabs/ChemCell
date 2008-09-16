@@ -32,7 +32,7 @@ RegionBox::RegionBox(int narg, char **arg) : Region(narg, arg)
   zhi = atof(arg[6]);
 
   if (xlo >= xhi || ylo >= yhi || zlo >= zhi)
-    error->all("Illegal region arguments");
+    error->all("Invalid region arguments");
 }
 
 /* ----------------------------------------------------------------------

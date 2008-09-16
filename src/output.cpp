@@ -187,7 +187,7 @@ void Output::init()
   // insure next restart is a multiple of every
 
   if (restart_every && simulator->spatial_flag == 0)
-    error->all("Cannot write restart files for non-spatial style");
+    error->all("Cannot write restart files for non-spatial simulation");
 
   next_restart = ntimestep + restart_every;
   if (restart_every == 0) next_restart = simulator->laststep + 1;
@@ -345,7 +345,7 @@ void Output::stats_modify(int narg, char **arg)
       format_user = new char[n];
       strcpy(format_user,arg[iarg+1]);
       iarg += 2;
-    } else error->all("Incorrect args in stats_modify command");
+    } else error->all("Illegal stats_modify command");
   }
 }
 
@@ -437,7 +437,7 @@ void Output::add_dump(int narg, char **arg)
 
   for (int idump = 0; idump < ndump; idump++)
     if (strcmp(arg[0],dump[idump]->id) == 0) error->all("Reuse of dump ID");
-  if (atoi(arg[1]) <= 0) error->all("Illegal dump frequency");
+  if (atoi(arg[1]) <= 0) error->all("Invalid dump frequency");
 
   // extend Dump lists if necessary
 

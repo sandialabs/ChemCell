@@ -37,7 +37,7 @@ RegionPlane::RegionPlane(int narg, char **arg) : Region(narg, arg)
   norm[2] = atof(arg[6]);
 
   double length = sqrt(dot(norm,norm));
-  if (length == 0.0) error->all("Illegal region arguments");
+  if (length == 0.0) error->all("Invalid region arguments");
   norm[0] /= length;
   norm[1] /= length;
   norm[2] /= length;

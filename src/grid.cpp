@@ -299,7 +299,8 @@ void Grid::global(int narg, char **arg)
       ybinsize = MAX(ybinsize,yvalue);
       zbinsize = MAX(zbinsize,zvalue);
       iarg += 4;
-    } else error->all("Illegal keyword in bin command");
+
+    } else error->all("Illegal bin command");
   }
 
   if (xbinsize == 0.0 || ybinsize == 0.0 || zbinsize == 0.0)

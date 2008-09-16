@@ -41,8 +41,7 @@ void MoveTest::command(int narg, char **arg)
 
   int ntest = atoi(arg[1]);
   int nhisto = atoi(arg[2]);
-  if (ntest <= 0 || nhisto <= 0) 
-    error->all("Invalid args in move_test command");
+  if (ntest <= 0 || nhisto <= 0) error->all("Illegal move_test command");
 
   int seed = atoi(arg[3]);
   char *file = arg[4];

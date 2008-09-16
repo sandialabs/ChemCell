@@ -828,7 +828,7 @@ void Input::restart()
 void Input::run_style() {
   if (simulator) delete simulator;
 
-  if (strcmp(arg[0],"none") == 0) error->all("Illegal run style");
+  if (strcmp(arg[0],"none") == 0) error->all("Invalid run style");
 
 #define SimulatorClass
 #define SimulatorStyle(key,Class) \
@@ -836,7 +836,7 @@ void Input::run_style() {
 #include "style.h"
 #undef SimulatorClass
 
-  else error->all("Illegal run style");
+  else error->all("Invalid run style");
 }
 
 /* ---------------------------------------------------------------------- */

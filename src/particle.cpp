@@ -308,7 +308,7 @@ void Particle::set_diffusion(int narg, char **arg)
 {
   if (narg != 2) error->all("Illegal diffusion command");
   double d = atof(arg[1]);
-  if (d < 0.0) error->all("Illegal diffusion constant");
+  if (d < 0.0) error->all("Invalid diffusion constant");
 
   if (strchr(arg[0],'*') == NULL) {
     int ispecies = find(arg[0]);
@@ -341,7 +341,7 @@ void Particle::set_dimension(int narg, char **arg)
 {
   if (narg != 2) error->all("Illegal dimension command");
   int dim = atoi(arg[1]);
-  if (dim != 2 && dim != 3) error->all("Illegal dimensionality");
+  if (dim != 2 && dim != 3) error->all("Invalid dimensionality");
 
   if (strchr(arg[0],'*') == NULL) {
     int ispecies = find(arg[0]);

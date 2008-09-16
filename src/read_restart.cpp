@@ -40,7 +40,7 @@ void ReadRestart::command(int narg, char **arg)
     fp = fopen(arg[0],"rb");
     if (fp == NULL) {
       char str[128];
-      sprintf(str,"Cannot open file %s",arg[0]);
+      sprintf(str,"Cannot open restart file %s",arg[0]);
       error->one(str);
     }
   }

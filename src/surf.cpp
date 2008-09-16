@@ -363,7 +363,7 @@ void Surf::add_region(int narg, char **arg)
   
   // create the new region
 
-  if (strcmp(arg[1],"none") == 0) error->all("Illegal region style");
+  if (strcmp(arg[1],"none") == 0) error->all("Invalid region style");
 
 #define RegionClass
 #define RegionStyle(key,Class) \
@@ -372,7 +372,7 @@ void Surf::add_region(int narg, char **arg)
 #include "style.h"
 #undef RegionClass
 
-  else error->all("Illegal region style");
+  else error->all("Invalid region style");
 
   region2surf[nregion] = isurf;
   surf2region[isurf] = nregion;

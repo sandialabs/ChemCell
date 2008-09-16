@@ -156,7 +156,7 @@ void Modify::add_fix(int narg, char **arg)
 #include "style.h"
 #undef FixClass
 
-  else error->all("Illegal fix style");
+  else error->all("Invalid fix style");
 
   // if fix is new, set it's mask values and increment nfix
 

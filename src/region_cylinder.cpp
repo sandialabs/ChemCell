@@ -41,7 +41,7 @@ RegionCylinder::RegionCylinder(int narg, char **arg) : Region(narg, arg)
     axis = 2;
     c1dim = 0;
     c2dim = 1;
-  } else error->all("Illegal region arguments");
+  } else error->all("Invalid region arguments");
 
   c1 = atof(arg[2]);
   c2 = atof(arg[3]);

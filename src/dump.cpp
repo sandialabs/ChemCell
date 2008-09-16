@@ -280,6 +280,6 @@ void Dump::modify_params(int narg, char **arg)
       else if (strcmp(arg[iarg+1],"no") == 0) orient_flag = 0;
       else error->all("Illegal dump_modify command");
       iarg += 2;
-    } else error->all("Incorrect args in dump_modify command");
+    } else error->all("Illegal dump_modify command");
   }
 }
