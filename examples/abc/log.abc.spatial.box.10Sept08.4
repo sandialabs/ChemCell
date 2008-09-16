@@ -1,0 +1,212 @@
+ChemCell (10 Sept 2008)
+# Simple A + B <-> C reaction via spatial simulator in periodic box
+
+seed		69484
+run_style	spatial
+timestep	0.001
+
+# volume = 1.0e-11 liters
+
+global          0 0 0 21.54435 21.54435 21.54435
+boundary	p p p
+move_style	cube brownian
+
+species		A
+species		B
+species		C
+
+reaction	1 A B 1.0e10 C
+reaction	2 C 1.0 A B
+
+diffusion	* 1.0e-6
+3 diffusion coeffs set via wildcard
+
+#max_prob	0.5
+probability	diff 1.5
+
+bin		diff 1.0e-6
+Setting up bins ...
+  bin size induced by diff constraint = 2.97494
+
+include		data.abc.box
+particles A 3000 
+Reading particles ...
+  3000 particles
+
+particles B 1000 
+Reading particles ...
+  1000 particles
+
+
+stats           10
+dump		1 100 dump.abc.spatial.box
+
+run		1000
+Particles:
+  number of 3d species = 3
+  min/max 3d diffusivities = 1e-06 1e-06
+  number of 2d species = 0
+  initial particles = 4000
+Reactions:
+  number of 0-reactant reactions = 0
+  number of 1-reactant reactions = 1
+  min/max 1-reactant rates = 1 1
+  number of 2-reactant reactions = 1
+  min/max 2-reactant rates = 1e+10 1e+10
+Domain:
+  global size in xyz = 21.5444 21.5444 21.5444
+Bins:
+  xyz size = 3.59073 3.59073 3.59073
+  xyz counts = 6 6 6 = 216 total
+Move:
+  ave/max move of 3d particle with largest D = 0.71365 2.97494
+Surfs:
+  surfs regions triangles vertices = 0 0 0 0
+  tri/bin: ave max = 0 0
+Chemistry:
+  min/max reaction distance = 2.14095 2.14095
+  min/max reaction probabilities = 0.000403905 0.001
+Step Time A B C 
+0 0 3000 1000 0
+10 0.01 2958 958 42
+20 0.02 2913 913 87
+30 0.03 2868 868 132
+40 0.04 2832 832 168
+50 0.05 2793 793 207
+60 0.06 2770 770 230
+70 0.07 2723 723 277
+80 0.08 2692 692 308
+90 0.09 2664 664 336
+100 0.1 2642 642 358
+110 0.11 2622 622 378
+120 0.12 2587 587 413
+130 0.13 2550 550 450
+140 0.14 2531 531 469
+150 0.15 2510 510 490
+160 0.16 2497 497 503
+170 0.17 2477 477 523
+180 0.18 2463 463 537
+190 0.19 2449 449 551
+200 0.2 2445 445 555
+210 0.21 2426 426 574
+220 0.22 2423 423 577
+230 0.23 2413 413 587
+240 0.24 2400 400 600
+250 0.25 2393 393 607
+260 0.26 2388 388 612
+270 0.27 2379 379 621
+280 0.28 2367 367 633
+290 0.29 2360 360 640
+300 0.3 2350 350 650
+310 0.31 2335 335 665
+320 0.32 2319 319 681
+330 0.33 2311 311 689
+340 0.34 2311 311 689
+350 0.35 2306 306 694
+360 0.36 2300 300 700
+370 0.37 2298 298 702
+380 0.38 2300 300 700
+390 0.39 2295 295 705
+400 0.4 2297 297 703
+410 0.41 2284 284 716
+420 0.42 2276 276 724
+430 0.43 2274 274 726
+440 0.44 2279 279 721
+450 0.45 2280 280 720
+460 0.46 2277 277 723
+470 0.47 2272 272 728
+480 0.48 2269 269 731
+490 0.49 2261 261 739
+500 0.5 2257 257 743
+510 0.51 2253 253 747
+520 0.52 2250 250 750
+530 0.53 2255 255 745
+540 0.54 2254 254 746
+550 0.55 2251 251 749
+560 0.56 2257 257 743
+570 0.57 2254 254 746
+580 0.58 2248 248 752
+590 0.59 2243 243 757
+600 0.6 2240 240 760
+610 0.61 2242 242 758
+620 0.62 2247 247 753
+630 0.63 2246 246 754
+640 0.64 2247 247 753
+650 0.65 2249 249 751
+660 0.66 2239 239 761
+670 0.67 2240 240 760
+680 0.68 2241 241 759
+690 0.69 2240 240 760
+700 0.7 2240 240 760
+710 0.71 2241 241 759
+720 0.72 2239 239 761
+730 0.73 2235 235 765
+740 0.74 2229 229 771
+750 0.75 2227 227 773
+760 0.76 2224 224 776
+770 0.77 2215 215 785
+780 0.78 2213 213 787
+790 0.79 2216 216 784
+800 0.8 2209 209 791
+810 0.81 2210 210 790
+820 0.82 2212 212 788
+830 0.83 2214 214 786
+840 0.84 2216 216 784
+850 0.85 2215 215 785
+860 0.86 2210 210 790
+870 0.87 2213 213 787
+880 0.88 2223 223 777
+890 0.89 2220 220 780
+900 0.9 2224 224 776
+910 0.91 2229 229 771
+920 0.92 2224 224 776
+930 0.93 2225 225 775
+940 0.94 2219 219 781
+950 0.95 2221 221 779
+960 0.96 2221 221 779
+970 0.97 2217 217 783
+980 0.98 2218 218 782
+990 0.99 2215 215 785
+1000 1 2216 216 784
+Loop time of 5.655 on 4 procs for 1000 steps
+
+Move  time (%) = 0.138963 (2.45734)
+Migrt time (%) = 0.573374 (10.1392)
+React time (%) = 1.78219 (31.5153)
+RComm time (%) = 3.09981 (54.8154)
+Outpt time (%) = 0.0526077 (0.930285)
+Balnc time (%) = 0 (0)
+Other time (%) = 0.00345367 (0.0610729)
+
+Nlocal:    804 ave 825 max 787 min
+Histogram: 1 0 0 1 1 0 0 0 0 1
+Nghost:    873.75 ave 889 max 860 min
+Histogram: 1 1 0 0 0 0 0 1 0 1
+Nbin:    200 ave 200 max 200 min
+Histogram: 4 0 0 0 0 0 0 0 0 0
+
+Move statistics (total & per-step):
+  moves      = 3346593 3346.59
+  tri checks = 0 0
+  refl  hits = 0 0
+  near  hits = 0 0
+  stick hits = 0 0
+  far   hits = 0 0
+  thru  hits = 0 0
+Reaction statistics (total & per-step):
+  bin-bin     = 3024000 3024
+  bin pairs   = 701808410 701808
+  dist checks = 105492401 105492
+  overlaps    = 3471067 3471.07
+  reactions   = 2074 2.074
+  count of each reaction: (1 1429) (2 645) 
+Number of balancing calls = 0
+Memory usage in Mbyte/proc (ave/max/min)
+  parts = 0.102997 0.102997 0.102997
+  bins  = 0.315857 0.315857 0.315857
+  surfs = 0 0 0
+  total = 0.418854 0.418854 0.418854
+Equivalance map of species & type
+  map A 1
+  map B 2
+  map C 3

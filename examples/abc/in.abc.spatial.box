@@ -1,0 +1,32 @@
+# Simple A + B <-> C reaction via spatial simulator in periodic box
+
+seed		69484
+run_style	spatial
+timestep	0.001
+
+# volume = 1.0e-11 liters
+
+global          0 0 0 21.54435 21.54435 21.54435
+boundary	p p p
+move_style	cube brownian
+
+species		A
+species		B
+species		C
+
+reaction	1 A B 1.0e10 C
+reaction	2 C 1.0 A B
+
+diffusion	* 1.0e-6
+
+#max_prob	0.5
+probability	diff 1.5
+
+bin		diff 1.0e-6
+
+include		data.abc.box
+
+stats           10
+dump		1 100 dump.abc.spatial.box
+
+run		1000

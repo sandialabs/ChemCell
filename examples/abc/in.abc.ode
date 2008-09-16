@@ -1,0 +1,23 @@
+# Simple A + B <-> C reaction via ODE integrator
+
+run_style	ode/rk
+timestep	0.001
+
+volume		1.0e-11
+
+species		A
+species		B
+species		C
+
+reaction	1 A B 1.0e10 C
+reaction	2 C 1.0 A B
+
+# match concentration to Gillespie counts
+
+count		A 4.9809e-10
+count		B 1.6603e-10
+
+stats           0.01 A B C
+
+run		1.0
+

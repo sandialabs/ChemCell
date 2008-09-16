@@ -1,0 +1,77 @@
+# Smoldyn input file
+# A + B <-> C
+
+#accuracy 1
+
+# set dim = 3, names of species, set max_mol only if running simulation
+
+dim 3
+names A B C
+max_mol 1000
+
+# set diffusion in units of um^2/sec
+# 1.0e-8 cm^2/sec = 1 um^2/sec
+
+difc A 1.0
+difc B 1.0
+difc C 1.0
+
+# set time_step size
+
+time_start 0
+time_stop 1
+time_step 0.001
+
+# unit box
+
+low_wall 0 0 p
+high_wall 0 1 p
+low_wall 1 0 p
+high_wall 1 1 p
+low_wall 2 0 p
+high_wall 2 1 p
+
+# molecule counts
+
+#mol 1000 A u u u
+
+# set number of mono reactions (order = 1)
+# for each reaction:
+#   mN = ID of mono reaction
+#   set reactants and products
+#   set rate in units of 1/sec
+#   if reversible, "product_param mN x 0.2" is good default
+
+# C -> A + B
+
+start_reaction
+order 1
+max_rxn 1
+
+reactant C m1
+rate m1 1.0
+product m1 A + B
+product_param m1 x 0.2
+
+end_reaction
+
+# set number of binary reactions (order = 2)
+# for each reaction:
+#   bN = ID of mono reaction
+#   set reactants and products
+#   set rate as k * 1.0e15 / Avg
+#   k is in units of 1/M-sec, 1.0e15 is um^3/liter, Avg = 6.023E23
+
+start_reaction
+order 2
+max_rxn 1
+
+# A + B -> C with k = 1.0e10 per M-sec
+
+reactant A + B b1
+rate b1 16.60302
+product b1 C
+
+end_reaction
+
+end_file

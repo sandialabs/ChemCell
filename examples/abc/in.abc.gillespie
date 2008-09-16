@@ -1,0 +1,20 @@
+# Simple A + B <-> C reaction via Gillepsie SSA
+
+seed		4827883
+run_style	gillespie
+
+volume          1.0e-11
+
+species		A
+species		B
+species		C
+
+reaction	1 A B 1.0e10 C
+reaction	2 C 1.0 A B
+
+count		A 3000
+count		B 1000
+
+stats           0.01 A B C
+
+run		1.0

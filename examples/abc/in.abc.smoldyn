@@ -1,0 +1,44 @@
+# Simple A + B <-> C reaction via spatial simulator in periodic box
+# use reaction distance parameters computed by Smoldyn
+# they change as a function of diffusion coefficients
+
+seed		69484
+run_style	spatial
+timestep	0.001
+
+# volume = 1.0e-11 liters
+
+global          0 0 0 21.54435 21.54435 21.54435
+boundary	p p p
+move_style	cube brownian
+
+species		A
+species		B
+species		C
+
+reaction	1 A B 1.0e10 C
+reaction	2 C 1.0 A B
+
+# Smoldyn params for D = 1.0e-6,1.0e-7,1.0e-8
+
+diffusion	* 1.0e-6
+react_modify	1 dist 0.158259 prob 1.0
+
+#diffusion	* 1.0e-7
+#react_modify	1 dist 0.160373 prob 1.0
+
+#diffusion	* 1.0e-8
+#react_modify	1 dist 0.564014 prob 1.0
+
+probability	diff 1.0
+
+bin		diff 1.0e-6
+#bin		diff 1.0e-7
+#bin		diff 1.0e-7
+
+include		data.abc.box
+
+stats           10
+dump		1 100 dump.abc.smoldyn.box
+
+run		1000
