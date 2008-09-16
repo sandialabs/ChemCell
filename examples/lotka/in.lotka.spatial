@@ -1,0 +1,29 @@
+# Lotka-Volterra system with spatial simulator
+# volume = 200x200x20 = 8.0e5 um^3 = 8.0e-10 liters
+
+seed		13898
+run_style	spatial
+timestep	0.001
+
+global          0 0 0 200 200 20
+boundary	p p p
+move_style	cube brownian
+
+species		y1
+species		y2
+
+reaction	1 y1 10 y1 y1
+reaction	2 y1 y2 4.8184e12 y2 y2
+reaction	3 y2 10
+
+diffusion	* 1.0e-6
+
+bin		diff 1.0e-6
+probability	diff 1.0
+
+include		data.lotka.box
+
+dump		1 100 dump.lotka.spatial
+stats           0.1
+
+run		10.0

@@ -1,0 +1,23 @@
+# Lotka-Volterra system with Gillepie SSA
+# volume = 200x200x20 = 8.0e5 um^3 = 8.0e-10 liters
+
+seed		3998694
+run_style	gillespie
+
+volume		8.0e-10
+
+species		y1
+species		y2
+species		z
+
+reaction	1 y1 10 y1 y1
+reaction	2 y1 y2 4.8184e12 y2 y2
+reaction	3 y2 10 z
+
+count		y1 1000
+count		y2 1000
+count		z 0
+
+stats           0.1
+
+run		10.0

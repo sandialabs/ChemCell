@@ -1,0 +1,208 @@
+ChemCell (10 Sept 2008)
+# Lotka-Volterra system with spatial simulator
+# volume = 200x200x20 = 8.0e5 um^3 = 8.0e-10 liters
+
+seed		13898
+run_style	spatial
+timestep	0.001
+
+global          0 0 0 200 200 20
+boundary	p p p
+move_style	cube brownian
+
+species		y1
+species		y2
+
+reaction	1 y1 10 y1 y1
+reaction	2 y1 y2 4.8184e12 y2 y2
+reaction	3 y2 10
+
+diffusion	* 1.0e-6
+2 diffusion coeffs set via wildcard
+
+bin		diff 1.0e-6
+Setting up bins ...
+  bin size induced by diff constraint = 2.97494
+probability	diff 1.0
+
+include		data.lotka.box
+particles y1 1000
+Reading particles ...
+  1000 particles
+
+particles y2 1000
+Reading particles ...
+  1000 particles
+
+
+dump		1 100 dump.lotka.spatial
+stats           0.1
+
+run		10.0
+Particles:
+  number of 3d species = 2
+  min/max 3d diffusivities = 1e-06 1e-06
+  number of 2d species = 0
+  initial particles = 2000
+Reactions:
+  number of 0-reactant reactions = 0
+  number of 1-reactant reactions = 2
+  min/max 1-reactant rates = 10 10
+  number of 2-reactant reactions = 1
+  min/max 2-reactant rates = 4.8184e+12 4.8184e+12
+Domain:
+  global size in xyz = 200 200 20
+Bins:
+  xyz size = 3.0303 3.0303 3.33333
+  xyz counts = 66 66 6 = 26136 total
+Move:
+  ave/max move of 3d particle with largest D = 0.71365 2.97494
+Surfs:
+  surfs regions triangles vertices = 0 0 0 0
+  tri/bin: ave max = 0 0
+Chemistry:
+  min/max reaction distance = 1.4273 1.4273
+  min/max reaction probabilities = 0.01 0.656835
+Step Time y1 y2 
+0 0 1000 1000
+100 0.1 1951 641
+200 0.2 4193 677
+300 0.3 8364 1704
+400 0.4 6265 8050
+500 0.5 1268 7686
+600 0.6 435 3688
+700 0.7 418 1616
+800 0.8 721 797
+900 0.9 1370 532
+1000 1 2778 540
+1100 1.1 5432 1149
+1200 1.2 6793 4004
+1300 1.3 3825 6814
+1400 1.4 1770 5467
+1500 1.5 1038 3256
+1600 1.6 1047 1831
+1700 1.7 1462 1227
+1800 1.8 2255 1051
+1900 1.9 4152 1169
+2000 2 5879 2767
+2100 2.1 4636 5298
+2200 2.2 2550 5361
+2300 2.3 1122 3656
+2400 2.4 1163 1969
+2500 2.5 1615 1258
+2600 2.6 2721 1115
+2700 2.7 4246 1817
+2800 2.8 4618 3328
+2900 2.9 3679 4732
+3000 3 2354 4385
+3100 3.1 1545 3358
+3200 3.2 1395 2172
+3300 3.3 2035 1488
+3400 3.4 3163 1451
+3500 3.5 4035 2533
+3600 3.6 4515 3390
+3700 3.7 3551 4538
+3800 3.8 1929 4466
+3900 3.9 1482 2765
+4000 4 1712 1843
+4100 4.1 2535 1412
+4200 4.2 3659 1847
+4300 4.3 3763 2998
+4400 4.4 3930 3456
+4500 4.5 3116 4211
+4600 4.6 1672 3642
+4700 4.7 1408 2346
+4800 4.8 1968 1617
+4900 4.9 3144 1536
+5000 5 3831 2567
+5100 5.1 3880 3360
+5200 5.2 3341 3966
+5300 5.3 2143 3838
+5400 5.4 1699 2709
+5500 5.5 1955 1955
+5600 5.6 2538 1805
+5700 5.7 3380 2004
+5800 5.8 3917 2752
+5900 5.9 3862 3532
+6000 6 3142 3946
+6100 6.1 2012 3685
+6200 6.2 2016 2551
+6300 6.3 2004 2178
+6400 6.4 2549 1776
+6500 6.5 3152 2159
+6600 6.6 3530 2697
+6700 6.7 2833 3536
+6800 6.8 2763 3048
+6900 6.9 2683 2926
+7000 7 2362 2848
+7100 7.1 2496 2334
+7200 7.2 2807 2365
+7300 7.3 2943 2669
+7400 7.4 3143 2747
+7500 7.5 3199 3130
+7600 7.6 2413 3480
+7700 7.7 2485 2855
+7800 7.8 2374 2620
+7900 7.9 2560 2431
+8000 8 2839 2336
+8100 8.1 3374 2648
+8200 8.2 3127 3262
+8300 8.3 2972 3291
+8400 8.4 2647 3226
+8500 8.5 2259 3015
+8600 8.6 2103 2497
+8700 8.7 2495 2163
+8800 8.8 3129 2140
+8900 8.9 3681 2636
+9000 9 3643 3539
+9100 9.1 2869 3723
+9200 9.2 2478 3358
+9300 9.3 2273 2930
+9400 9.4 2136 2451
+9500 9.5 2514 2091
+9600 9.6 3007 2270
+9700 9.7 3096 2666
+9800 9.8 3252 2880
+9900 9.9 3389 3077
+10000 10 2767 3545
+Loop time of 65.812 on 1 procs for 10000 steps
+
+Move  time (%) = 8.20527 (12.4677)
+Migrt time (%) = 3.53085 (5.36505)
+React time (%) = 52.3058 (79.4776)
+RComm time (%) = 0.228731 (0.347552)
+Outpt time (%) = 1.53901 (2.3385)
+Balnc time (%) = 0 (0)
+Other time (%) = 0.00234938 (0.00356983)
+
+Nlocal:    6312 ave 6312 max 6312 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:    1346 ave 1346 max 1346 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nbin:    36992 ave 36992 max 36992 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Move statistics (total & per-step):
+  moves      = 56538450 5653.85
+  tri checks = 0 0
+  refl  hits = 0 0
+  near  hits = 0 0
+  stick hits = 0 0
+  far   hits = 0 0
+  thru  hits = 0 0
+Reaction statistics (total & per-step):
+  bin-bin     = -635927296 -63592.7
+  bin pairs   = 262490779 26249.1
+  dist checks = 73340928 7334.09
+  overlaps    = 427854 42.7854
+  reactions   = 841091 84.1091
+  count of each reaction: (1 282390) (2 280623) (3 278078) 
+Number of balancing calls = 0
+Memory usage in Mbyte/proc (ave/max/min)
+  parts = 1.17297 1.17297 1.17297
+  bins  = 2.89111 2.89111 2.89111
+  surfs = 0 0 0
+  total = 4.06409 4.06409 4.06409
+Equivalance map of species & type
+  map y1 1
+  map y2 2
