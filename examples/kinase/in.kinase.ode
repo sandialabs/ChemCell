@@ -1,0 +1,17 @@
+# 3-stage Kinase cascade with ODE solution
+
+run_style	ode/rk
+timestep	0.001
+
+volume          1.0e-12
+
+include		kinase.model
+
+count active-receptor 1.66e-9
+count inactive-kin1   1.66e-9
+count inactive-kin2   1.66e-9
+count inactive-kin3   1.66e-9
+count ptase-x	      1.66e-9
+
+stats		0.01 active-receptor active-kin1 active-kin2 active-kin3
+run		1.0

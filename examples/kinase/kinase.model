@@ -1,0 +1,19 @@
+# Simple model of 3-stage kinase cascade
+
+species active-receptor
+species inactive-receptor
+species active-kin1
+species inactive-kin1
+species active-kin2
+species inactive-kin2
+species active-kin3
+species inactive-kin3
+species ptase-x
+
+reaction 1 active-receptor 10.0 inactive-receptor
+reaction 2 active-receptor inactive-kin1 1.0e11 active-kin1 active-receptor
+reaction 3 active-kin1 ptase-x 1.0e11 inactive-kin1 ptase-x
+reaction 4 active-kin1 inactive-kin2 1.0e11 active-kin1 active-kin2
+reaction 5 active-kin2 ptase-x 1.0e11 inactive-kin2 ptase-x
+reaction 6 active-kin2 inactive-kin3 1.0e11 active-kin2 active-kin3
+reaction 7 active-kin3 ptase-x 1.0e11 inactive-kin3 ptase-x

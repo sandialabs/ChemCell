@@ -1,0 +1,244 @@
+ChemCell (10 Sept 2008)
+# 3-stage Kinase cascade with spatial simulator in a sphere
+
+run_style	spatial
+seed		5992893
+timestep	0.001
+
+# volume = 1.0e-12 liters
+
+global          -6.203505 -6.203505 -6.203505 6.203505 6.203505 6.203505
+boundary	n n n
+move_style	sphere brownian
+
+include		kinase.model
+# Simple model of 3-stage kinase cascade
+
+species active-receptor
+species inactive-receptor
+species active-kin1
+species inactive-kin1
+species active-kin2
+species inactive-kin2
+species active-kin3
+species inactive-kin3
+species ptase-x
+
+reaction 1 active-receptor 10.0 inactive-receptor
+reaction 2 active-receptor inactive-kin1 1.0e11 active-kin1 active-receptor
+reaction 3 active-kin1 ptase-x 1.0e11 inactive-kin1 ptase-x
+reaction 4 active-kin1 inactive-kin2 1.0e11 active-kin1 active-kin2
+reaction 5 active-kin2 ptase-x 1.0e11 inactive-kin2 ptase-x
+reaction 6 active-kin2 inactive-kin3 1.0e11 active-kin2 active-kin3
+reaction 7 active-kin3 ptase-x 1.0e11 inactive-kin3 ptase-x
+
+probability     max 0.5
+diffusion       * 1.0e-6
+9 diffusion coeffs set via wildcard
+#bin	        react 0.2
+bin	        diff 1.0e-6
+Setting up bins ...
+  bin size induced by diff constraint = 1.71758
+
+region	        1 sphere 0 0 0 6.203505
+include	        data.kinase.sphere
+particles active-receptor 1000
+Reading particles ...
+  1000 particles
+
+particles inactive-kin1 1000
+Reading particles ...
+  1000 particles
+
+particles inactive-kin2 1000
+Reading particles ...
+  1000 particles
+
+particles inactive-kin3 1000
+Reading particles ...
+  1000 particles
+
+particles ptase-x 1000
+Reading particles ...
+  1000 particles
+
+
+dump            1 50 dump.kinase.spatial.sphere
+
+stats	        0.01 active-receptor active-kin1 active-kin2 active-kin3
+
+run	        1000
+Particles:
+  number of 3d species = 9
+  min/max 3d diffusivities = 1e-06 1e-06
+  number of 2d species = 0
+  initial particles = 5000
+Reactions:
+  number of 0-reactant reactions = 0
+  number of 1-reactant reactions = 1
+  min/max 1-reactant rates = 10 10
+  number of 2-reactant reactions = 6
+  min/max 2-reactant rates = 1e+11 1e+11
+Domain:
+  global size in xyz = 12.407 12.407 12.407
+Bins:
+  xyz size = 1.77243 1.77243 1.77243
+  xyz counts = 7 7 7 = 343 total
+Move:
+  ave/max move of 3d particle with largest D = 0.71365 1.71758
+Surfs:
+  surfs regions triangles vertices = 1 1 0 0
+  tri/bin: ave max = 0.565598 1
+Chemistry:
+  min/max reaction distance = 0.429579 0.429579
+  min/max reaction probabilities = 0.01 0.5
+Step Time active-receptor active-kin1 active-kin2 active-kin3 
+0 0 1000 0 0 0
+10 0.01 911 485 262 103
+20 0.02 827 491 351 220
+30 0.03 755 454 352 251
+40 0.04 685 440 319 253
+50 0.05 617 408 302 252
+60 0.06 573 380 296 213
+70 0.07 522 369 292 242
+80 0.08 481 335 268 214
+90 0.09 438 313 239 201
+100 0.1 398 334 237 178
+110 0.11 363 295 255 214
+120 0.12 336 278 244 184
+130 0.13 308 257 209 190
+140 0.14 282 263 204 167
+150 0.15 261 229 201 159
+160 0.16 239 211 177 141
+170 0.17 225 192 155 148
+180 0.18 210 217 187 130
+190 0.19 189 201 170 143
+200 0.2 181 166 182 137
+210 0.21 167 161 157 113
+220 0.22 160 143 145 136
+230 0.23 148 155 124 131
+240 0.24 126 164 144 120
+250 0.25 108 130 131 128
+260 0.26 102 103 111 94
+270 0.27 94 88 98 75
+280 0.28 87 82 71 76
+290 0.29 79 77 75 74
+300 0.3 74 64 65 65
+310 0.31 68 76 39 45
+320 0.32 63 77 59 48
+330 0.33 54 50 52 51
+340 0.34 50 44 51 55
+350 0.35 45 48 54 52
+360 0.36 38 40 40 47
+370 0.37 33 42 51 40
+380 0.38 29 32 42 39
+390 0.39 26 31 27 35
+400 0.4 24 28 36 32
+410 0.41 21 24 32 35
+420 0.42 19 26 25 33
+430 0.43 18 27 29 23
+440 0.44 15 13 23 28
+450 0.45 14 18 14 26
+460 0.46 12 6 9 12
+470 0.47 11 8 8 6
+480 0.48 9 7 7 5
+490 0.49 9 9 10 5
+500 0.5 8 8 10 15
+510 0.51 7 6 6 7
+520 0.52 6 8 4 3
+530 0.53 4 3 5 5
+540 0.54 4 3 4 4
+550 0.55 4 3 5 6
+560 0.56 4 5 4 3
+570 0.57 4 4 11 6
+580 0.58 3 4 5 5
+590 0.59 3 4 5 4
+600 0.6 3 6 3 3
+610 0.61 2 4 3 0
+620 0.62 2 2 3 1
+630 0.63 2 1 2 3
+640 0.64 2 2 2 2
+650 0.65 2 0 1 0
+660 0.66 1 2 0 0
+670 0.67 1 1 2 3
+680 0.68 1 2 2 2
+690 0.69 1 2 3 1
+700 0.7 1 1 0 2
+710 0.71 1 0 0 0
+720 0.72 1 2 1 0
+730 0.73 1 2 1 2
+740 0.74 1 1 2 1
+750 0.75 1 2 1 1
+760 0.76 1 1 2 3
+770 0.77 1 2 3 3
+780 0.78 1 1 3 5
+790 0.79 1 1 0 4
+800 0.8 1 0 0 0
+810 0.81 1 1 2 1
+820 0.82 1 1 2 2
+830 0.83 1 1 1 0
+840 0.84 1 1 1 0
+850 0.85 0 1 2 3
+860 0.86 0 1 5 0
+870 0.87 0 0 0 2
+880 0.88 0 0 0 1
+890 0.89 0 0 0 1
+900 0.9 0 0 0 1
+910 0.91 0 0 0 1
+920 0.92 0 0 0 0
+930 0.93 0 0 0 0
+940 0.94 0 0 0 0
+950 0.95 0 0 0 0
+960 0.96 0 0 0 0
+970 0.97 0 0 0 0
+980 0.98 0 0 0 0
+990 0.99 0 0 0 0
+1000 1 0 0 0 0
+Loop time of 10.3643 on 1 procs for 1000 steps
+
+Move  time (%) = 1.6588 (16.005)
+Migrt time (%) = 0.18843 (1.81807)
+React time (%) = 8.36827 (80.7415)
+RComm time (%) = 0.0189545 (0.182883)
+Outpt time (%) = 0.129611 (1.25055)
+Balnc time (%) = 0 (0)
+Other time (%) = 0.000205517 (0.00198294)
+
+Nlocal:    5000 ave 5000 max 5000 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:    0 ave 0 max 0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nbin:    729 ave 729 max 729 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Move statistics (total & per-step):
+  moves      = 5000000 5000
+  tri checks = 4762175 4762.18
+  refl  hits = 429228 429.228
+  near  hits = 0 0
+  stick hits = 0 0
+  far   hits = 0 0
+  thru  hits = 0 0
+Reaction statistics (total & per-step):
+  bin-bin     = 4802000 4802
+  bin pairs   = 1286098862 1.2861e+06
+  dist checks = 34832836 34832.8
+  overlaps    = 105160 105.16
+  reactions   = 53432 53.432
+  count of each reaction: (1 1000) (2 10656) (3 10656) (4 8352) (5 8352) (6 7208) (7 7208) 
+Number of balancing calls = 0
+Memory usage in Mbyte/proc (ave/max/min)
+  parts = 0.34758 0.34758 0.34758
+  bins  = 0.191521 0.191521 0.191521
+  surfs = 0 0 0
+  total = 0.539101 0.539101 0.539101
+Equivalance map of species & type
+  map active-receptor 1
+  map inactive-receptor 2
+  map active-kin1 3
+  map inactive-kin1 4
+  map active-kin2 5
+  map inactive-kin2 6
+  map active-kin3 7
+  map inactive-kin3 8
+  map ptase-x 9

@@ -1,0 +1,17 @@
+# 3-stage Kinase cascade with Gillespie SSA solution
+
+run_style	gillespie
+seed		5992893
+
+volume          1.0e-12
+
+include		kinase.model
+
+count active-receptor 1000
+count inactive-kin1   1000
+count inactive-kin2   1000
+count inactive-kin3   1000
+count ptase-x	      1000
+
+stats		0.01 active-receptor active-kin1 active-kin2 active-kin3
+run		1.0

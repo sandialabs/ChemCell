@@ -1,0 +1,27 @@
+# 3-stage Kinase cascade with spatial simulator in a sphere
+
+run_style	spatial
+seed		5992893
+timestep	0.001
+
+# volume = 1.0e-12 liters
+
+global          -6.203505 -6.203505 -6.203505 6.203505 6.203505 6.203505
+boundary	n n n
+move_style	sphere brownian
+
+include		kinase.model
+
+probability     max 0.5
+diffusion       * 1.0e-6
+#bin	        react 0.2
+bin	        diff 1.0e-6
+
+region	        1 sphere 0 0 0 6.203505
+include	        data.kinase.sphere
+
+dump            1 50 dump.kinase.sphere
+
+stats	        0.01 active-receptor active-kin1 active-kin2 active-kin3
+
+run	        1000

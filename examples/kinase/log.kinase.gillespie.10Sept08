@@ -1,0 +1,146 @@
+ChemCell (10 Sept 2008)
+# 3-stage Kinase cascade with Gillespie SSA solution
+
+run_style	gillespie
+seed		5992893
+
+volume          1.0e-12
+
+include		kinase.model
+# Simple model of 3-stage kinase cascade
+
+species active-receptor
+species inactive-receptor
+species active-kin1
+species inactive-kin1
+species active-kin2
+species inactive-kin2
+species active-kin3
+species inactive-kin3
+species ptase-x
+
+reaction 1 active-receptor 10.0 inactive-receptor
+reaction 2 active-receptor inactive-kin1 1.0e11 active-kin1 active-receptor
+reaction 3 active-kin1 ptase-x 1.0e11 inactive-kin1 ptase-x
+reaction 4 active-kin1 inactive-kin2 1.0e11 active-kin1 active-kin2
+reaction 5 active-kin2 ptase-x 1.0e11 inactive-kin2 ptase-x
+reaction 6 active-kin2 inactive-kin3 1.0e11 active-kin2 active-kin3
+reaction 7 active-kin3 ptase-x 1.0e11 inactive-kin3 ptase-x
+
+count active-receptor 1000
+count inactive-kin1   1000
+count inactive-kin2   1000
+count inactive-kin3   1000
+count ptase-x	      1000
+
+stats		0.01 active-receptor active-kin1 active-kin2 active-kin3
+run		1.0
+Particles:
+  number of 3d species = 9
+  min/max 3d diffusivities = 0 0
+  number of 2d species = 0
+  initial particles = 0
+Reactions:
+  number of 0-reactant reactions = 0
+  number of 1-reactant reactions = 1
+  min/max 1-reactant rates = 10 10
+  number of 2-reactant reactions = 6
+  min/max 2-reactant rates = 1e+11 1e+11
+Step Time active-receptor active-kin1 active-kin2 active-kin3 
+0 0 1000 0 0 0
+2709 0.0100012 898 464 267 146
+6143 0.02 805 463 355 242
+9463 0.0300012 742 433 288 236
+12630 0.0400035 679 433 332 250
+15801 0.0500064 608 371 278 238
+18692 0.0600117 543 340 260 235
+21572 0.0700078 480 360 248 208
+24190 0.0800037 437 325 251 197
+26612 0.0900007 384 288 221 197
+28926 0.100003 345 283 237 207
+31229 0.110002 302 261 224 178
+33181 0.120001 272 227 170 190
+35078 0.130006 244 188 181 167
+36764 0.140005 225 201 152 134
+38455 0.150008 199 181 175 148
+39962 0.160008 181 156 155 138
+41327 0.17 170 150 124 127
+42598 0.180008 141 137 112 110
+43798 0.190001 124 135 113 126
+44967 0.200018 115 108 115 107
+46029 0.21001 103 108 88 94
+46878 0.220002 92 93 76 73
+47672 0.230002 84 79 91 76
+48367 0.240019 77 77 71 60
+49053 0.250009 70 72 78 73
+49760 0.260005 65 69 71 65
+50383 0.270001 60 53 65 65
+51014 0.280043 56 57 57 66
+51548 0.290001 48 50 57 57
+52030 0.300023 45 50 42 51
+52479 0.310006 38 40 50 53
+52831 0.320016 34 33 35 39
+53141 0.330012 34 28 32 33
+53386 0.340015 31 22 20 29
+53688 0.350015 30 31 31 24
+53970 0.360007 26 33 27 20
+54229 0.370003 23 29 35 22
+54468 0.380021 21 16 25 22
+54687 0.390106 20 20 20 21
+54884 0.400037 19 20 21 20
+55076 0.410001 18 20 16 14
+55273 0.420081 15 18 18 24
+55455 0.430053 14 13 17 11
+55566 0.440024 11 14 7 12
+55680 0.450038 9 11 13 11
+55805 0.460655 9 5 9 6
+55870 0.470062 8 3 10 13
+55948 0.480123 8 9 5 6
+56016 0.490003 8 10 6 0
+56089 0.500134 8 7 4 4
+56154 0.510134 7 6 6 3
+56222 0.520268 6 6 3 1
+56268 0.530126 6 8 2 2
+56313 0.540328 4 5 2 6
+56355 0.550155 4 9 8 8
+56445 0.560036 4 7 9 13
+56518 0.570052 4 7 12 11
+56609 0.580024 4 5 15 11
+56680 0.590378 3 4 5 12
+56726 0.601444 3 2 5 4
+56756 0.610716 2 3 1 4
+56782 0.620098 2 1 1 2
+56789 0.631632 1 0 0 0
+56791 0.631691 0 0 0 0
+Loop time of 0.03774 on 1 procs for 56791 steps
+
+Move  time (%) = 0 (0)
+Migrt time (%) = 0 (0)
+React time (%) = 0.025615 (67.8722)
+RComm time (%) = 0 (0)
+Outpt time (%) = 0.000449657 (1.19146)
+Balnc time (%) = 0 (0)
+Other time (%) = 0.0116754 (30.9363)
+
+Reaction statistics (total & per-step):
+  bin-bin     = 0 0
+  bin pairs   = 0 0
+  dist checks = 0 0
+  overlaps    = 0 0
+  reactions   = 56790 0.999982
+  count of each reaction: (1 1000) (2 11218) (3 11218) (4 9001) (5 9001) (6 7676) (7 7676) 
+Memory usage in Mbyte/proc (ave/max/min)
+  parts = 0 0 0
+  bins  = 0 0 0
+  surfs = 0 0 0
+  total = 0 0 0
+Equivalance map of species & type
+  map active-receptor 1
+  map inactive-receptor 2
+  map active-kin1 3
+  map inactive-kin1 4
+  map active-kin2 5
+  map inactive-kin2 6
+  map active-kin3 7
+  map inactive-kin3 8
+  map ptase-x 9

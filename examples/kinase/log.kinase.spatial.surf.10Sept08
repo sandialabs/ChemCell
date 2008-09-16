@@ -1,0 +1,255 @@
+ChemCell (10 Sept 2008)
+# 3-stage Kinase cascade with spatial simulator in a triangulated sphere
+# receptors are frozen on surface of sphere
+
+run_style	spatial
+seed		5992893
+timestep	0.001
+
+# volume = 1.0e-12 liters
+
+global          -6.203505 -6.203505 -6.203505 6.203505 6.203505 6.203505
+boundary	n n n
+move_style	sphere brownian
+
+include		kinase.model
+# Simple model of 3-stage kinase cascade
+
+species active-receptor
+species inactive-receptor
+species active-kin1
+species inactive-kin1
+species active-kin2
+species inactive-kin2
+species active-kin3
+species inactive-kin3
+species ptase-x
+
+reaction 1 active-receptor 10.0 inactive-receptor
+reaction 2 active-receptor inactive-kin1 1.0e11 active-kin1 active-receptor
+reaction 3 active-kin1 ptase-x 1.0e11 inactive-kin1 ptase-x
+reaction 4 active-kin1 inactive-kin2 1.0e11 active-kin1 active-kin2
+reaction 5 active-kin2 ptase-x 1.0e11 inactive-kin2 ptase-x
+reaction 6 active-kin2 inactive-kin3 1.0e11 active-kin2 active-kin3
+reaction 7 active-kin3 ptase-x 1.0e11 inactive-kin3 ptase-x
+
+probability     max 0.5
+diffusion       * 1.0e-6
+9 diffusion coeffs set via wildcard
+#bin	        react 0.2
+bin	        diff 1.0e-6
+Setting up bins ...
+  bin size induced by diff constraint = 1.71758
+
+dimension       active-receptor 2
+dimension       inactive-receptor 2
+diffusion       active-receptor 0
+diffusion       inactive-receptor 0
+
+react_modify    2 rate 2.0e11        # double rate at surf with active receptor
+
+include	        data.kinase.surf
+triangles sphere 26 48
+Reading surface ...
+  26 vertices & 48 triangles
+particles active-receptor 1000 sphere
+Reading particles ...
+  1000 particles
+
+particles inactive-kin1 1000
+Reading particles ...
+  1000 particles
+
+particles inactive-kin2 1000
+Reading particles ...
+  1000 particles
+
+particles inactive-kin3 1000
+Reading particles ...
+  1000 particles
+
+particles ptase-x 1000
+Reading particles ...
+  1000 particles
+
+
+dump            1 50 dump.kinase.spatial.surf
+
+stats	        0.01 active-receptor active-kin1 active-kin2 active-kin3
+
+run	        1000
+Particles:
+  number of 3d species = 7
+  min/max 3d diffusivities = 1e-06 1e-06
+  number of 2d species = 2
+  min/max 2d diffusivities = 0 0
+  initial particles = 5000
+Reactions:
+  number of 0-reactant reactions = 0
+  number of 1-reactant reactions = 1
+  min/max 1-reactant rates = 10 10
+  number of 2-reactant reactions = 6
+  min/max 2-reactant rates = 1e+11 2e+11
+Domain:
+  global size in xyz = 12.407 12.407 12.407
+Bins:
+  xyz size = 1.77243 1.77243 1.77243
+  xyz counts = 7 7 7 = 343 total
+Move:
+  ave/max move of 3d particle with largest D = 0.71365 1.71758
+Surfs:
+  surfs regions triangles vertices = 1 0 48 26
+  tri/bin: ave max = 1.4344 6
+Chemistry:
+  min/max reaction distance = 0.541235 0.541235
+  min/max reaction probabilities = 0.01 0.5
+Step Time active-receptor active-kin1 active-kin2 active-kin3 
+0 0 1000 0 0 0
+10 0.01 922 286 153 85
+20 0.02 830 275 222 144
+30 0.03 762 282 217 155
+40 0.04 688 287 202 157
+50 0.05 616 293 208 168
+60 0.06 557 288 206 154
+70 0.07 506 261 227 157
+80 0.08 451 250 210 178
+90 0.09 414 230 177 170
+100 0.1 383 219 197 175
+110 0.11 352 210 186 175
+120 0.12 328 221 176 150
+130 0.13 306 209 150 137
+140 0.14 288 203 171 139
+150 0.15 262 197 153 131
+160 0.16 240 198 160 134
+170 0.17 218 166 147 124
+180 0.18 202 176 147 122
+190 0.19 190 142 110 107
+200 0.2 170 137 123 105
+210 0.21 157 143 109 86
+220 0.22 140 126 126 105
+230 0.23 124 109 128 109
+240 0.24 113 108 98 109
+250 0.25 101 96 86 98
+260 0.26 92 89 79 66
+270 0.27 83 71 70 71
+280 0.28 78 66 60 54
+290 0.29 68 84 79 57
+300 0.3 59 71 67 57
+310 0.31 51 58 62 53
+320 0.32 44 54 61 49
+330 0.33 43 45 37 45
+340 0.34 38 39 40 32
+350 0.35 37 38 32 39
+360 0.36 35 36 37 33
+370 0.37 32 38 34 29
+380 0.38 30 36 30 27
+390 0.39 30 25 36 25
+400 0.4 28 29 29 21
+410 0.41 24 27 25 22
+420 0.42 23 25 34 27
+430 0.43 21 25 30 21
+440 0.44 20 12 22 29
+450 0.45 16 25 22 17
+460 0.46 15 13 23 15
+470 0.47 15 10 13 12
+480 0.48 13 12 7 8
+490 0.49 13 11 11 7
+500 0.5 13 16 13 5
+510 0.51 11 11 15 8
+520 0.52 9 9 9 14
+530 0.53 6 5 8 5
+540 0.54 6 7 3 2
+550 0.55 6 10 12 5
+560 0.56 6 10 8 3
+570 0.57 5 5 4 4
+580 0.58 5 7 7 4
+590 0.59 4 4 3 4
+600 0.6 4 4 4 2
+610 0.61 4 2 5 5
+620 0.62 4 5 9 7
+630 0.63 3 5 7 9
+640 0.64 2 1 6 8
+650 0.65 2 3 2 4
+660 0.66 1 2 3 3
+670 0.67 0 1 3 4
+680 0.68 0 1 4 5
+690 0.69 0 0 0 1
+700 0.7 0 0 0 0
+710 0.71 0 0 0 0
+720 0.72 0 0 0 0
+730 0.73 0 0 0 0
+740 0.74 0 0 0 0
+750 0.75 0 0 0 0
+760 0.76 0 0 0 0
+770 0.77 0 0 0 0
+780 0.78 0 0 0 0
+790 0.79 0 0 0 0
+800 0.8 0 0 0 0
+810 0.81 0 0 0 0
+820 0.82 0 0 0 0
+830 0.83 0 0 0 0
+840 0.84 0 0 0 0
+850 0.85 0 0 0 0
+860 0.86 0 0 0 0
+870 0.87 0 0 0 0
+880 0.88 0 0 0 0
+890 0.89 0 0 0 0
+900 0.9 0 0 0 0
+910 0.91 0 0 0 0
+920 0.92 0 0 0 0
+930 0.93 0 0 0 0
+940 0.94 0 0 0 0
+950 0.95 0 0 0 0
+960 0.96 0 0 0 0
+970 0.97 0 0 0 0
+980 0.98 0 0 0 0
+990 0.99 0 0 0 0
+1000 1 0 0 0 0
+Loop time of 10.4506 on 1 procs for 1000 steps
+
+Move  time (%) = 1.51731 (14.5189)
+Migrt time (%) = 0.189692 (1.81513)
+React time (%) = 8.59377 (82.2324)
+RComm time (%) = 0.0195322 (0.186901)
+Outpt time (%) = 0.130079 (1.2447)
+Balnc time (%) = 0 (0)
+Other time (%) = 0.000207186 (0.00198253)
+
+Nlocal:    5000 ave 5000 max 5000 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:    0 ave 0 max 0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nbin:    729 ave 729 max 729 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Move statistics (total & per-step):
+  moves      = 5000000 5000
+  tri checks = 13411030 13411
+  refl  hits = 395386 395.386
+  near  hits = 0 0
+  stick hits = 0 0
+  far   hits = 0 0
+  thru  hits = 0 0
+Reaction statistics (total & per-step):
+  bin-bin     = 4802000 4802
+  bin pairs   = 1366223349 1.36622e+06
+  dist checks = 27809123 27809.1
+  overlaps    = 173377 173.377
+  reactions   = 48838 48.838
+  count of each reaction: (1 1000) (2 9277) (3 9277) (4 7687) (5 7687) (6 6955) (7 6955) 
+Number of balancing calls = 0
+Memory usage in Mbyte/proc (ave/max/min)
+  parts = 0.34758 0.34758 0.34758
+  bins  = 0.191521 0.191521 0.191521
+  surfs = 0.00315857 0.00315857 0.00315857
+  total = 0.542259 0.542259 0.542259
+Equivalance map of species & type
+  map active-receptor 1
+  map inactive-receptor 2
+  map active-kin1 3
+  map inactive-kin1 4
+  map active-kin2 5
+  map inactive-kin2 6
+  map active-kin3 7
+  map inactive-kin3 8
+  map ptase-x 9

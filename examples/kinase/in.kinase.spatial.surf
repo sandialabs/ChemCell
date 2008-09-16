@@ -1,0 +1,34 @@
+# 3-stage Kinase cascade with spatial simulator in a triangulated sphere
+# receptors are frozen on surface of sphere
+
+run_style	spatial
+seed		5992893
+timestep	0.001
+
+# volume = 1.0e-12 liters
+
+global          -6.203505 -6.203505 -6.203505 6.203505 6.203505 6.203505
+boundary	n n n
+move_style	sphere brownian
+
+include		kinase.model
+
+probability     max 0.5
+diffusion       * 1.0e-6
+#bin	        react 0.2
+bin	        diff 1.0e-6
+
+dimension       active-receptor 2
+dimension       inactive-receptor 2
+diffusion       active-receptor 0
+diffusion       inactive-receptor 0
+
+react_modify    2 rate 2.0e11        # double rate at surf with active receptor
+
+include	        data.kinase.surf
+
+dump            1 50 dump.kinase.surf
+
+stats	        0.01 active-receptor active-kin1 active-kin2 active-kin3
+
+run	        1000
