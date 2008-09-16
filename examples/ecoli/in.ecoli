@@ -1,0 +1,37 @@
+# E Coli system from Lipkow, Andrews, Bray paper
+# use Smoldyn-computed reaction parameters
+# test time-delay in 4 FLIM occupancies with 100% signal
+
+# if wanted to do multiple runs for statistical purposes:
+# could uncomment clear, variable, next, jump commands
+# and comment out seed command
+
+#clear
+#variable	a loop 25
+
+seed		382785
+run_style	spatial
+timestep	1.0e-4
+
+global          0 0 0 2.801 1.001 1.001
+boundary	n n n
+move_style	sphere brownian
+
+include		ecoli.model
+
+probability	diff 1.0
+bin		diff 1.0e-7
+
+include		data.ecoli
+
+stats           10
+
+fix		1 conc/random 50 ecoli.CheA &
+		3 CheA CheAa CheAp 3 CheA CheAa CheAp
+
+dump		1 250 dump.ecoli CheYp
+
+run		6000
+
+#next		a
+#jump		in.ecoli

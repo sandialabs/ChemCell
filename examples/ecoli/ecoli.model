@@ -1,0 +1,65 @@
+# Ecoli model from this paper:
+#   K. Lipkow, S. S. Andrews, D. Bray, J of Bacteriology, 187, 45-53 (2005)
+#   with Smoldyn parameters
+# Ecoli as cylindrical cell with surface species
+# binding radii adjusted accordingly for surface/volume reactions
+
+# species
+
+species		CheA
+species		CheAa       # activated CheA
+species		CheAp       # phosphorylated CheA
+species		CheY
+species		CheYp       # phosphorylated CheY
+species		CheZ
+species		CheZs       # CheZ on plane (static)
+species		FliM1       # unbound FliM in each flagellum 
+species		FliM2
+species		FliM3
+species		FliM4
+species		FliM1b      # FliM bound to CheYp in each flagellum
+species		FliM2b
+species		FliM3b
+species		FliM4b
+
+# surface species (all else are 3d)
+
+dimension       CheA* 2
+dimension       FliM* 2
+
+# mono reactions
+
+reaction	m1 CheAa  3.4e1  CheAp
+reaction	m2 CheY   5.0e-5 CheYp
+reaction	m3 CheYp  8.5e-2 CheY
+reaction	m4 FliM1b 2.0e1  FliM1 CheYp
+reaction	m5 FliM2b 2.0e1  FliM2 CheYp
+reaction	m6 FliM3b 2.0e1  FliM3 CheYp
+reaction	m7 FliM4b 2.0e1  FliM4 CheYp
+
+# binary reactions
+
+reaction	b1 CheAp CheY  1.0e8 CheAa  CheYp
+reaction	b2 CheZ  CheYp 1.6e6 CheZ   CheY
+reaction	b3 CheZs CheYp 1.6e6 CheZs  CheY
+reaction	b4 FliM1 CheYp 5.0e6 FliM1b
+reaction	b5 FliM2 CheYp 5.0e6 FliM2b
+reaction	b6 FliM3 CheYp 5.0e6 FliM3b
+reaction	b7 FliM4 CheYp 5.0e6 FliM4b
+
+# Smoldyn binding radii (ones on surface are increased from volumetric
+#                        values in paper)
+
+react_modify	b1 dist 0.02034  prob 1.0
+react_modify	b2 dist 0.004    prob 1.0
+react_modify	b3 dist 0.004    prob 1.0
+react_modify	b4 dist 0.007346 prob 1.0
+react_modify	b5 dist 0.007346 prob 1.0
+react_modify	b6 dist 0.007346 prob 1.0
+react_modify	b7 dist 0.007346 prob 1.0
+
+# Diffusion coefficients (all else are static, D = 0)
+
+diffusion	CheY  1.0e-7
+diffusion	CheYp 1.0e-7
+diffusion	CheZ  6.0e-8
