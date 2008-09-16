@@ -27,6 +27,6 @@ bin		diff 1.0e-6
 include		data.abc.box
 
 stats           10
-dump		1 100 dump.abc.spatial.box
+dump		1 100 dump.abc.box
 
 run		1000

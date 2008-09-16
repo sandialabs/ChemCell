@@ -39,6 +39,6 @@ bin		diff 1.0e-6
 include		data.abc.box
 
 stats           10
-dump		1 100 dump.abc.smoldyn.box
+dump		1 100 dump.abc.smoldyn
 
 run		1000

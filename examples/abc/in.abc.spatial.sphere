@@ -27,6 +27,6 @@ bin		diff 1.0e-6
 include		data.abc.sphere
 
 stats           10
-dump		1 100 dump.abc.spatial.sphere
+dump		1 100 dump.abc.sphere
 
 run		1000
