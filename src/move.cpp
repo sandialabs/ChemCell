@@ -48,7 +48,7 @@ enum {REFLECT,NEAR,STICK,FAR,THRU};
 
 // comment out if don't want DEBUG enabled
 
-#define DEBUG_MOVE
+//#define DEBUG_MOVE
 
 /* ---------------------------------------------------------------------- */
 
