@@ -3,7 +3,7 @@
 
 :line
 
-Open-Source Rules :h3
+Open-Source Distribution :h3
 
 ChemCell comes with no warranty of any kind.  As each source file states
 in its header, it is a copyrighted code that is distributed free-of-
@@ -35,5 +35,31 @@ of the GPL.
 source file headers (including the copyright and GPL notices) should
 remain part of the code.
 
-"This page"_contribute.html describes how you can contribute to an
-open-source code like ChemCell.
+:line
+
+In the spirit of an open-source code, these are various ways you can
+contribute to making ChemCell better.  You can send email to
+sjplimp at sandia.gov on any of these items.
+
+If you write/add a new feature to the code, let us know and we can
+include it in the general distribution.  :ulb,l
+
+If you find a bug, report it. :l
+
+If you perform an interesting calculation with ChemCell or write a
+paper using ChemCell results, let us know and we can include a brief
+description, image, movie on the "ChemCell WWW page"_cws. :l
+
+Send an email if you find an error or omission in the "ChemCell
+documentation"_doc/Manual.html, or have a suggestion for something to
+clarify or include. :l
+
+Point prospective users to the "ChemCell WWW Site"_cws or link to it
+from your WWW site. :l
+
+Cash.  Small denominations, unmarked bills preferred.  Leave in paper
+sack on desk.  "VISA"_email also accepted.  Chocolate chip cookies
+encouraged. :ule,l
+
+:link(pd,doc/Manual.html)
+:link(email,mailto:sjplimp@sandia.gov)

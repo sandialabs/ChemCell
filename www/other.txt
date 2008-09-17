@@ -5,63 +5,41 @@
 
 Other Codes :h3
 
-This page gives pointers to
+These are other biological cell simulators, which may be well-suited
+to the problems you want to model.
 
-"Other cell modeling codes"_#other - other cell modeling codes
-"Visualization packages"_#viz - high quality visualization packages :ul
+"MCell"_mcell - by Joel Stiles (PSC) and Tom Bartol (Salk Institute)
+"MesoRD"_meso - by Johan Hattne (EMBL) and Johan Elf (Uppsala Univ)
+"Smoldyn"_smoldyn - by Steve Andrews (TMSI) :ul
+"VCell"_vcell - by Jim Schaaf and Les Loew (NRCAM, U Conn Health Center)
+"E-Cell"_ecell - a large Japanese-led project :ul
 
-Other MD Codes :h4,link(otherMD)
+:link(mcell,http://www.mcell.cnl.salk.edu)
+:link(meso,http://mesord.sourceforge.net)
+:link(smoldyn,http://www.smoldyn.org)
+:link(vcell,http://www.nrcam.uchc.edu/index.html)
+:link(ecell,http://www.e-cell.org/ecell)
 
-These are freely-available molecular dynamics codes, most of them
-parallel, which may be well-suited to the problems you want to model.
-They can also be used in conjunction with LAMMPS to perform
-complementary modeling tasks.
-
-"CHARMM"_charmm
-"AMBER"_amber
-"NAMD"_namd
-"NWCHEM"_nwchem
-"DL_POLY"_dlpoly
-"Tinker"_tinker :ul
-
-:link(charmm,http://www.scripps.edu/brooks)
-:link(amber,http://amber.scripps.edu)
-:link(namd,http://www.ks.uiuc.edu/Research/namd/)
-:link(nwchem,http://www.emsl.pnl.gov/docs/nwchem/nwchem.html)
-:link(dlpoly,http://www.cse.clrc.ac.uk/msi/software/DL_POLY)
-:link(tinker,http://dasher.wustl.edu/tinker)
-
-CHARMM, AMBER, NAMD, NWCHEM, and Tinker are designed primarily for
-modeling biological molecules.  CHARMM and AMBER use
-atom-decomposition (replicated-data) strategies for parallelism; NAMD
-and NWCHEM use spatial-decomposition approaches, similar to LAMMPS.
-Tinker is a serial code.  DL_POLY includes potentials for a variety of
-biological and non-biological materials; both a replicated-data and
-spatial-decomposition version exist.
+The first 3 are similar in spirit to ChemCell, meaning they model
+biochemical networks of reacting/diffusing chemical species within a
+spatial geometry via particles.  VCell uses continuum PDEs for
+reaction/diffusion in a spatial representation of the cell.  E-Cell
+provides a rich set of continuum and stochastic solvers for
+non-spatial cell models.
 
 :line
 
 Visualization Packages :h4,link(viz)
 
-The LAMMPS package itself includes only the simplest of "visualization
-tools"_doc/Section_tools.html#xmovie.
+ChemCell itself does not perform visualization of its output.  Since
+its output is snapshots of particles, these are high-quality particle
+visualizers we recommend.
 
-These are high-quality visualization packages we recommend:
-
-"Raster3d"_http://www.bmsc.washington.edu/raster3d/raster3d.html
-"RasMol"_http://www.openrasmol.org
 "VMD"_http://www.ks.uiuc.edu/Research/vmd
-"AtomEye"_http://164.107.79.177/Archive/Graphics/A :ul
+"AtomEye"_http://mt.seas.upenn.edu/Archive/Graphics/A :ul
 
 Our group has also written and released a separate toolkit called
-"Pizza.py"_../pizza.html which provides tools for doing LAMMPS pre-
-and post-processing, including visualization.  Pizza.py is written in
-"Python"_http://www.python.org, is available for download from "this
-page"_../download.html, and includes Python wrappers for the Raster3d
-and RasMol packages listed above.
-
-The company Scienomics has created an interface to LAMMPS as part of
-their Materials and Processes Simulations (MAPS) platform which is
-described at their "WWW page"_http://www.scienomics.com.  It can be
-used to visualize and perform analysis on the output of LAMMPS
-simulations.
+"Pizza.py"_../pizza.html which provides tools for doing ChemCell pre-
+and post-processing, including model creation, plotting, and
+visualization.  Pizza.py is written in "Python"_http://www.python.org,
+is available for download from "this page"_../download.html.
