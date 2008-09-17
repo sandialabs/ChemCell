@@ -1,4 +1,4 @@
-"ChemCell WWW Site"_lws :c
+"ChemCell WWW Site"_cws :c
 :link(cws,../chemcell.html)
 
 :line
@@ -13,6 +13,8 @@ upgraded version from the "download page"_../download.html, that
 includes all these features/fixes, and rebuild the code.
 
 The current version of ChemCell is 10 Sept 2008.
+
+:line
 
 [10 Sept 2008]
 

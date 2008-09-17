@@ -8,41 +8,23 @@ Pictures & Movies from ChemCell Simulations :h3
 The images and movies on this page are from ChemCell simulations that
 have been rendered with various plotting and visualization packages.
 
-"dendrimer"_#dendrimer:	    solvated dendritic polymer phase behavior
-"solidification"_#solidify: metal solidificiation
-"membrane"_#membrane:       lipid membrane self-assembly and fusion
-"adhesion"_#adhesion:       tensile pull on adhesive polymer chains
-"crazing"_#crazing:         crazing of entangled polymer chains
-"nanowires"_#wires:	    stress in metal nanowires
-"shear"_#shear:             shear of large single-crystal metals :tb(s=:)
+"endoplasmic reticulum"_#er: Ca++ ion release from endoplasmic reticulum
+"E. Coli"_#ecoli: chemotaxis response by E. Coli
+"Synechococcus"_#synecho: carbon fixation in sea-water bacteria Synechococcus
+"NF-kB immune response"_#immune: oscillatory immune response of NF-kB network
+"ABC model"_#abc: simple A + B <-> C reaction model
+"kinase cascade"_#kinase: 3-stage kinase cascade :tb(s=:)
 
 All of the images/movies are shown in small size.  Click on the image
 to view a larger version.
 
 :line
 
-Solvated dendritic polymer structure :h4,link(dendrimer)
+Ca++ ion release from endoplasmic reticulum :h4,link(er)
 
-This is work by "Seung Soon Jang"_jang (jsshys@wag.caltech.edu) in
-Bill Goddard's group at Cal Tech.  They've developed a model for a
-dendrion diblock copolymer consisting of a dendritic polymer with a
-hydrophobic backbone.  The 1st paper listed is a study of its
-structural and dynamical properties in water.  Such materials have
-interesting nanoscale structural and phase behavior.
-
-They've also studied amphiphilic bistable (2)rotaxane molecules which
-have controllable switching properties as their conformation changes.
-The 2nd paper discusses simulations of this system.
-
-:link(jang,http://www.wag.caltech.edu/home/jsshys)
-
-The 1st picture is the molecular structures of a diblock copolymer
-system at two different levels of water content.  The 2nd picture
-illustrates conformational changes in a Langmuir monolayer of the
-rotaxane molecules.
+This is work with Shawn Means (Sandia, now SDF).
 
 :image(images/dendrite_small.jpg,images/dendrite.jpg)
-:image(images/rotaxane_small.jpg,images/rotaxane.jpg)
 
 These papers have further details:
 
@@ -52,8 +34,82 @@ copolymer formed from polyaryl ethereal dendrimer and linear PTFE],
 III, J Phys Chem B, 109, 10154-10167
 (2005). ("abstract"_abstracts/jpc05.html)
 
-[Molecular dynamics simulation of amphiphilic bistable (2)rotaxane
-Langmuir monolayer at air/water interface], "S. S. Jang"_jang,
-Y. H. Jang, Y.-H. Kim, W. A. Goddard III, J. W. Choi, J. R. Heath,
-A. H. Flood, B. W. Laursen, and J. F. Stoddart, J Amer Chem Soc, 127,
-14804 (2005).  ("abstract"_abstracts/jacs05a.html)
+:line
+
+Chemotaxis response by E. Coli :h4,link(ecoli)
+
+This is work with Shawn Means (Sandia, now SDF).
+
+:image(images/dendrite_small.jpg,images/dendrite.jpg)
+
+These papers have further details:
+
+[Nanophase-segregation and water dynamics in the dendrion diblock
+copolymer formed from polyaryl ethereal dendrimer and linear PTFE],
+"S. S. Jang"_jang, S.-T. Lin, T. Cagin, V. Molinero and W. A. Goddard
+III, J Phys Chem B, 109, 10154-10167
+(2005). ("abstract"_abstracts/jpc05.html)
+
+:line
+
+Carbon fixation in sea-water bacteria Synechococcus :h4,link(synecho)
+
+This is work with Shawn Means (Sandia, now SDF).
+
+:image(images/dendrite_small.jpg,images/dendrite.jpg)
+
+These papers have further details:
+
+[Nanophase-segregation and water dynamics in the dendrion diblock
+copolymer formed from polyaryl ethereal dendrimer and linear PTFE],
+"S. S. Jang"_jang, S.-T. Lin, T. Cagin, V. Molinero and W. A. Goddard
+III, J Phys Chem B, 109, 10154-10167
+(2005). ("abstract"_abstracts/jpc05.html)
+
+:line
+
+Oscillatory immune response of NF-kB network :h4,link(immune)
+
+This is work with Shawn Means (Sandia, now SDF).
+
+:image(images/dendrite_small.jpg,images/dendrite.jpg)
+
+These papers have further details:
+
+[Nanophase-segregation and water dynamics in the dendrion diblock
+copolymer formed from polyaryl ethereal dendrimer and linear PTFE],
+"S. S. Jang"_jang, S.-T. Lin, T. Cagin, V. Molinero and W. A. Goddard
+III, J Phys Chem B, 109, 10154-10167
+(2005). ("abstract"_abstracts/jpc05.html)
+
+:line
+
+Simple A + B <-> C reaction model :h4,link(abc)
+
+This is work with Shawn Means (Sandia, now SDF).
+
+:image(images/dendrite_small.jpg,images/dendrite.jpg)
+
+These papers have further details:
+
+[Nanophase-segregation and water dynamics in the dendrion diblock
+copolymer formed from polyaryl ethereal dendrimer and linear PTFE],
+"S. S. Jang"_jang, S.-T. Lin, T. Cagin, V. Molinero and W. A. Goddard
+III, J Phys Chem B, 109, 10154-10167
+(2005). ("abstract"_abstracts/jpc05.html)
+
+:line
+
+3-stage kinase cascade :h4,link(kinase)
+
+This is work with Shawn Means (Sandia, now SDF).
+
+:image(images/dendrite_small.jpg,images/dendrite.jpg)
+
+These papers have further details:
+
+[Nanophase-segregation and water dynamics in the dendrion diblock
+copolymer formed from polyaryl ethereal dendrimer and linear PTFE],
+"S. S. Jang"_jang, S.-T. Lin, T. Cagin, V. Molinero and W. A. Goddard
+III, J Phys Chem B, 109, 10154-10167
+(2005). ("abstract"_abstracts/jpc05.html)
