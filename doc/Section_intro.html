@@ -67,13 +67,13 @@ discussion of the open-source philosophy.
 capabilities, such as modified reaction rules or boundary conditions.
 See <A HREF = "Section_modify.html">this section</A> for more details.
 </P>
-<P>ChemCell is written in C++ and can be downloaded from the <A HREF = "lws">ChemCell
+<P>ChemCell is written in C++ and can be downloaded from the <A HREF = "http://www.cs.sandia.gov/~sjplimp/ChemCell.html">ChemCell
 WWW Site</A>.  No additional software is needed to run ChemCell in
 serial on a desktop machine.  ChemCell will run on any parallel
 machine that compiles C++ and supports the <A HREF = "http://www-unix.mcs.anl.gov/mpi">MPI</A> message-passing
 library.  This includes distributed- or shared-memory parallel
 machines and Beowulf-style clusters.  To run with spatial parallelism,
-the "Zoltan library" must also be installed.
+the <A HREF = "http://www.cs.sandia.gov/zoltan.html">Zoltan library</A> must also be installed.
 </P>
 
 
@@ -91,15 +91,22 @@ from <A HREF = "http://www.cs.sandia.gov/~sjplimp/pizza.html">the Pizza.py WWW s
 
 
 
-<P>These are other simulation codes, similar in spirit to ChemCell, which
-model biochemical networks of reacting/diffusing chemical species
-within a spatial geometry:
+<P>These are other cell-modeling simulation codes.  The first 3 are
+similar in spirit to ChemCell, meaning they model biochemical networks
+of reacting/diffusing chemical species within a spatial geometry via
+particles.  VCell uses continuum PDEs for reaction/diffusion in a
+spatial representation of the cell.  E-Cell provides a rich set of
+continuum and stochastic solvers for non-spatial cell models.
 </P>
-<UL><LI><A HREF = "http://www.nrcam.uchc.edu/index.html">VCell</A> - by Jim Schaaf and Les Loew (NRCAM, U Conn Health Center)
-<LI><A HREF = "http://www.mcell.cnl.salk.edu">MCell</A> - by Joel Stiles (PSC) and Tom Bartol (Salk Institute)
+<UL><LI><A HREF = "http://www.mcell.cnl.salk.edu">MCell</A> - by Joel Stiles (PSC) and Tom Bartol (Salk Institute)
 <LI><A HREF = "http://mesord.sourceforge.net">MesoRD</A> - by Johan Hattne (EMBL) and Johan Elf (Uppsala Univ)
 <LI><A HREF = "http://www.smoldyn.org">Smoldyn</A> - by Steve Andrews (TMSI) 
 </UL>
+<UL><LI><A HREF = "http://www.nrcam.uchc.edu/index.html">VCell</A> - by Jim Schaaf and Les Loew (NRCAM, U Conn Health Center)
+<LI><A HREF = "http://www.e-cell.org/ecell">E-Cell</A> - a large Japanese-led project 
+</UL>
+
+
 
 
 

@@ -20,20 +20,21 @@ Commands</A>
 modeling protein networks in biological cells with spatial
 information.  Compartments within the cell are bounded by membrane
 surfaces defined as geometric regions or connected triangles.
-Particles of different species diffuse via Brownian motion in 3d and
-on 2d surfaces.  Particles react with nearby neighbors according to
-rules derived from chemical rate equations.  Non-spatial simulations
-can also be run using an ODE solver or the Gillespie Stochastic
-Simulation Algorithm (SSA).  Spatial simulations can be run in
-parallel if desired or a parallel machine can be used to run multiple
-serial simulations for statistical averaging.  The <A HREF = "http://www.cs.sandia.gov/~sjplimp/pizza.html">Pizza.py
+Particles represent individual biomolecules and diffuse via Brownian
+motion in 3d and on 2d surfaces.  Particles react with neighboring
+particles according to rules derived from chemical rate equations.
+Non-spatial models can also be run using an ODE solver or the
+Gillespie Stochastic Simulation Algorithm (SSA).  Spatial simulations
+can be run in parallel as can multiple instances of non-spatial
+simluations for statistical averaging.  The <A HREF = "pizza.html">Pizza.py
 package</A> of Python-based tools can create input files for
 ChemCell and visualize and plot its output.
 </P>
 <P>ChemCell was developed at Sandia National Laboratories, a US
 Department of Energy facility, with funding from the DOE.  It is an
-open-source code, distributed freely under the terms of the GNU Public
-License (GPL).
+open-source code, designed to be easy to modify and extend with new
+functionality.  It is distributed freely under the terms of the GNU
+Public License (GPL).
 </P>
 <P>The authors of the code are <A HREF = "http://www.cs.sandia.gov/~sjplimp">Steve Plimpton</A> and Alex Slepoy, who
 can be contacted at sjplimp at sandia.gov and alexander.sleopy at

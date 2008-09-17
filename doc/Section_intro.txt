@@ -65,12 +65,12 @@ capabilities, such as modified reaction rules or boundary conditions.
 See "this section"_Section_modify.html for more details.
 
 ChemCell is written in C++ and can be downloaded from the "ChemCell
-WWW Site"_lws.  No additional software is needed to run ChemCell in
+WWW Site"_cws.  No additional software is needed to run ChemCell in
 serial on a desktop machine.  ChemCell will run on any parallel
 machine that compiles C++ and supports the "MPI"_mpi message-passing
 library.  This includes distributed- or shared-memory parallel
 machines and Beowulf-style clusters.  To run with spatial parallelism,
-the "Zoltan library" must also be installed.
+the "Zoltan library"_zoltan must also be installed.
 
 :link(zoltan,http://www.cs.sandia.gov/zoltan.html)
 
@@ -87,19 +87,24 @@ from "the Pizza.py WWW site"_pizza.
 :link(pizza,http://www.cs.sandia.gov/~sjplimp/pizza.html)
 :link(python,http://www.python.org)
 
-These are other simulation codes, similar in spirit to ChemCell, which
-model biochemical networks of reacting/diffusing chemical species
-within a spatial geometry:
+These are other cell-modeling simulation codes.  The first 3 are
+similar in spirit to ChemCell, meaning they model biochemical networks
+of reacting/diffusing chemical species within a spatial geometry via
+particles.  VCell uses continuum PDEs for reaction/diffusion in a
+spatial representation of the cell.  E-Cell provides a rich set of
+continuum and stochastic solvers for non-spatial cell models.
 
-"VCell"_vcell - by Jim Schaaf and Les Loew (NRCAM, U Conn Health Center)
 "MCell"_mcell - by Joel Stiles (PSC) and Tom Bartol (Salk Institute)
 "MesoRD"_meso - by Johan Hattne (EMBL) and Johan Elf (Uppsala Univ)
 "Smoldyn"_smoldyn - by Steve Andrews (TMSI) :ul
+"VCell"_vcell - by Jim Schaaf and Les Loew (NRCAM, U Conn Health Center)
+"E-Cell"_ecell - a large Japanese-led project :ul
 
-:link(vcell,http://www.nrcam.uchc.edu/index.html)
 :link(mcell,http://www.mcell.cnl.salk.edu)
 :link(meso,http://mesord.sourceforge.net)
 :link(smoldyn,http://www.smoldyn.org)
+:link(vcell,http://www.nrcam.uchc.edu/index.html)
+:link(ecell,http://www.e-cell.org/ecell)
 
 :line
 

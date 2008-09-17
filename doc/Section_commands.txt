@@ -118,7 +118,7 @@ This section describes the structure of a typical ChemCell input script.
 The "examples" directory in the ChemCell distribution contains many
 sample input scripts; the corresponding problems are discussed in
 "this section"_Section_example.html, and animated on the "ChemCell WWW
-Site"_lws.
+Site"_cws.
 
 A ChemCell input script typically has several stages:
 

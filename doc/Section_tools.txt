@@ -2,9 +2,9 @@
 "ChemCell Documentation"_cd - "ChemCell Commands"_cc - "Next
 Section"_Section_modify.html :c
 
-:link(lws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
-:link(ld,Manual.html)
-:link(lc,Section_commands.html#comm)
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
 
 :line
 
