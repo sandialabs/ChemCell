@@ -1,0 +1,43 @@
+"ChemCell WWW Site"_cws :c
+:link(cws,../chemcell.html)
+
+:line
+
+Contributing to ChemCell :h3
+
+In the spirit of an open-source code, these are various ways you can
+contribute to making ChemCell better.  You can send "email"_email on any
+of these items.
+
+:link(email,mailto:sjplimp@sandia.gov)
+
+Point prospective users to the "ChemCell WWW Site"_lws.  Mention it in
+talks or link to it from your WWW site. :ulb,l
+
+If you find an error or omission in the "ChemCell documentation"_ld or
+on the "ChemCell WWW Site"_lws, or have a suggestion for something to
+clarify or include, send an email. :l
+
+:link(ld,doc/Manual.html)
+
+If you find a bug, "this section"_doc/Section_errors.html#9_2 of the
+ChemCell documentation describes how to report it. :l
+
+If you publish a paper using ChemCell results, send the citation (and
+any cool pictures or movies if you like) to add to the
+"Publications"_papers.html, "Pictures"_pictures.html, or
+"Movies"_movies.html pages of the "ChemCell WWW Site"_lws, with links
+and attributions back to you. :l
+
+Create a new Makefile.machine that can be added to the src/MAKE
+directory. :l
+
+ChemCell is designed to be easy to extend with new code for features
+like boundary conditions, diagnostic computations, etc.  "This
+section"_doc/Section_modify.html of the ChemCell documentation gives
+details.  If you add a feature of general interest, it can be added to
+the ChemCell distribution. :l
+
+Cash.  Small denominations, unmarked bills preferred.  Leave in paper
+sack on desk.  "VISA"_email also accepted.  Chocolate chip cookies
+encouraged. :ule,l

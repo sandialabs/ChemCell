@@ -1,0 +1,216 @@
+"ChemCell WWW Site"_cws :c
+:link(cws,../chemcell.html)
+
+:line
+
+Pictures from ChemCell Simulations :h3
+
+The images on this page are from ChemCell simulations (or its
+predecessor codes), that have been rendered with various visualization
+packages.  "This page"_movies.html has additional pictures with
+accompanying animations.
+
+"dendrimer"_#dendrimer:	    solvated dendritic polymer phase behavior
+"solidification"_#solidify: metal solidificiation
+"membrane"_#membrane:       lipid membrane self-assembly and fusion
+"adhesion"_#adhesion:       tensile pull on adhesive polymer chains
+"crazing"_#crazing:         crazing of entangled polymer chains
+"nanowires"_#wires:	    stress in metal nanowires
+"shear"_#shear:             shear of large single-crystal metals :tb(s=:)
+
+All of these images are shown in small size.  Click on the image to
+view a larger version.
+
+:line
+
+Solvated dendritic polymer structure :h4,link(dendrimer)
+
+This is work by "Seung Soon Jang"_jang (jsshys@wag.caltech.edu) in
+Bill Goddard's group at Cal Tech.  They've developed a model for a
+dendrion diblock copolymer consisting of a dendritic polymer with a
+hydrophobic backbone.  The 1st paper listed is a study of its
+structural and dynamical properties in water.  Such materials have
+interesting nanoscale structural and phase behavior.
+
+They've also studied amphiphilic bistable (2)rotaxane molecules which
+have controllable switching properties as their conformation changes.
+The 2nd paper discusses simulations of this system.
+
+:link(jang,http://www.wag.caltech.edu/home/jsshys)
+
+The 1st picture is the molecular structures of a diblock copolymer
+system at two different levels of water content.  The 2nd picture
+illustrates conformational changes in a Langmuir monolayer of the
+rotaxane molecules.
+
+:image(images/dendrite_small.jpg,images/dendrite.jpg)
+:image(images/rotaxane_small.jpg,images/rotaxane.jpg)
+
+These papers have further details:
+
+[Nanophase-segregation and water dynamics in the dendrion diblock
+copolymer formed from polyaryl ethereal dendrimer and linear PTFE],
+"S. S. Jang"_jang, S.-T. Lin, T. Cagin, V. Molinero and W. A. Goddard
+III, J Phys Chem B, 109, 10154-10167
+(2005). ("abstract"_abstracts/jpc05.html)
+
+[Molecular dynamics simulation of amphiphilic bistable (2)rotaxane
+Langmuir monolayer at air/water interface], "S. S. Jang"_jang,
+Y. H. Jang, Y.-H. Kim, W. A. Goddard III, J. W. Choi, J. R. Heath,
+A. H. Flood, B. W. Laursen, and J. F. Stoddart, J Amer Chem Soc, 127,
+14804 (2005).  ("abstract"_abstracts/jacs05a.html)
+
+:line
+
+Metal solidification :h4,link(solidify)
+
+This is work by "Mark Asta's"_asta group at Northwestern and Jeff Hoyt
+(jjhoyt@sandia.gov) at Sandia.  They've developed a simulation
+strategy for solidifying metals and metal alloys where the temperature
+of the sytem is carefully thermostatted so that the velocity of the
+interface can be accurately measured.
+
+:link(asta,http://www.matsci.northwestern.edu/faculty/ma.html)
+
+This snapshot is a liquid/solid interface in NiAl.  See a movie of
+solidification on "this page"_movies.html#solidify.
+
+:image(images/nial_small.jpg,images/nial.jpg)
+
+This paper and related ones on "this page"_papers.html have further
+details:
+
+[Calculation of alloy solid-liquid interfacial free energies from
+atomic-scale simulations], M. Asta, J. J. Hoyt, A. Karma, Phys Rev B,
+66, 100101 (2002). ("abstract"_abstracts/prb02.html)
+
+:line
+
+Lipid membrane self-assembly and fusion :h4,link(membrane)
+
+This is work by Mark Stevens (msteve@sandia.gov) at Sandia on the
+self-assembly of lipid bilayers and membrane fusion using an idealized
+bead-spring model for a 2-tail lipid molecule.
+
+Head-head and head-solvent interactions are set to give hydrophyllic
+behavior.  Head-tail and tail-solvent interactions are hydrophobic.  A
+3d random ensemble of lipid molecules in a background solvent will
+spontaneously self-assemble into bilayers and vesicles as shown by
+these 2d slice views.  When 2 vesicles are gently pushed together they
+can fuse as tails of individual lipid molecules straddle both
+membranes.  The detailed fusion images were made with "VMD"_vmd.
+
+:link(vmd,http://www.ks.uiuc.edu/Research/vmd)
+
+:image(images/lipid_small.jpg,images/lipid.jpg)
+:image(images/bilayer1_small.jpg,images/bilayer1.jpg)
+:image(images/bilayer2_small.jpg,images/bilayer2.jpg)
+:image(images/vesicle1_small.jpg,images/vesicle1.jpg)
+:image(images/vesicle2_small.jpg,images/vesicle2.jpg)
+:image(images/fusion_small.jpg,images/fusion.jpg)
+:image(images/splay_small.jpg,images/splay.jpg)
+
+This paper has further details:
+
+[Insights into the molecular mechanism of membrane fusion from
+simulation: Evidence for the association of splayed tails],
+M. J. Stevens, J. H. Hoh, T. B. Woolf, Phys Rev Lett, 91, 188102
+(2003). ("abstract"_abstracts/prl03.html)
+
+:line
+
+Tensile pull on adhesive polymer chains :h4,link(adhesion)
+
+This is work by Scott Sides (swsides@mrl.ucsb.edu), Gary Grest
+(gsgrest@sandia.gov), and Mark Stevens (msteve@sandia.gov), all at Sandia,
+on adhesive properties of polymers.
+
+The simulations are of melts of 500- and 1000-mer bead-spring chains.
+The systems range from 100-500K total monomers and are run for 10-20
+million timesteps.  In these snapshots of models with different
+parameters, the blue chains are the melt, red are tethered and
+unbroken chains, green are tethered and broken.
+
+:image(images/pullout_small.jpg,images/pullout.jpg)
+
+These papers have further details:
+
+[Large-scale simulation of adhesion dynamics for end-grafted
+polymers], S. W. Sides, G. S. Grest, M. J. Stevens, Macromolecules,
+35, 566-573 (2002). ("abstract"_abstracts/macro02.html)
+
+[Effect of end-tethered polymers on surface adhesion of glassy
+polymers], S. W. Sides, G. S. Grest, M. J. Stevens, S. J. Plimpton,
+Journal of Polymer Science, Part B (Polymer Physics), 42, 199-208
+(2004). ("abstract"_abstracts/jps04.html)
+
+:line
+
+Crazing of entangled polymer chains :h4,link(crazing)
+
+This is work by "Joerg Rottler"_rottler (now at Princeton) and "Mark
+Robbins"_robbins at JHU.  The image shows a polymer glass that has
+been deformed into a craze at large strains.  In the craze, polymers
+(~0.5 nm diameter) are bundled into an intricate load-bearing network
+of ~10 nm diameter fibrils.  Crazing is largely responsible for the
+high fracture energy of glassy polymers.
+
+:link(rottler,http://www.princeton.edu/~jrottler)
+:link(robbins,http://www.pha.jhu.edu/~mr/mr.html)
+
+:image(images/craze_small.jpg,images/craze.jpg)
+
+These papers have further details:
+
+[Growth, microstructure, and failure of crazes in glassy polymers],
+J. Rottler and M. O. Robbins, Phys Rev E, 68, 011801
+(2003). ("abstract"_abstracts/pre03a.html)
+
+[Jamming under tension in polymer crazes], J. Rottler and
+M. O. Robbins, Phys Rev Lett, 89, 195501
+(2002). ("abstract"_abstracts/prl02.html)
+
+[Cracks and crazes: On calculating the macroscopic fracture energy of
+glassy polymers from molecular simulations], J. Rottler, S. Barsky,
+M. O. Robbins, Phys Rev Lett, 89, 148304
+(2002). ("abstract"_abstracts/prl02a.html)
+
+:line
+
+Stress in metal nanowires :h4,link(wires)
+
+This is work by "Min Zhou's"_zhou group at Georgia Tech on modeling
+the effect of tensile stress at varying strain rates on single-crystal
+Cu nanowires of varying dimensions.  In the image, atoms are colored
+to highlight defects and the transverse dimensions are drawn at an
+exaggerated scale.
+
+:link(zhou,http://www.me.gatech.edu/me/people/academic.faculty/Zhou_Min.html)
+
+:image(images/nanowire_small.jpg,images/nanowire.jpg)
+
+This GaTech "WWW site"_nanowire has further details.
+
+:link(nanowire,http://diva.me.gatech.edu/Wuwei/nanowire.html)
+
+:line
+
+Shear of large single-crystal metals :h4,link(shear)
+
+This is work with Mark Horstemeyer (mfhorst@me.msstate.edu) at
+Mississippi State (formerly at Sandia) and Mike Baskes
+(baskes@lanl.gov) at LANL to study stress/strain effects in large
+single-crystal metals samples.  Simulations with up to 100M atoms were
+run.  This image shows defect formation in a quasi-2d Ni sample
+undergoing fixed-end shear, where the z-dimension (into the image) is
+periodic but very thin.  The black lines indicate atom displacements
+as the sample has sheared to the right.
+
+:image(images/shear_horst_small.jpg,images/shear_horst.jpg)
+
+This paper and related ones on "this page" have further details:
+
+[Computational nanoscale plasticity simulations using embedded atom
+potentials], M. F. Horstemeyer, M. I. Baskes, S. J. Plimpton,
+Theoretical and Applied Fracture Mechanics, 37, 49-98
+(2001). ("abstract"_abstracts/tafm01.html)

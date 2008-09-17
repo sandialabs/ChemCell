@@ -1,0 +1,38 @@
+"LAMMPS WWW Site"_lws :c
+:link(lws,../lammps.html)
+
+:line
+
+Citing LAMMPS in your papers :h3
+
+The following papers describe the parallel algorithms used in LAMMPS.
+If you use LAMMPS results in your published work, please cite the J
+Comp Phys reference and include the URL of the "LAMMPS WWW Site"_lws
+at www.cs.sandia.gov/~sjplimp/lammps.html.  A paper describing the
+latest version of LAMMPS is in preparation; when it appears in print,
+you can check this site for a more current citation.
+
+S. J. Plimpton, [Fast Parallel Algorithms for Short-Range Molecular
+Dynamics], J Comp Phys, 117, 1-19 (1995). ("abstract"_absjcomps95)
+("postscript"_PSjcomps95) ("ps.gz"_gzjcomps95) ("tar file"_tarjcomps95
+of figures only if they don't display in paper)
+
+:link(absjcomps95,../abstracts/jcompphys95.html)
+:link(PSjcomps95,../papers/jcompphys95.ps)
+:link(gzjcomps95,../papers/jcompphys95.ps.gz)
+:link(tarjcomps95,../papers/jcompphys95_figs.tar.gz)
+
+S. J. Plimpton, R. Pollock, M. Stevens, [Particle-Mesh Ewald and
+rRESPA for Parallel Molecular Dynamics Simulations], in Proc of the
+Eighth SIAM Conference on Parallel Processing for Scientific
+Computing, Minneapolis, MN (March 1997). ("abstract"_abssiam97)
+("postscript"_PSsiam97) ("ps.gz"_gzsiam97)
+
+:link(abssiam97,../abstracts/siam97.html)
+:link(PSsiam97,../papers/siam97.ps)
+:link(gzsiam97,../papers/siam97.ps.gz)
+
+If you send me information about any of your publications that use
+LAMMPS results, I'll be pleased to add them to the Publications page
+of the "LAMMPS WWW Site"_lws.  Ditto for a picture or movie for the
+Pictures or Movies pages.

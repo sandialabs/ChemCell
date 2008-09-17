@@ -1,0 +1,56 @@
+"ChemCell WWW Site"_lws :c
+:link(cws,../chemcell.html)
+
+:line
+
+New Features and Bug Fixes in ChemCell :h3
+
+This page lists new features and bug fixes in the ChemCell molecular
+dynamics package since the current version was released.
+
+To add these features/fixes to your version of ChemCell, you have 2
+choices.  You can download an upgraded version that includes all these
+features/fixes from the "download page"_../download.html and re-build
+ChemCell from scratch.  Or you can apply individual patch files to your
+copy of ChemCell as described below.
+
+The current version of ChemCell is 1 Jan 2006.
+
+:line
+
+[Applying patches:]
+
+Download the patch file.  You may have to shift-click in your browser
+to download the file instead of display it.  Patch files have names
+like patch.7Sept04. :ulb,l
+
+Put the patch file in your top-level ChemCell directory, where the
+LICENSE and README files are. :l
+
+Apply the patch by typing the following command from the top-level
+ChemCell directory, where the redirected file is the name of the patch
+file. :l
+
+patch -bp4 < patch.7Sept04 :pre
+
+A list of updated files print out to the screen.  The -b switch
+creates backup files of your originals (e.g. src/react.cpp.orig), so
+you can manually undo the patch if something goes wrong. :l
+
+Re-make ChemCell and you have the bug-fix or new feature. :l,ule
+
+Additional notes:
+
+If you wish to apply several patches, you can apply them in any order,
+unless otherwise indicated, in which case you should apply them in
+order of their dates. :ulb,l
+
+The link to a "list of changed files" will tell you what files the
+patch modifies in case you have edited those files yourself. :l,ule
+
+:line
+
+[1 Jan 2006]
+
+Initial public release of ChemCell.  52,967 lines of code in src dir.
+This version supercedes earlier distributed beta versions.

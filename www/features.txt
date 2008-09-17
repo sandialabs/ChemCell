@@ -1,0 +1,22 @@
+"ChemCell WWW Site"_cws :c
+:link(cws,../chemcell.html)
+
+:line
+
+ChemCell Features :h3
+
+ChemCell is a stochastic particle-based reaction/diffusion code with
+the following functionality:
+
+Our group has also written and released a separate toolkit called
+"Pizza.py"_../pizza.html which provides tools for doing setup,
+analysis, plotting, and visualization for ChemCell simulations.
+Pizza.py is written in "Python"_http://www.python.org and is available
+for download from "this page"_../download.html.
+
+More details are given in the following sections of the "ChemCell
+documentation"_doc/Manual.html:
+
+"What is ChemCell"_doc/Section_intro.html#1_1
+"ChemCell features"_doc/Section_intro.html#1_2 :ul
+
