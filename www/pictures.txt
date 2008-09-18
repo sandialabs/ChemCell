@@ -18,7 +18,8 @@ All of the images/movies are displayed in small size.  Click on an
 image to view a larger version.  The animations and model images on
 this page were made with the "Pizza.py
 tool"_http://www.cs.sandia.gov/~sjplimp/pizza.html.  All of the movies
-are typically a few Mb in size (no more than 15 Mb).
+are in QuickTime format and are typically a few Mb in size (no more
+than 15 Mb).
 
 :line
 
