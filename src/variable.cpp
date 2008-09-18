@@ -173,7 +173,7 @@ void Variable::set(int narg, char **arg)
     index[nvar] = universe->iworld;
 
     if (universe->me == 0) {
-      FILE *fp = fopen("tmp.lammps.variable","w");
+      FILE *fp = fopen("tmp.ccell.variable","w");
       fprintf(fp,"%d\n",universe->nworlds);
       fclose(fp);
     }
@@ -279,16 +279,16 @@ int Variable::next(int narg, char **arg)
     int nextindex;
     if (me == 0) {
       while (1) {
-	if (!rename("tmp.spparks.variable","tmp.spparks.variable.lock")) break;
+	if (!rename("tmp.ccell.variable","tmp.ccell.variable.lock")) break;
 	usleep(100000);
       }
-      FILE *fp = fopen("tmp.spparks.variable.lock","r");
+      FILE *fp = fopen("tmp.ccell.variable.lock","r");
       fscanf(fp,"%d",&nextindex);
       fclose(fp);
-      fp = fopen("tmp.spparks.variable.lock","w");
+      fp = fopen("tmp.ccell.variable.lock","w");
       fprintf(fp,"%d\n",nextindex+1);
       fclose(fp);
-      rename("tmp.spparks.variable.lock","tmp.spparks.variable");
+      rename("tmp.ccell.variable.lock","tmp.ccell.variable");
       if (universe->uscreen)
 	fprintf(universe->uscreen,
 		"Increment via next: value %d on partition %d\n",
