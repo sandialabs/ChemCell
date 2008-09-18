@@ -122,7 +122,7 @@ In ChemCell, a "fix" is any operation that is computed during
 timestepping that alters some property of the system.  It could be
 alteration of a rate or a rate equation, implementation of a boundary
 condition, or calculation of some diagnostic property.  See the fix.h
-file for a list of methods these classes defines.
+file for a list of methods these classes define.
 
 Here is a brief description of the class methods.  All of these
 methods are optional.
@@ -136,16 +136,11 @@ cleanup: called after timestepping :tb(s=:)
 
 Simulator options :link(simulator),h4
 
-All classes that define an atom style are sub-classes of the Atom
-class.  See the atom.h file for a list of methods these classes
-defines.  The atom style determines what quantities are associated
-with an atom in a ChemCell simulation.  If one of the existing atom
-styles does not define all the arrays you need to store with an atom,
-then a new atom class can be created.
-
-Atom_atomic.cpp and atom_atomic.h are the simplest example of an Atom
-class.  They implement the {atomic} style of the
-"atom_style"_atom_style.html command.
+Classes that define the style of simulation being performed via the
+"run_style"_run_style.html command are sub-classes of the Simulator
+class.  These include ODE solvers, a Gillespie solve, and a spatial
+solver for spatial simulations.  See the simulator.h file for a list
+of methods these classed define.
 
 Here is a brief description of the class methods required:
 

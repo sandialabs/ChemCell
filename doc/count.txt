@@ -39,7 +39,7 @@ This command can only be used for non-spatial simulations.
 
 [Related commands:]
 
-"particle"_particle.html
+"particles"_particles.html
 
 [Default:]
 

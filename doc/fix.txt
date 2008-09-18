@@ -35,7 +35,7 @@ The ID of a fix can contain alphanumeric characters and underscores.
 
 Each fix style has its own documentation page which describes its
 arguments and what it does.  For example, see the "fix
-conc"_fix_conc.html page for information on style {conc}.
+conc/set"_fix_conc_set.html page for information on style {conc/set}.
 
 Fixes perform their operations at different stages of the timestep.
 If 2 or more fixes both operate at the same stage of the timestep,

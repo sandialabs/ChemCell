@@ -18,6 +18,8 @@ use one or more data files (data.*) of geometry or particle info as
 additional input.  These were created via the "Pizza.py"_pizza
 pre-processing tool using the *.py scripts in the same directory.
 
+:link(pizza,http://www.cs.sandia.gov/~sjplimp/pizza.html)
+
 Plots can be made from the log files using the "clog" and plotting
 tools in Pizza.py.  Images and movies can be made from the dump and
 data files using the "cdata", "dump", and various visualization tools

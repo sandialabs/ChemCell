@@ -17,7 +17,7 @@ reaction-ID = ID of reaction to modify :ulb,l
 one or more keyword/value pairs can be specified :l
   keywords = {rate} or {loc} or {dist} or {prob} or {weight}
   {rate} value = rate
-    rate = reaction rate (same units as in "reaction"_react.html command)
+    rate = reaction rate (same units as in "reaction"_reaction.html command)
   {loc} values = product styleflag whichflag dirflag
     product = which product (1-N)
     styleflag = {def} or {at} or {near}

@@ -28,6 +28,6 @@ Delete a previously defined reaction so that it is no longer active.
 
 [Related commands:] none
 
-"react"_react.html
+"reaction"_reaction.html
 
 [Default:] none

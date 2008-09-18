@@ -44,7 +44,7 @@ reaction happens at the desired frequency for a well-mixed system with
 diffusion-limitd reactions.
 
 Note that values of P and R for individual reactions can be overridden
-via the "react_modify"_react_modify command.
+via the "react_modify"_react_modify.html command.
 
 [Restrictions:]
 
