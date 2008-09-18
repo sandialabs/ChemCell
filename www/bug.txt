@@ -16,6 +16,17 @@ The current version of ChemCell is 10 Sept 2008.
 
 :line
 
+[18 Sept 2008]
+
+Fixed some broken links in doc pages.  This is really a test of
+the scripts I use to generate an updated tarball and the list of
+patched files.
+
+This is the "list of changed files"_patches/files.18Sep08 from the 10
+Sept 2008 version.
+
+:line
+
 [10 Sept 2008]
 
 Initial public release of ChemCell.  18,882 lines of code in src dir.
