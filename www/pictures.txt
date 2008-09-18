@@ -58,6 +58,7 @@ the simulation domain (for 64 processors) to try and get equal numbers
 of particles on each processor.  The interior of the ER has a much
 higher density of particles than the exterior.
 
+:image(images/er_model_small.jpg,images/er_model.jpg)
 :image(images/er_box_small.png,images/er_box.png)
 :image(images/er_surf_small.jpg,movies/er_surf.mov)
 :image(images/er_cluster_small.png,images/er_cluster.png)
