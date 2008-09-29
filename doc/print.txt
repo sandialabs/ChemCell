@@ -42,6 +42,6 @@ involving mathematical operations, or references to other
 
 [Related commands:]
 
-"fix print"_fix_print.html, "variable"_variable.html
+"variable"_variable.html
 
 [Default:] none
