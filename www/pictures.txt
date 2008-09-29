@@ -161,15 +161,18 @@ combined and reaction rates are not known for many of them.  Thus we
 only expect results useful for qualitative comparisons.
 
 The 1st figure is a micrograph of cyanobacteria cells with spherical
-carboxysomes inside (sorry, I have lost the citation for this image).
-The 2nd figure is a schematic of the carbon-concentration process in a
-cyanobacterium (also missing a citation).  The 3rd figure is a
-snapshot from ChemCell showing a cut-away of a cylindrical cell with 5
-carboxysomes inside.  Various particle species inside the carboxysome,
-in the cytoplasm, and outside the cell can be seen.  The 4th figure is
-a plot of organic carbon production as the simulation proceeds; the 3
-curves show qualitatively different rates depending on where the
-Rubisco and carbonic-anhydrase are placed geometrically in the model.
+carboxysomes inside (see Fig 1 in [Microcompartments in Prokaryotes:
+Carboxysomes and Related Polyhedra], G. C. Cannon, C. E. Bradburne,
+H. C. Aldrich, S. H. Baker, S. Heinhorst, J. M. Shively, Appl and Env
+Microbiology, 67, 5351-5361 (2001)). The 2nd figure is a schematic of
+the carbon-concentration process in a cyanobacterium (sorry, missing a
+citation).  The 3rd figure is a snapshot from ChemCell showing a
+cut-away of a cylindrical cell with 5 carboxysomes inside.  Various
+particle species inside the carboxysome, in the cytoplasm, and outside
+the cell can be seen.  The 4th figure is a plot of organic carbon
+production as the simulation proceeds; the 3 curves show qualitatively
+different rates depending on where the Rubisco and carbonic-anhydrase
+are placed geometrically in the model.
 
 :image(images/synecho_expt_small.jpg,images/synecho_expt.jpg)
 :image(images/synecho_model_small.jpg,images/synecho_model.jpg)
