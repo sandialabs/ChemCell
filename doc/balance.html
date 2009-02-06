@@ -14,18 +14,19 @@ Commands</A>
 </H3>
 <P><B>Syntax:</B>
 </P>
-<P>balance style arg(s) file
+<P>balance style args file
 </P>
 <LI>style = <I>static</I> or <I>dynamic</I> 
 
-<PRE>  <I>static</I> args: <I>bin</I> or <I>particle</I>
+<PRE>  <I>static</I> arg: <I>bin</I> or <I>particle</I>
     bin = balance by bin count
     particle = balance by particle count
   <I>dynamic</I> args: N threshhold
     N = test whether to balance every N steps
-    threshhold = only balance if imbalance is greater than threshhold
-file = optional filename for storing sub-domain boundaries 
+    threshhold = only balance if imbalance is greater than threshhold 
 </PRE>
+<P>file = filename for storing sub-domain boundaries (optional)
+</P>
 <P><B>Examples:</B>
 </P>
 <PRE>bin static particle

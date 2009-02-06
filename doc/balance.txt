@@ -11,16 +11,16 @@ balance command :h3
 
 [Syntax:]
 
-balance style arg(s) file
+balance style args file
 
 style = {static} or {dynamic} :l
-  {static} args: {bin} or {particle}
+  {static} arg: {bin} or {particle}
     bin = balance by bin count
     particle = balance by particle count
   {dynamic} args: N threshhold
     N = test whether to balance every N steps
-    threshhold = only balance if imbalance is greater than threshhold
-file = optional filename for storing sub-domain boundaries :pre
+    threshhold = only balance if imbalance is greater than threshhold :pre
+file = filename for storing sub-domain boundaries (optional)
 
 [Examples:]
 
