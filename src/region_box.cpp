@@ -195,7 +195,7 @@ void RegionBox::compute_normal(double *x, double *normal)
 
 /* ----------------------------------------------------------------------
    compute xnew on box surface due to move in dir of distance from xold
-   have to wrap around box edges
+   NOTE: need to add wrap around box edges
 ------------------------------------------------------------------------- */
 
 void RegionBox::move2d(double *xold, double *normal, double *dir,

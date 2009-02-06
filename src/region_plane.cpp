@@ -247,7 +247,7 @@ void RegionPlane::move2d(double *xold, double *normal, double *dir,
   xnew[1] = xold[1] + distance*dir[1];
   xnew[2] = xold[2] + distance*dir[2];
 
-  // force xnew to be in plane of triangle
+  // force xnew to be in plane
 
   push_pt_to_plane(xnew,ctr,norm);
 }

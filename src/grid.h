@@ -12,8 +12,8 @@
    See the README file in the top-level ChemCell directory.
 ------------------------------------------------------------------------- */
 
-#ifndef BIN_H
-#define BIN_H
+#ifndef GRID_H
+#define GRID_H
 
 #include "stdio.h"
 #include "system.h"
