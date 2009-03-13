@@ -61,8 +61,9 @@ The number and size of geometry bins is determined by using zero or
 more of 3 keywords: {diff}, {gsize}, and {gcount}.  If multiple
 keywords are used, the geometry bin size is set to the maximum of the
 sizes induced by each keyword.  If none of the 3 keywords are used,
-geometry bins are setup as if the {diff} keyword had been used with a
-value equal to the largest diffusion coefficient currently defined.
+geometry bins are setup as if the {diff} keyword had been specified
+with a diffusion coefficient of 0.0, which as described below is the
+same as using the largest diffusion coefficient currently defined.
 Note that the global simulation domain must have an integer number of
 geometry bins in each dimension, so the bin size may be set slightly
 larger than the values inferred by these keywords.
@@ -70,12 +71,14 @@ larger than the values inferred by these keywords.
 The {diff} keyword sets the geometry bin size to the maximum distance
 a particle will move in one timestep, which depends on the specified
 "diffusion"_diffusion.html coefficient, the "timestep"_timestep.html
-size, and "move_style"_move_style.html settings.  Note that if these
-values are changed after using the bin command (e.g. you change the
-timestep or reset some particle's diffusion coefficient), you may end
-up with an invalid geometry bin size.  Also note that you can run
-ChemCell once (e.g. for zero timesteps) to see the maximum diffusive
-distance printed out.
+size, and "move_style"_move_style.html settings.  If the specified
+diffusion coefficient is 0.0, then ChemCell will compute the maximum
+distance using the largest diffusion coefficient currently defined.
+Note that if these values are changed after using the bin command
+(e.g. you change the timestep or reset some particle's diffusion
+coefficient), you may end up with an invalid geometry bin size.  Also
+note that you can run ChemCell once (e.g. for zero timesteps) to see
+the maximum diffusive distance printed out.
 
 The {gsize} keyword sets the geometry bin size in each dimension
 to the specified values.
