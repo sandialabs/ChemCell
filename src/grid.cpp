@@ -19,6 +19,7 @@
 #include "simulator.h"
 #include "domain.h"
 #include "particle.h"
+#include "chem.h"
 #include "move.h"
 #include "surf.h"
 #include "balance.h"
@@ -39,6 +40,7 @@
 #define MAX(a,b) ((a) > (b) ? (a) : (b))
 
 #define CHUNK 10000
+#define BIG 1000000000
 
 /* ---------------------------------------------------------------------- */
 
@@ -140,13 +142,13 @@ void Grid::init()
 
   if (me == 0) {
     if (screen) {
-      fprintf(screen,"Bins:\n");
+      fprintf(screen,"Geometry Bins:\n");
       fprintf(screen,"  xyz size = %g %g %g\n",xbinsize,ybinsize,zbinsize);
       fprintf(screen,"  xyz counts = %d %d %d = %d total\n",
 	      gbinx,gbiny,gbinz,gbins);
     }
     if (logfile) {
-      fprintf(logfile,"Bins:\n");
+      fprintf(logfile,"Geometry Bins:\n");
       fprintf(logfile,"  xyz size = %g %g %g\n",xbinsize,ybinsize,zbinsize);
       fprintf(logfile,"  xyz counts = %d %d %d = %d total\n",
 	      gbinx,gbiny,gbinz,gbins);
@@ -191,6 +193,7 @@ void Grid::dynamic()
 
 /* ----------------------------------------------------------------------
    create bins for 1st time and assign them to procs
+   also create reaction bins
 ------------------------------------------------------------------------- */
 
 void Grid::create(int narg, char **arg)
@@ -220,6 +223,10 @@ void Grid::create(int narg, char **arg)
 
   blist = (OneBin *) memory->smalloc(nbins*sizeof(OneBin),"grid:blist");
   topology();
+
+  // allocate reaction bins and initialize reaction bin settings
+
+  chem->create();
 }
 
 /* ----------------------------------------------------------------------
@@ -229,14 +236,20 @@ void Grid::create(int narg, char **arg)
 
 void Grid::global(int narg, char **arg)
 {
-  // compute desired bin size based on keyword/value pairs
-  // diffusion coeff induces a single bin size
-  // reaction length induces a single bin size
-  // size and count induce 3 sizes
+  // calculate grid bin size and reaction bin size
+  // diff, gsize, gcount induce grid bin size(s)
+  // react, rsize, rcount induce reaction bin size(s)
 
   double value,xvalue,yvalue,zvalue;
-  int nx,ny,nz;
-  xbinsize = ybinsize = zbinsize = 0.0;
+  double gxsize,gysize,gzsize;
+  double rxsize,rysize,rzsize;
+  int nx,ny,nz,rperx,rpery,rperz;
+
+  int gbinflag = 0;
+  int rbinflag = 0;
+  gxsize = gysize = gzsize = 0.0;
+  rxsize = rysize = rzsize = 0.0;
+  rperx = rpery = rperz = 0;
 
   int iarg = 0;
   while (iarg < narg) {
@@ -244,73 +257,131 @@ void Grid::global(int narg, char **arg)
     if (strcmp(arg[iarg],"diff") == 0) {
       if (narg < iarg+2) error->all("Illegal bin command");
       value = atof(arg[iarg+1]);
+      if (value < 0.0) error->all("Illegal bin command");
       value = move->maxbin(value);
       if (me == 0) {
 	fprintf(screen,"  bin size induced by diff constraint = %g\n",value);
 	fprintf(logfile,"  bin size induced by diff constraint = %g\n",value);
       }
-      xbinsize = MAX(xbinsize,value);
-      ybinsize = MAX(ybinsize,value);
-      zbinsize = MAX(zbinsize,value);
+      gxsize = MAX(gxsize,value);
+      gysize = MAX(gysize,value);
+      gzsize = MAX(gzsize,value);
+      gbinflag = 1;
       iarg += 2;
 
-    } else if (strcmp(arg[iarg],"react") == 0) {
-      if (narg < iarg+2) error->all("Illegal bin command");
-      value = atof(arg[iarg+1]);
-      if (me == 0) {
-	fprintf(screen,"  bin size induced by react constraint = %g\n",value);
-	fprintf(logfile,"  bin size induced by react constraint = %g\n",value);
-      }
-      xbinsize = MAX(xbinsize,value);
-      ybinsize = MAX(ybinsize,value);
-      zbinsize = MAX(zbinsize,value);
-      iarg += 2;
-
-    } else if (strcmp(arg[iarg],"size") == 0) {
+    } else if (strcmp(arg[iarg],"gsize") == 0) {
       if (narg < iarg+4) error->all("Illegal bin command");
       xvalue = atof(arg[iarg+1]);
       yvalue = atof(arg[iarg+2]);
       zvalue = atof(arg[iarg+3]);
+      if (xvalue <= 0.0 || yvalue <= 0.0 || zvalue <= 0.0)
+	error->all("Illegal bin command");
       if (me == 0) {
-	fprintf(screen,"  bin size induced by size constraint = %g %g %g\n",
+	fprintf(screen,"  bin size induced by gsize constraint = %g %g %g\n",
 		xvalue,yvalue,zvalue);
-	fprintf(logfile,"  bin size induced by size constraint = %g %g %g\n",
+	fprintf(logfile,"  bin size induced by gsize constraint = %g %g %g\n",
 		xvalue,yvalue,zvalue);
       }
-      xbinsize = MAX(xbinsize,xvalue);
-      ybinsize = MAX(ybinsize,yvalue);
-      zbinsize = MAX(zbinsize,zvalue);
+      gxsize = MAX(gxsize,xvalue);
+      gysize = MAX(gysize,yvalue);
+      gzsize = MAX(gzsize,zvalue);
+      gbinflag = 1;
       iarg += 4;
 
-    } else if (strcmp(arg[iarg],"count") == 0) {
+    } else if (strcmp(arg[iarg],"gcount") == 0) {
       if (narg < iarg+4) error->all("Illegal bin command");
       nx = atoi(arg[iarg+1]);
       ny = atoi(arg[iarg+2]);
       nz = atoi(arg[iarg+3]);
+      if (nx <= 0 || ny <= 0 || nz <= 0) error->all("Illegal bin command");
       xvalue = domain->xsize / nx;
       yvalue = domain->ysize / ny;
       zvalue = domain->zsize / nz;
       if (me == 0) {
-	fprintf(screen,"  bin size induced by count constraint = %g %g %g\n",
+	fprintf(screen,"  bin size induced by gcount constraint = %g %g %g\n",
 		xvalue,yvalue,zvalue);
-	fprintf(logfile,"  bin size induced by count constraint = %g %g %g\n",
+	fprintf(logfile,"  bin size induced by gcount constraint = %g %g %g\n",
 		xvalue,yvalue,zvalue);
       }
-      xbinsize = MAX(xbinsize,xvalue);
-      ybinsize = MAX(ybinsize,yvalue);
-      zbinsize = MAX(zbinsize,zvalue);
+      gxsize = MAX(gxsize,xvalue);
+      gysize = MAX(gysize,yvalue);
+      gzsize = MAX(gzsize,zvalue);
+      gbinflag = 1;
+      iarg += 4;
+
+    } else if (strcmp(arg[iarg],"react") == 0) {
+      if (narg < iarg+2) error->all("Illegal bin command");
+      value = atof(arg[iarg+1]);
+      if (value < 0.0) error->all("Illegal bin command");
+      if (value == 0.0) value = chem->maxbin();
+      if (me == 0) {
+	fprintf(screen,"  bin size induced by react constraint = %g\n",value);
+	fprintf(logfile,"  bin size induced by react constraint = %g\n",value);
+      }
+      rxsize = MAX(rxsize,value);
+      rysize = MAX(rysize,value);
+      rzsize = MAX(rzsize,value);
+      rbinflag = 1;
+      iarg += 2;
+
+    } else if (strcmp(arg[iarg],"rsize") == 0) {
+      if (narg < iarg+4) error->all("Illegal bin command");
+      xvalue = atof(arg[iarg+1]);
+      yvalue = atof(arg[iarg+2]);
+      zvalue = atof(arg[iarg+3]);
+      if (xvalue <= 0.0 || yvalue <= 0.0 || zvalue <= 0.0)
+	error->all("Illegal bin command");
+      if (me == 0) {
+	fprintf(screen,"  bin size induced by rsize constraint = %g %g %g\n",
+		xvalue,yvalue,zvalue);
+	fprintf(logfile,"  bin size induced by rsize constraint = %g %g %g\n",
+		xvalue,yvalue,zvalue);
+      }
+      rxsize = MAX(rxsize,xvalue);
+      rysize = MAX(rysize,yvalue);
+      rzsize = MAX(rzsize,zvalue);
+      rbinflag = 1;
+      iarg += 4;
+
+    } else if (strcmp(arg[iarg],"rcount") == 0) {
+      if (narg < iarg+4) error->all("Illegal bin command");
+      nx = atoi(arg[iarg+1]);
+      ny = atoi(arg[iarg+2]);
+      nz = atoi(arg[iarg+3]);
+      if (nx <= 0 || ny <= 0 || nz <= 0) error->all("Illegal bin command");
+      if (me == 0) {
+	fprintf(screen,"  bin count induced by rcount constraint = %d %d %d\n",
+		nx,ny,nz);
+	fprintf(logfile,"  bin count induced by rcount constraint = %d %d %d\n",
+		nx,ny,nz);
+      }
+      rperx = nx;
+      rpery = ny;
+      rperz = nz;
+      rbinflag = 1;
       iarg += 4;
 
     } else error->all("Illegal bin command");
   }
 
-  if (xbinsize == 0.0 || ybinsize == 0.0 || zbinsize == 0.0)
-    error->all("Bin size of 0.0");
+  // set grid bin size = xbinsize,ybinsize,zbinsize
+  // calculate default size if grid keywords were not specified
 
-  // set actual bin size >= desired size
-  // fit integer # of bins into global domain
-  // must be at least one bin in a dimension
-  // must be multiple of 2 bins in a periodic dimension
+  if (gbinflag == 0)
+    xbinsize = ybinsize = zbinsize = move->maxbin(0.0);
+  else {
+    xbinsize = gxsize;
+    ybinsize = gysize;
+    zbinsize = gzsize;
+  }
+
+  if (xbinsize == 0.0 || ybinsize == 0.0 || zbinsize == 0.0)
+    error->all("Geometry bin size of 0.0");
+
+  // set actual grid bin size >= desired size
+  // fit integer # of grid bins into global domain
+  // must be at least one grid bin in a dimension
+  // enforce multiple of 2 grid bins in a periodic dimension
 
   gbinx = static_cast<int> (domain->xsize / xbinsize);
   gbiny = static_cast<int> (domain->ysize / ybinsize);
@@ -338,7 +409,7 @@ void Grid::global(int narg, char **arg)
     gbinz--;
   }
 
-  // gbinx, gbiny, gbinz = actual bin counts in interior of global domain
+  // gbinx,gbiny,gbinz = actual bin counts in interior of global domain
   
   gbins = gbinx*gbiny*gbinz;
 
@@ -357,11 +428,26 @@ void Grid::global(int narg, char **arg)
   xorigin = domain->xlo;
   yorigin = domain->ylo;
   zorigin = domain->zlo;
+
+  // set reaction bin counts per grid bin = nperx,npery,nperz
+  // default = 1 if reaction keywords were not specified
+
+  if (rbinflag == 0)
+    nperx = npery = nperz = 1;
+  else {
+    nperx = npery = nperz = BIG;
+    if (rxsize > 0.0) nperx = static_cast<int> (xbinsize/rxsize);
+    if (rysize > 0.0) npery = static_cast<int> (ybinsize/rysize);
+    if (rzsize > 0.0) nperz = static_cast<int> (zbinsize/rzsize);
+    if (rperx) nperx = MIN(nperx,rperx);
+    if (rpery) npery = MIN(npery,rpery);
+    if (rperz) nperz = MIN(nperz,rperz);
+  }
 }
 
 /* ----------------------------------------------------------------------
    initialize grid ID, proc, ghost from current decomp
-   zeroes geometry and particles counters
+   zeroes geometry and particle counters
    sets up migrate info from current decomp
 ------------------------------------------------------------------------- */
 
@@ -1076,9 +1162,9 @@ void Grid::rebalance()
   Zoltan_Comm_Obj *plan;
   Particle::OnePart *plist = particle->plist;
 
-  // setup linked list of particles in each bin and count them
+  // setup linked list of particles in each grid bin and count them
 
-  particle->link();
+  link();
 
   // perform RCB on owned bins with weight = bins or particles
   // RCB returns bounding box for my sub-domain
@@ -1263,9 +1349,11 @@ void Grid::rebalance()
     plist = particle->plist;
     particle->nlocal++;
     plist[m].ibin = bufpr[i].ibin;
-    // SJP
-    if (plist[m].ibin >= nbins) printf("BAD BIN %d %d %d %d\n",
-				       me,m,plist[m].ibin,nbins);
+
+    // debug statement
+    if (plist[m].ibin >= nbins)
+      printf("BAD BIN %d %d %d %d\n",me,m,plist[m].ibin,nbins);
+
     plist[m].itri = bufpr[i].itri;
     plist[m].seed = bufpr[i].seed;
   }
@@ -1409,7 +1497,28 @@ void Grid::fill_pr(int m, int obin, int proc, int *pn)
 }
 
 /* ----------------------------------------------------------------------
-   return size of blist array
+   setup particle-to-particle links in plist and counter in blist
+   do it for owned and ghost particles
+   assumes blist[].first = -1, blist[].nparts = 0 for all bins w/ particles
+   set this way from initial topology()
+------------------------------------------------------------------------- */
+
+void Grid::link()
+{
+  int ibin;
+
+  Particle::OnePart *plist = particle->plist;
+  int ntotal = particle->ntotal;
+  for (int i = 0; i < ntotal; i++) {
+    ibin = plist[i].ibin;
+    plist[i].next = blist[ibin].first;
+    blist[ibin].first = i;
+    blist[ibin].nparts++;
+  }
+}
+
+/* ----------------------------------------------------------------------
+   return size of OneBin, Index, Migrate, buffers
 ------------------------------------------------------------------------- */
 
 int Grid::memory_usage()

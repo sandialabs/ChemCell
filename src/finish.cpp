@@ -279,13 +279,15 @@ void Finish::memory_usage()
 {
   int pbyte = particle->memory_usage();
   int bbyte = 0;
+  int rbyte = 0;
   int sbyte = 0;
   if (simulator->spatial_flag) {
     bbyte = grid->memory_usage();
+    rbyte = chem->memory_usage();
     sbyte = surf->memory_usage();
   }
 
-  int byte = pbyte + bbyte + sbyte;
+  int byte = pbyte + bbyte + rbyte + sbyte;
 
   int pbyte_ave,pbyte_max,pbyte_min;
   MPI_Allreduce(&pbyte,&pbyte_ave,1,MPI_INT,MPI_SUM,world);
@@ -296,6 +298,11 @@ void Finish::memory_usage()
   MPI_Allreduce(&bbyte,&bbyte_ave,1,MPI_INT,MPI_SUM,world);
   MPI_Allreduce(&bbyte,&bbyte_max,1,MPI_INT,MPI_MAX,world);
   MPI_Allreduce(&bbyte,&bbyte_min,1,MPI_INT,MPI_MIN,world);
+
+  int rbyte_ave,rbyte_max,rbyte_min;
+  MPI_Allreduce(&rbyte,&rbyte_ave,1,MPI_INT,MPI_SUM,world);
+  MPI_Allreduce(&rbyte,&rbyte_max,1,MPI_INT,MPI_MAX,world);
+  MPI_Allreduce(&rbyte,&rbyte_min,1,MPI_INT,MPI_MIN,world);
 
   int sbyte_ave,sbyte_max,sbyte_min;
   MPI_Allreduce(&sbyte,&sbyte_ave,1,MPI_INT,MPI_SUM,world);
@@ -309,6 +316,7 @@ void Finish::memory_usage()
 
   pbyte_ave /= nprocs;
   bbyte_ave /= nprocs;
+  rbyte_ave /= nprocs;
   sbyte_ave /= nprocs;
   byte_ave /= nprocs;
 
@@ -319,8 +327,10 @@ void Finish::memory_usage()
       fprintf(screen,"Memory usage in Mbyte/proc (ave/max/min)\n");
       fprintf(screen,"  parts = %g %g %g\n",
 	      s*pbyte_ave,s*pbyte_max,s*pbyte_min);
-      fprintf(screen,"  bins  = %g %g %g\n",
+      fprintf(screen,"  grid bins  = %g %g %g\n",
 	      s*bbyte_ave,s*bbyte_max,s*bbyte_min);
+      fprintf(screen,"  reaction bins  = %g %g %g\n",
+	      s*rbyte_ave,s*rbyte_max,s*rbyte_min);
       fprintf(screen,"  surfs = %g %g %g\n",
 	      s*sbyte_ave,s*sbyte_max,s*sbyte_min);
       fprintf(screen,"  total = %g %g %g\n",
@@ -330,8 +340,10 @@ void Finish::memory_usage()
       fprintf(logfile,"Memory usage in Mbyte/proc (ave/max/min)\n");
       fprintf(logfile,"  parts = %g %g %g\n",
 	      s*pbyte_ave,s*pbyte_max,s*pbyte_min);
-      fprintf(logfile,"  bins  = %g %g %g\n",
+      fprintf(logfile,"  grid bins  = %g %g %g\n",
 	      s*bbyte_ave,s*bbyte_max,s*bbyte_min);
+      fprintf(logfile,"  reaction bins  = %g %g %g\n",
+	      s*rbyte_ave,s*rbyte_max,s*rbyte_min);
       fprintf(logfile,"  surfs = %g %g %g\n",
 	      s*sbyte_ave,s*sbyte_max,s*sbyte_min);
       fprintf(logfile,"  total = %g %g %g\n",

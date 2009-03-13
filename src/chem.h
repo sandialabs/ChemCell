@@ -28,6 +28,7 @@ class Chem : public System {
   int noverlap;                   // # of reaction overlaps
   int *rcount;                    // count of reactions of each kind
   int doneflag;                   // Gillespie flag for no more reactions
+  int sortflag;                   // spatial flag for sorting particles
 
   int prob_style;
   double max_prob;
@@ -37,7 +38,10 @@ class Chem : public System {
   virtual ~Chem();
   virtual void init() = 0;
   virtual void reactions() = 0;
-  virtual void setup_stencil() {}
+  virtual void create() {}
+  virtual void dynamic() {}
+  virtual double maxbin() {return 0.0;}
+  virtual int memory_usage() {return 0;};
 
   void set_prob(int, char **);
 };

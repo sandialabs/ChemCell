@@ -23,8 +23,8 @@ class Particle : public System {
   struct OnePart {
     double x[3];              // coords of particle
     int species;              // species of particle
-    int ibin;                 // which local bin particle is in
-    int itri;                 // which local triangle part is on, -1 if 3d
+    int ibin;                 // which local grid bin particle is in
+    int itri;                 // which triangle part is on, -1 if 3d
     int seed;                 // RNG seed for this particle
     int next;                 // next particle in bin, -1 if no more
     int flag;                 // flag for this particle
@@ -70,7 +70,6 @@ class Particle : public System {
   void link();
   void unlink(int);
   void compact();
-  void sort();
   int match(char *, char *);
   int allmatch(char *, int *);
   int pack_restart(double *);
@@ -80,8 +79,6 @@ class Particle : public System {
  private:
   int me;
   int maxpart;              // max # of particles plist can hold
-
-  int nlink;                // # of particles setup by link(), unlink()
 
   struct Migrate {          // particle data to copy or migrate a particle
     double x[3];
@@ -99,7 +96,6 @@ class Particle : public System {
   void unpack(int, Migrate *, int);
   void fill_pm(int, Grid::Migrate *, int *);
   void fill_pc(int, Grid::Migrate *, int *);
-  static int compare(const void *, const void *);
   void check_dimension(int);
 };
 

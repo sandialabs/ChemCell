@@ -83,6 +83,7 @@ class Input : public System {
   void run();
   void run_style();
   void seed();
+  void sort();
   void species();
   void stats();
   void stats_modify();

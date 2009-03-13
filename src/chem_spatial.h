@@ -25,26 +25,30 @@ class ChemSpatial : public Chem {
   ~ChemSpatial();
   void init();
   void reactions();
-  void setup_stencil();
+  void create();
+  void dynamic();
+  double maxbin();
+  int memory_usage();
 
  private:
   int me;
   int allocated;
+  int nlink;                // # of particles in linked list of react bins
 
   struct Migrate {          // particle data to copy or migrate a particle
-    double x[3];
-    int species;
-    int seed;
-    int ibin;
-    int itri;
-    int flag;
+    double x[3];            // particle coord, remapped for PBC
+    int species;            // species
+    int seed;               // seed
+    int ibin;               // local grid bin of particle in receiver domain
+    int itri;               // which triangle particle is on
+    int flag;               // REACTANT or PRODUCT particle
   };
 
   Migrate *buf1,*buf2,*buf3;
   int *proclist;
   int size1,size2,size3,sizeproc;
 
-  int *nreactant;
+  int *nreactant;               // local copies of react ptrs
   int **reactants;
   int *nproduct;
   int **products;
@@ -58,6 +62,41 @@ class ChemSpatial : public Chem {
   int nstencil;                  // # of bin pairings in one color
   int *stencil1,*stencil2;       // list of bin pairings
 
+  struct ReactBin {              // reaction bins for finding reaction partners
+    int id;                      // global ID of bin for owned, -1 for ghost
+    int ghost;                   // 0 = owned, 1 = upwind ghost, 2 = far ghost
+    int igridbin;                // index of local grid bin this rbin is inside
+    int nparts;                  // # of particles in reaction bin
+    int first;                   // index of 1st particle in bin (-1 if none)
+    int next;                    // next bin of same color (-1 if last)
+    int flag;                    // flag for this bin
+  };
+
+  ReactBin *rblist;              // list of reaction bins (3d array underneath)
+                                 // these bins tile all local grid bins
+                                 // including full tiling of ghost grid bins
+
+  int grbins;                    // global reaction bin count
+  int grbinx,grbiny,grbinz;      // global reaction bin count in each dir
+
+  int nrbins;                    // local rbin count (with ghosts)
+  int nrbinx,nrbiny,nrbinz;      // local rbin count in each dir (with ghosts)
+  int nperx,npery,nperz;         // # of reaction bins per grid bin in each dim
+  int maxrbin;                   // max size of rblist
+
+  int **bbounds;                 // extent of global rbins in local grid bins
+                                 // 0/1 = xlo/xhi, 2/3 = ylo/yhi, 4/5 = zlo/zhi
+  int maxgbin;                   // max size of bbounds
+
+  // offset between local and global reaction bins
+  // global = local + offset
+
+  int xoffset,yoffset,zoffset;
+
+  double xbinsize,ybinsize,zbinsize;   // reaction bin size in each dir
+  double xbininv,ybininv,zbininv;      // inverse bin size in each dir
+  double xorigin,yorigin,zorigin;      // xyz pt at which global rbins start
+
   double **distsq;               // distsq[I][J] = reaction cutoff distance
                                  //   (squared) for all reacts between sp I,J
 
@@ -70,13 +109,21 @@ class ChemSpatial : public Chem {
   double *monoprobsum;           // monoprobsum[I] = summed probability
                                  //   for all mono reactions for species I
 
-  void unpack(int, Migrate *);
   void fill_rm(Particle::OnePart *, Grid::Migrate *, int, int *);
   void fill_rc(Particle::OnePart *, Grid::Migrate *, int, int *);
+  void unpack(int, Migrate *);
   int match(Migrate *, int);
 
+  void topology();
+  void setup_stencil();
   void setup_colors();
   int whichcolor(int);
+  void link();
+  void unlink();
+  int whichlocal(int, double *);
+  void sort();
+  static int compare(const void *, const void *);
+
   void free_arrays();
 };
 

@@ -459,6 +459,7 @@ void Particle::compute_count(int flag)
       for (i = 0; i < nspecies; i++) pcount[i] = my_count[i] = 0;
       for (i = 0; i < nlocal; i++) my_count[plist[i].species]++;
       MPI_Allreduce(my_count,pcount,nspecies,MPI_INT,MPI_SUM,world);
+      delete [] my_count;
     } else if (simulator->stochastic_flag == 0) {
       double factor = AVOGADRO * chem->volume;
       for (i = 0; i < nspecies; i++)
@@ -545,7 +546,7 @@ void Particle::read(int narg, char **arg)
     }
     if (err == NULL) error->one("Unexpected end of file");
   }
-
+    
   MPI_Bcast(xyz[0],3*n,MPI_DOUBLE,0,world);
 
   // scan particle list and keep those whose bin maps to my owned domain
@@ -966,50 +967,6 @@ void Particle::ghost_acquire()
 }
 
 /* ----------------------------------------------------------------------
-   setup particle-to-particle links in plist and counter in blist
-   do it for owned and ghost particles
-   assumes bin[].first = -1 and bin[].nparts = 0 for all bins particles are in
-   set nlink so can unlink later on same particles
-------------------------------------------------------------------------- */
-
-void Particle::link()
-{
-  Grid::OneBin *blist = grid->blist;
-  int ibin;
-
-  for (int i = 0; i < ntotal; i++) {
-    ibin = plist[i].ibin;
-    plist[i].next = blist[ibin].first;
-    blist[ibin].first = i;
-    blist[ibin].nparts++;
-  }
-  nlink = ntotal;
-}
-
-/* ----------------------------------------------------------------------
-   reset bin[].first = -1 and bin[].nparts = 0 only for linked particles
-   do it by traversing particle-to-particle links
-   if flag = 0, loop is over nlink particles at time of link creation
-   if flag = 1, loop is over current ntotal particles
-------------------------------------------------------------------------- */
-
-void Particle::unlink(int flag)
-{
-  Grid::OneBin *blist = grid->blist;
-  int ibin;
-
-  int n;
-  if (flag == 0) n = nlink;
-  else n = ntotal;
-
-  for (int i = 0; i < n; i++) {
-    ibin = plist[i].ibin;
-    blist[ibin].first = -1;
-    blist[ibin].nparts = 0;
-  }
-}
-
-/* ----------------------------------------------------------------------
    compact the particle list, owned and ghost
    if flag = 0, keep it
    if flag = -1, delete it (spent reactant)
@@ -1046,90 +1003,6 @@ void Particle::compact()
 }
 
 /* ----------------------------------------------------------------------
-   sort particles within each bin by rearranging particle-to-particle links
-------------------------------------------------------------------------- */
-
-void Particle::sort()
-{
-  int i,j,m;
-
-  // set flag for each particle's bin to unsorted
-
-  Grid::OneBin *blist = grid->blist;
-  for (i = 0; i < ntotal; i++) blist[plist[i].ibin].flag = 0;
-
-  // loop over particles
-  // if bin is already sorted, just skip it
-  // grow rank array if necessary
-  // fill rank array with current ordering of particles in bin
-  // qsort will shuffle rank array
-  // reset next ptrs based on new ordering in rank array
-
-  int maxparts = 1000;
-  int *rank = new int[maxparts];
-  int ibin,first,nparts;
-
-  for (i = 0; i < ntotal; i++) {
-    ibin = plist[i].ibin;
-    if (blist[ibin].flag) continue;
-    blist[ibin].flag = 1;
-
-    first = blist[ibin].first;
-    nparts = blist[ibin].nparts;
-
-    if (nparts > maxparts) {
-      maxparts = nparts;
-      delete [] rank;
-      rank = new int[maxparts];
-    }
-
-    m = first;
-    for (j = 0; j < nparts; j++) {
-      rank[j] = m;
-      m = plist[m].next;
-    }
-
-    qsort(rank,nparts,sizeof(int),compare);
-
-    blist[ibin].first = rank[0];
-    for (j = 0; j < nparts-1; j++)
-      plist[rank[j]].next = rank[j+1];
-    plist[rank[nparts-1]].next = -1;
-  }
-
-  // free rank array
-
-  delete [] rank;
-}
-
-/* ----------------------------------------------------------------------
-   compare particles I and J for sorting purposes
-   called from qsort in sort() method
-   is a static method so can't use plist directly
-   return -1 if I < J, 0 if I = J, 1 if I > J
-   do comparison based on seed, x, y, z, species
-------------------------------------------------------------------------- */
-
-int Particle::compare(const void *pi, const void *pj)
-{
-  int i = *((int *) pi);
-  int j = *((int *) pj);
-  Particle::OnePart *p = particle->plist;
-
-  if (p[i].seed < p[j].seed) return -1;
-  else if (p[i].seed > p[j].seed) return 1;
-  else if (p[i].x[0] < p[j].x[0]) return -1;
-  else if (p[i].x[0] > p[j].x[0]) return 1;
-  else if (p[i].x[1] < p[j].x[1]) return -1;
-  else if (p[i].x[1] > p[j].x[1]) return 1;
-  else if (p[i].x[2] < p[j].x[2]) return -1;
-  else if (p[i].x[2] > p[j].x[2]) return 1;
-  else if (p[i].species < p[j].species) return -1;
-  else if (p[i].species > p[j].species) return 1;
-  return 0;
-}
-
-/* ----------------------------------------------------------------------
    if pattern matches str, return 1, else return 0
    pattern can have one or zero wildcard char *
    5 cases handled: no *, *, *ab, ab*, ab*cd
@@ -1154,7 +1027,7 @@ int Particle::match(char *pattern, char *str)
   int flag = 1;
   *wild = '\0';
   if (strstr(str,pre) != str) flag = 0;
-  if (strstr(&str[strlen(str)-strlen(post)],post) == NULL) flag = 0;
+   if (strstr(&str[strlen(str)-strlen(post)],post) == NULL) flag = 0;
   *wild = '*';
   return flag;
 }

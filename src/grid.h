@@ -29,12 +29,11 @@ class Grid : public System {
     int proc;           // proc to send to (if me, just copy)
     int pbc;            // 0 if no PBC remapping, 1 if yes
     int xpbc,ypbc,zpbc; // -1,0,1 box lengths to add to particle coords
-    int ibin;           // if sending, global bin ID of particle
-                        // if copying, local bin ID for new location
+    int ibin;           // local bin ID of particle in receiving location
     Migrate *ptr;       // ptr to next object in list (NULL if last)
   };
 
-  struct OneBin {
+  struct OneBin {       // grid bins for geometry and particle tracking
     int id;             // global ID of bin (0 to gbins-1)
                         // if global ghost and periodic, ID of PBC image
                         // if global ghost and non-periodic, id = -1
@@ -46,13 +45,11 @@ class Grid : public System {
     Migrate *migrate;   // 1st migrate action
     int ntri;           // # of triangles in bin
     Index *tri;         // 1st triangle
-    int next;           // next bin of same color (-1 if last)
     int nparts;         // # of particles in bin
     int first;          // index of 1st particle in bin (-1 if none)
-    int flag;           // flag for this bin
   };
 
-  OneBin *blist;                // list of bins (3d array underneath)
+  OneBin *blist;        // list of bins (3d array underneath)
 
   // global bin counts not including ghosts
   // global IDs numbered from 0 to gbins-1 (x varies fast, y middle, z slow)
@@ -60,6 +57,7 @@ class Grid : public System {
 
   int gbins;                    // global bin count
   int gbinx,gbiny,gbinz;        // global bin count in each dir
+  int nperx,npery,nperz;        // reaction bin count per grid bin
 
   // local bin layout including ghosts
   // local IDs numbered from 0 to nbins-1 (x varies fast, y middle, z slow)
@@ -69,10 +67,11 @@ class Grid : public System {
   int nbinx,nbiny,nbinz;        // local bin count in each dir (with ghosts)
 
   // offset between local and global bins
+  // global = local + offset
   // local is 0 for leftmost ghost, global is 0 for leftmost actual bin
   // offset for leftmost proc is -1 since its ghost is global ghost
 
-  int xoffset,yoffset,zoffset;  // global = local + offset
+  int xoffset,yoffset,zoffset;
 
   double xbinsize,ybinsize,zbinsize;   // bin size in each dir
   double xbininv,ybininv,zbininv;      // inverse bin size in each dir
@@ -117,6 +116,7 @@ class Grid : public System {
   void add_tri(int, int);
   void delete_tri(Index *);
   void delete_migrate(Migrate *);
+  void link();
   int memory_usage();
 
  private:

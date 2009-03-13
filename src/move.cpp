@@ -1473,7 +1473,16 @@ double Move::erfcc(double x)
 
 double Move::maxbin(double diffusivity)
 {
-  double max;
+  double max = 0.0;
+
+  if (diffusivity == 0.0)
+    for (int i = 0; i < particle->nspecies; i++)
+      diffusivity = MAX(diffusivity,particle->diffusivity[i]);
+
+  if (diffusivity == 0.0) {
+    error->warning("Cannot use bin diff command with diffusivities = 0.0");
+    return max;
+  }
 
   if (sampleflag == UNIFORM)
     max = 0.5 * 32.0 /

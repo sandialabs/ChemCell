@@ -57,6 +57,9 @@ ChemSpatial::ChemSpatial() : Chem()
   stencil1 = new int[nstencil];
   stencil2 = new int[nstencil];
 
+  rblist = NULL;
+  bbounds = NULL;
+
   size1 = size2 = size3 = 0;
   buf1 = buf2 = buf3 = NULL;
   sizeproc = 0;
@@ -78,6 +81,9 @@ ChemSpatial::~ChemSpatial()
   delete [] firstcolor;
   delete [] stencil1;
   delete [] stencil2;
+
+  memory->sfree(rblist);
+  memory->destroy_2d_int_array(bbounds);
 
   memory->sfree(buf1);
   memory->sfree(buf2);
@@ -317,15 +323,22 @@ void ChemSpatial::init()
     fprintf(logfile,"  min/max reaction probabilities = %g %g\n",pmin,pmax);
   }
 
-  // error if max reaction distance exceeds bin size
+  if (me == 0) {
+    fprintf(screen,"Reaction bins:\n");
+    fprintf(screen,"  xyz size = %g %g %g\n",xbinsize,ybinsize,zbinsize);
+    fprintf(screen,"  xyz counts = %d %d %d = %d total\n",
+	    grbinx,grbiny,grbinz,grbins);
 
-  if (dmax > grid->xbinsize || dmax > grid->ybinsize || 
-      dmax > grid->zbinsize) error->all("Max reaction distance > bin size");
+    fprintf(logfile,"Reaction bins:\n");
+    fprintf(logfile,"  xyz size = %g %g %g\n",xbinsize,ybinsize,zbinsize);
+    fprintf(logfile,"  xyz counts = %d %d %d = %d total\n",
+	    grbinx,grbiny,grbinz,grbins);
+  }
 
-  // setup reaction stencils for initial decomp
-  // setup_stencil also performs bin coloring for decomp
+  // error if max reaction distance exceeds reaction bin size
 
-  setup_stencil();
+  if (dmax > xbinsize || dmax > ybinsize || 
+      dmax > zbinsize) error->all("Max reaction distance > reaction bin size");
 
   // initialize reaction counters
 
@@ -344,7 +357,7 @@ void ChemSpatial::init()
 void ChemSpatial::reactions()
 {
   int i,icolor,ip,jp,kp,mp,istencil,ireact,nsend,nrecv,ncopy;
-  int ispecies,jspecies,kspecies,ibin,jbin,kbin,ibinnew;
+  int ispecies,jspecies,kspecies,irbin,jrbin,krbin,ibin,jbin,kbin,ibinnew;
   int npossible,ipossible;
   double delx,dely,delz,rsq;
   double rn;
@@ -360,10 +373,11 @@ void ChemSpatial::reactions()
     return;
   }
 
-  // setup linked list of particles in each bin and sort them within each bin
+  // setup linked list of particles in each bin
+  // sort them within each bin if requested (to give same answer on any P)
 
-  particle->link();
-  particle->sort();
+  link();
+  if (sortflag) sort();
 
   // flag all particles as not reacted: own = 0, ghost = 1
 
@@ -381,43 +395,47 @@ void ChemSpatial::reactions()
 
   for (icolor = 0; icolor < ncolor; icolor++) {
 
-    // loop over bins of a particular color
+    // loop over reaction bins of a particular color
    
     nsend = ncopy = 0;
-    kbin = firstcolor[icolor];
+    krbin = firstcolor[icolor];
 
-    while (kbin >= 0) {
+    while (krbin >= 0) {
 
-      // consider all dual reactions with this stencil origin = kbin
-      // loop over stencil pairs ibin,jbin = 2 interacting bins
+      // consider all dual reactions with this stencil origin = krbin
+      // loop over stencil pairs irbin,jrbin = 2 interacting reaction bins
+      // ibin,jbin = corresponding grid bins
 
       nbinbin += nstencil;
 
       for (istencil = 0; istencil < nstencil; istencil++) {
-	ibin = kbin + stencil1[istencil];
-	jbin = kbin + stencil2[istencil];
+	irbin = krbin + stencil1[istencil];
+	jrbin = krbin + stencil2[istencil];
+	ibin = rblist[irbin].igridbin;
+	jbin = rblist[jrbin].igridbin;
 
-	// if either bin is global non-periodic ghost, go to next stencil pair
-	// if either bin has no particles, go to next stencil pair
+	// if either grid bin is global non-periodic ghost, skip this pair
+	// if either reaction bin has no particles, skip this pair
 
 	if (blist[ibin].id == -1 || blist[jbin].id == -1) continue;
-	if (blist[ibin].first == -1 || blist[jbin].first == -1) continue;
-	if (ibin != jbin) nbinpair += blist[ibin].nparts * blist[jbin].nparts;
-	else nbinpair += (blist[ibin].nparts * (blist[jbin].nparts-1)) / 2;
+	if (rblist[irbin].first == -1 || rblist[jrbin].first == -1) continue;
+	if (irbin != jrbin)
+	  nbinpair += rblist[irbin].nparts * rblist[jrbin].nparts;
+	else nbinpair += (rblist[irbin].nparts * (rblist[jrbin].nparts-1)) / 2;
 
 	// ip,jp = 2 particles
-	// double loop over all ip in ibin, all jp in jbin
-	// if ibin = jbin, then start jp one particle beyond ip
+	// double loop over all ip in irbin, all jp in jrbin
+	// if irbin = jrbin, then start jp one particle beyond ip
 	// skip any ip or jp that has already reacted (flag = -1)
 
-	ip = blist[ibin].first;
+	ip = rblist[irbin].first;
 	while (ip >= 0) {
 
 	  if (plist[ip].flag == -1) goto idone;
 	  ispecies = plist[ip].species;
 
-	  if (ibin == jbin) jp = plist[ip].next;
-	  else jp = blist[jbin].first;
+	  if (irbin == jrbin) jp = plist[ip].next;
+	  else jp = rblist[jrbin].first;
 	  while (jp >= 0) {
 
 	    if (plist[jp].flag == -1) goto jdone;
@@ -458,7 +476,7 @@ void ChemSpatial::reactions()
 	      }
 	    rcount[ireact]++;
 
-	    // flag the 2 reactants as non-reactive
+	    // flag the 2 reactants as spent reactants
 
 	    plist[ip].flag = -1;
 	    plist[jp].flag = -1;
@@ -466,7 +484,7 @@ void ChemSpatial::reactions()
 	    // notify procs and image bins that reactants are now non-reactive
 	    // this is all procs/bins that store ibin/jbin as owned or
 	    //   upwind ghost bin including PBC images on same proc
-	    // bin migrate action list stores this info
+	    // grid bin migrate action list stores this info
 	    // one exception: if ibin/jbin is ghost it has a migrate action
 	    //   to same ibin/jbin on this proc, which is not needed
 
@@ -515,7 +533,7 @@ void ChemSpatial::reactions()
 	    }
 
 	    // done with particle ip
-	    // go to next particle in ibin
+	    // go to next particle in irbin
 
 	    goto idone;
 
@@ -529,7 +547,9 @@ void ChemSpatial::reactions()
 
       // consider mono reactions for particles in this bin
 
-      kp = blist[kbin].first;
+      kp = rblist[krbin].first;
+      kbin = rblist[krbin].igridbin;
+
       while (kp >= 0) {
 
 	// skip a kp that has already reacted
@@ -560,12 +580,12 @@ void ChemSpatial::reactions()
 	  }
 	rcount[ireact]++;
 
-	// flag the reactant as non-reactive
+	// flag the reactant as spent reactant
 
 	plist[kp].flag = -1;
 	    
 	// notify procs and image bins that reactants are now non-reactive
-	// this is all procs/bins that store owned kbin as
+	// this is all procs/bins that store owned krbin as
 	//   upwind ghost bin including PBC images on same proc
 	// bin migrate action list stores this info
 
@@ -605,7 +625,7 @@ void ChemSpatial::reactions()
 
       // next bin of same color
 
-      kbin = blist[kbin].next;
+      krbin = rblist[krbin].next;
     }
 
     // send and receive REACTANT/PRODUCT particles before next color
@@ -634,52 +654,16 @@ void ChemSpatial::reactions()
     plist = particle->plist;
   }
 
-  // clear bins before compacting particles
-  // compact the particle list: no deleted or ghost particles
+  // clear reaction bins before compacting particles
+  // compact the particle list to remove deleted and ghost particles
 
-  particle->unlink(0);
+  unlink();
   particle->compact();
 }
 
 /* ----------------------------------------------------------------------
-   process received or copied particles
-   for REACTANT particles, find them in ibin and flag as non-reactive
-   for PRODUCT particles, I am new owner, so add them to plist as ghosts
-   flag them as 0 so will be saved when compacting particles
-------------------------------------------------------------------------- */
-
-void ChemSpatial::unpack(int n, Migrate *buf)
-{
-  int mbin,mp;
-  Grid::OneBin *blist = grid->blist;
-  Particle::OnePart *plist = particle->plist;
-
-  for (int i = 0; i < n; i++) {
-    if (buf[i].flag == REACTANT) {
-      mbin = buf[i].ibin;
-      mp = blist[mbin].first;
-      while (mp >= 0) {
-	if (match(&buf[i],mp)) break;
-	mp = plist[mp].next;
-      }
-      if (mp == -1) error->one("Did not find matching reaction particle");
-      plist[mp].flag = -1;
-    } else {
-      mp = particle->add(buf[i].species,
-			 buf[i].x[0],buf[i].x[1],buf[i].x[2]);
-      plist = particle->plist;
-      particle->nghost++;
-      plist[mp].seed = buf[i].seed;
-      plist[mp].ibin = buf[i].ibin;
-      plist[mp].itri = buf[i].itri;
-      plist[mp].flag = 0;
-    }
-  }
-}
-
-/* ----------------------------------------------------------------------
    add Ith particle from plist to Migrate send buffer
-   use ibin since it is local bin ID in receiving proc
+   ptr->ibin is local bin ID in receiving proc
 ------------------------------------------------------------------------- */
 
 void ChemSpatial::fill_rm(Particle::OnePart *p, Grid::Migrate *ptr,
@@ -732,7 +716,7 @@ void ChemSpatial::fill_rm(Particle::OnePart *p, Grid::Migrate *ptr,
 
 /* ----------------------------------------------------------------------
    add Ith particle from plist to Migrate on-processor copy buffer
-   use ibin since it is local bin ID in self
+   ptr->ibin is local bin ID in self
 ------------------------------------------------------------------------- */
 
 void ChemSpatial::fill_rc(Particle::OnePart *p, Grid::Migrate *ptr,
@@ -762,7 +746,6 @@ void ChemSpatial::fill_rc(Particle::OnePart *p, Grid::Migrate *ptr,
   }
 
   // rest of particle attributes
-  // convert itri to global IDs
 
   buf3[n].species = p->species;
   buf3[n].seed = p->seed;
@@ -771,6 +754,47 @@ void ChemSpatial::fill_rc(Particle::OnePart *p, Grid::Migrate *ptr,
   buf3[n].flag = flag;
 
   *pn = n+1;
+}
+
+/* ----------------------------------------------------------------------
+   process received or copied particles
+   for REACTANT particles:
+     mbin = local reaction bin, derived from local grid bin and xyz
+     if mbin is ghost = 2, can ignore particle
+     find particle in mbin
+     flag with -1 as spent reactant
+   for PRODUCT particles:
+     I am new owner, so add it to plist as a ghost
+     flag with 0 so will be saved when compacting particles
+------------------------------------------------------------------------- */
+
+void ChemSpatial::unpack(int n, Migrate *buf)
+{
+  int mbin,mp;
+  Particle::OnePart *plist = particle->plist;
+
+  for (int i = 0; i < n; i++) {
+    if (buf[i].flag == REACTANT) {
+      mbin = whichlocal(buf[i].ibin,buf[i].x);
+      if (rblist[mbin].ghost == 2) continue;
+      mp = rblist[mbin].first;
+      while (mp >= 0) {
+	if (match(&buf[i],mp)) break;
+	mp = plist[mp].next;
+      }
+      if (mp == -1) error->one("Did not find matching reaction particle");
+      plist[mp].flag = -1;
+    } else {
+      mp = particle->add(buf[i].species,
+			 buf[i].x[0],buf[i].x[1],buf[i].x[2]);
+      plist = particle->plist;
+      particle->nghost++;
+      plist[mp].seed = buf[i].seed;
+      plist[mp].ibin = buf[i].ibin;
+      plist[mp].itri = buf[i].itri;
+      plist[mp].flag = 0;
+    }
+  }
 }
 
 /* ----------------------------------------------------------------------
@@ -792,35 +816,170 @@ int ChemSpatial::match(Migrate *buf, int i)
 }
 
 /* ----------------------------------------------------------------------
+   create reaction bins for 1st time based on decomposition of grid bins
+   also call setup_stencil() and setup_colors()
+------------------------------------------------------------------------- */
+
+void ChemSpatial::create()
+{
+  nperx = grid->nperx;
+  npery = grid->npery;
+  nperz = grid->nperz;
+
+  grbinx = grid->gbinx * nperx;
+  grbiny = grid->gbiny * npery;
+  grbinz = grid->gbinz * nperz;
+  grbins = grbinx*grbiny*grbinz;
+
+  nrbinx = grid->nbinx * nperx;
+  nrbiny = grid->nbiny * npery;
+  nrbinz = grid->nbinz * nperz;
+  nrbins = nrbinx*nrbiny*nrbinz;
+  maxrbin = nrbins;
+  maxgbin = grid->nbins;
+
+  rblist = (ReactBin *)
+    memory->srealloc(rblist,maxrbin*sizeof(ReactBin),"chem/spatial:rblist");
+  bbounds = (int **)
+    memory->grow_2d_int_array(bbounds,maxgbin,6,"chem/spatial:bbounds");
+
+  xbinsize = grid->xbinsize / nperx;
+  ybinsize = grid->ybinsize / npery;
+  zbinsize = grid->zbinsize / nperz;
+
+  xbininv = 1.0/xbinsize;
+  ybininv = 1.0/ybinsize;
+  zbininv = 1.0/zbinsize;
+
+  xorigin = grid->xorigin;
+  yorigin = grid->yorigin;
+  zorigin = grid->zorigin;
+
+  topology();
+  setup_stencil();
+  setup_colors();
+}
+
+/* ----------------------------------------------------------------------
+   redo setup of reaction bins since grid bins were rebalanced
+------------------------------------------------------------------------- */
+
+void ChemSpatial::dynamic()
+{
+  nrbinx = grid->nbinx * nperx;
+  nrbiny = grid->nbiny * npery;
+  nrbinz = grid->nbinz * nperz;
+  nrbins = nrbinx*nrbiny*nrbinz;
+
+  if (nrbins > maxrbin) {
+    maxrbin = nrbins;
+    rblist = (ReactBin *)
+      memory->srealloc(rblist,maxrbin*sizeof(ReactBin),"chem/spatial:rblist");
+  }
+  if (grid->nbins > maxgbin) {
+    maxgbin = grid->nbins;
+    bbounds = (int **)
+      memory->grow_2d_int_array(bbounds,maxgbin,6,"chem/spatial:bbounds");
+  }
+
+  topology();
+  setup_stencil();
+  setup_colors();
+}
+
+/* ----------------------------------------------------------------------
+   initialize reaction bin ID, ghost from current decomp
+   zero particle counters
+------------------------------------------------------------------------- */
+
+void ChemSpatial::topology()
+{
+  int i,j,k,m;
+
+  // set attributes as if all were far away ghost bins
+  // igridbin is set for all bins including ghosts
+
+  int nbinx = grid->nbinx;
+  int nbiny = grid->nbiny;
+  int nbinz = grid->nbinz;
+
+  for (m = 0; m < nrbins; m++) {
+    rblist[m].id = -1;
+    rblist[m].ghost = 2;
+    rblist[m].nparts = 0;
+    rblist[m].first = -1;
+
+    i = m % nrbinx;
+    j = (m/nrbinx) % nrbiny;
+    k = m / (nrbinx*nrbiny);
+    rblist[m].igridbin = (k/nperz)*nbinx*nbiny + (j/npery)*nbinx + i/nperx;
+  }
+
+  // set ghost = 1 for reaction bins on upwind boundary
+
+  for (k = nperz; k <= nrbinz-nperz; k++)
+    for (j = npery; j <= nrbiny-npery; j++)
+      for (i = nperx; i <= nrbinx-nperx; i++)
+	if (k == nrbinz-nperz || j == nrbiny-npery || i == nrbinx-nperx) {
+	  m = k*nrbinx*nrbiny + j*nrbinx + i;
+	  rblist[m].ghost = 1;
+	}
+
+  // set id for owned bins and set ghost = 0
+
+  xoffset = grid->xoffset * nperx;
+  yoffset = grid->yoffset * npery;
+  zoffset = grid->zoffset * nperz;
+
+  for (k = nperz; k < nrbinz-nperz; k++)
+    for (j = npery; j < nrbiny-npery; j++)
+      for (i = nperx; i < nrbinx-nperx; i++) {
+	m = k*nrbinx*nrbiny + j*nrbinx + i;
+	rblist[m].id = 
+	  (k+zoffset)*grbinx*grbiny + (j+yoffset)*grbinx + (i+xoffset);
+	rblist[m].ghost = 0;
+      }
+
+  // bbounds[m][] = first/last global reaction bin in Mth local grid bin
+  // 0/1 = xlo/xhi, 2/3 = ylo/yhi, 4/5 = zlo/zhi
+
+  int nbins = grid->nbins;
+  for (m = 0; m < nbins; m++) {
+    grid->local2global(m,&i,&j,&k);
+    bbounds[m][0] = i*nperx;
+    bbounds[m][1] = (i+1)*nperx - 1;
+    bbounds[m][2] = j*npery;
+    bbounds[m][3] = (j+1)*npery - 1;
+    bbounds[m][4] = k*nperz;
+    bbounds[m][5] = (k+1)*nperz - 1;
+  }
+}
+
+/* ----------------------------------------------------------------------
    setup reaction stencils based on current decomposition
 ------------------------------------------------------------------------- */
 
 void ChemSpatial::setup_stencil()
 {
-  int nbinx = grid->nbinx;
-  int nbiny = grid->nbiny;
-
-  stencil1[ 0] = 0;          stencil2[ 0] = 0;
-  stencil1[ 1] = 0;          stencil2[ 1] = 1;
-  stencil1[ 2] = 0;          stencil2[ 2] = nbinx;
-  stencil1[ 3] = 0;          stencil2[ 3] = nbinx + 1;
-  stencil1[ 4] = 1;          stencil2[ 4] = nbinx;
-  stencil1[ 5] = 0;          stencil2[ 5] = nbinx*nbiny;
-  stencil1[ 6] = 0;          stencil2[ 6] = nbinx*nbiny + 1;
-  stencil1[ 7] = 0;          stencil2[ 7] = nbinx*nbiny + nbinx;
-  stencil1[ 8] = 0;          stencil2[ 8] = nbinx*nbiny + nbinx + 1;
-  stencil1[ 9] = 1;          stencil2[ 9] = nbinx*nbiny;
-  stencil1[10] = 1;          stencil2[10] = nbinx*nbiny + nbinx;
-  stencil1[11] = nbinx;      stencil2[11] = nbinx*nbiny;
-  stencil1[12] = nbinx;      stencil2[12] = nbinx*nbiny + 1;
-  stencil1[13] = nbinx + 1;  stencil2[13] = nbinx*nbiny;
-
-  setup_colors();
+  stencil1[ 0] = 0;           stencil2[ 0] = 0;
+  stencil1[ 1] = 0;           stencil2[ 1] = 1;
+  stencil1[ 2] = 0;           stencil2[ 2] = nrbinx;
+  stencil1[ 3] = 0;           stencil2[ 3] = nrbinx + 1;
+  stencil1[ 4] = 1;           stencil2[ 4] = nrbinx;
+  stencil1[ 5] = 0;           stencil2[ 5] = nrbinx*nrbiny;
+  stencil1[ 6] = 0;           stencil2[ 6] = nrbinx*nrbiny + 1;
+  stencil1[ 7] = 0;           stencil2[ 7] = nrbinx*nrbiny + nrbinx;
+  stencil1[ 8] = 0;           stencil2[ 8] = nrbinx*nrbiny + nrbinx + 1;
+  stencil1[ 9] = 1;           stencil2[ 9] = nrbinx*nrbiny;
+  stencil1[10] = 1;           stencil2[10] = nrbinx*nrbiny + nrbinx;
+  stencil1[11] = nrbinx;      stencil2[11] = nrbinx*nrbiny;
+  stencil1[12] = nrbinx;      stencil2[12] = nrbinx*nrbiny + 1;
+  stencil1[13] = nrbinx + 1;  stencil2[13] = nrbinx*nrbiny;
 }
 
 /* ----------------------------------------------------------------------
    setup bin-to-bin ptrs for each reaction color
-   only for owned bins
+   only for owned reaction bins
    loop in reverse order so that 1st bins are 1st in color list
 ------------------------------------------------------------------------- */
 
@@ -830,11 +989,10 @@ void ChemSpatial::setup_colors()
 
   for (i = 0; i < ncolor; i++) firstcolor[i] = -1;
 
-  Grid::OneBin *blist = grid->blist;
-  for (i = grid->nbins-1; i >= 0; i--) {
-    if (!blist[i].ghost) {
-      icolor = whichcolor(blist[i].id);
-      blist[i].next = firstcolor[icolor];
+  for (i = nrbins-1; i >= 0; i--) {
+    if (!rblist[i].ghost) {
+      icolor = whichcolor(rblist[i].id);
+      rblist[i].next = firstcolor[icolor];
       firstcolor[icolor] = i;
     }
   }
@@ -849,12 +1007,12 @@ int ChemSpatial::whichcolor(int id)
 {
   // ix,iy,iz = global bin indices
 
-  int ix = id % grid->gbinx;
-  int iy = (id/grid->gbinx) % grid->gbiny;
-  int iz = id / (grid->gbinx * grid->gbiny);
+  int ix = id % grbinx;
+  int iy = (id/grbinx) % grbiny;
+  int iz = id / (grbinx * grbiny);
 
   // cx,cy,cz = color indices
-  // add 1 so that lowest-left global bin is color 0
+  // lowest-left global bin is color 0
 
   int cx = (ix+1) % 2;
   int cy = (iy+1) % 2;
@@ -862,6 +1020,225 @@ int ChemSpatial::whichcolor(int id)
 
   int icolor = cz*4 + cy*2 + cx;
   return icolor;
+}
+
+/* ----------------------------------------------------------------------
+   setup particle-to-particle links in plist and counter in rblist
+   do it for owned and ghost particles
+   assumes rblist[].first = -1, rblist[].nparts = 0 for all bins w/ particles
+   set this way from initial topology() or from previous unlink
+   set nlink so can unlink later on same particles
+------------------------------------------------------------------------- */
+
+void ChemSpatial::link()
+{
+  int irbin;
+
+  Particle::OnePart *plist = particle->plist;
+  nlink = particle->ntotal;
+
+  for (int i = 0; i < nlink; i++) {
+    irbin = whichlocal(plist[i].ibin,plist[i].x);
+    plist[i].next = rblist[irbin].first;
+    rblist[irbin].first = i;
+    rblist[irbin].nparts++;
+  }
+}
+
+/* ----------------------------------------------------------------------
+   reset bin[].first = -1 and bin[].nparts = 0 only for linked particles
+   do it by traversing particle-to-particle links
+   instead of looping over bins, since may be more bins than particles
+------------------------------------------------------------------------- */
+
+void ChemSpatial::unlink()
+{
+  int irbin;
+  Particle::OnePart *plist = particle->plist;
+
+  for (int i = 0; i < nlink; i++) {
+    irbin = whichlocal(plist[i].ibin,plist[i].x);
+    rblist[irbin].first = -1;
+    rblist[irbin].nparts = 0;
+  }
+}
+
+/* ----------------------------------------------------------------------
+   use xyz of particle to determine which local reaction bin the particle is in
+   also use local igridbin the particle is in
+   bbounds = extent of global reaction bins in each local grid bin
+   return local reaction bin ID (0 to nrbins-1)
+------------------------------------------------------------------------- */
+
+int ChemSpatial::whichlocal(int igridbin, double *x)
+{
+  int ix = static_cast<int> ((x[0]-xorigin)*xbininv);
+  int iy = static_cast<int> ((x[1]-yorigin)*ybininv);
+  int iz = static_cast<int> ((x[2]-zorigin)*zbininv);
+  ix = MAX(ix,bbounds[igridbin][0]);
+  ix = MIN(ix,bbounds[igridbin][1]);
+  iy = MAX(iy,bbounds[igridbin][2]);
+  iy = MIN(iy,bbounds[igridbin][3]);
+  iz = MAX(iz,bbounds[igridbin][4]);
+  iz = MIN(iz,bbounds[igridbin][5]);
+  return (iz-zoffset)*nrbinx*nrbiny + (iy-yoffset)*nrbinx + ix-xoffset;
+}
+
+/* ----------------------------------------------------------------------
+   sort particles within each reaction bin
+   by rearranging particle-to-particle links
+------------------------------------------------------------------------- */
+
+void ChemSpatial::sort()
+{
+  int i,j,m,irbin,first,nparts;
+
+  Particle::OnePart *plist = particle->plist;
+  int ntotal = particle->ntotal;
+  
+  // set flag for each particle's bin to unsorted
+
+  for (i = 0; i < ntotal; i++) {
+    irbin = whichlocal(plist[i].ibin,plist[i].x);
+    rblist[irbin].flag = 0;
+  }
+
+  // loop over particles, skip those in far away ghost bins
+  // if bin is already sorted, just skip it
+  // grow rank array if necessary
+  // fill rank array with current ordering of particles in bin
+  // qsort will shuffle rank array
+  // reset next ptrs based on new ordering in rank array
+
+  int maxparts = 1000;
+  int *rank = new int[maxparts];
+
+  for (i = 0; i < ntotal; i++) {
+    irbin = whichlocal(plist[i].ibin,plist[i].x);
+    if (rblist[irbin].ghost == 2) continue;
+    if (rblist[irbin].flag) continue;
+    rblist[irbin].flag = 1;
+
+    first = rblist[irbin].first;
+    nparts = rblist[irbin].nparts;
+
+    if (nparts > maxparts) {
+      maxparts = nparts;
+      delete [] rank;
+      rank = new int[maxparts];
+    }
+
+    m = first;
+    for (j = 0; j < nparts; j++) {
+      rank[j] = m;
+      m = plist[m].next;
+    }
+
+    qsort(rank,nparts,sizeof(int),compare);
+
+    rblist[irbin].first = rank[0];
+    for (j = 0; j < nparts-1; j++)
+      plist[rank[j]].next = rank[j+1];
+    plist[rank[nparts-1]].next = -1;
+  }
+
+  // free rank array
+
+  delete [] rank;
+}
+
+/* ----------------------------------------------------------------------
+   compare particles I and J for sorting purposes
+   called from qsort in sort() method
+   is a static method so can't use plist directly
+   return -1 if I < J, 0 if I = J, 1 if I > J
+   do comparison based on seed, x, y, z, species
+------------------------------------------------------------------------- */
+
+int ChemSpatial::compare(const void *pi, const void *pj)
+{
+  int i = *((int *) pi);
+  int j = *((int *) pj);
+  Particle::OnePart *p = particle->plist;
+
+  if (p[i].seed < p[j].seed) return -1;
+  else if (p[i].seed > p[j].seed) return 1;
+  else if (p[i].x[0] < p[j].x[0]) return -1;
+  else if (p[i].x[0] > p[j].x[0]) return 1;
+  else if (p[i].x[1] < p[j].x[1]) return -1;
+  else if (p[i].x[1] > p[j].x[1]) return 1;
+  else if (p[i].x[2] < p[j].x[2]) return -1;
+  else if (p[i].x[2] > p[j].x[2]) return 1;
+  else if (p[i].species < p[j].species) return -1;
+  else if (p[i].species > p[j].species) return 1;
+  return 0;
+}
+
+/* ----------------------------------------------------------------------
+   compute reaction bin size needed for reactions
+   called by bin::global() which sets up bins
+   assume current reaction definitions and settings
+   does same computation as init()
+------------------------------------------------------------------------- */
+
+double ChemSpatial::maxbin()
+{
+  int ireact,ispecies,jspecies,ipair;
+  double max = 0.0;
+
+  int nspecies = particle->nspecies;
+
+  int nreactions = react->nreactions;
+  double *rate = react->rate;
+
+  nreactant = react->nreactant;
+  npair = react->npair;
+  pairlist = react->pairlist;
+
+  if (prob_style == 0) {
+    int iwhich = -1;
+    double kmax = 0.0;
+    for (ireact = 0; ireact < nreactions; ireact++)
+      if (nreactant[ireact] == 2 && rate[ireact] > kmax) {
+	kmax = rate[ireact];
+	iwhich = ireact;
+      }
+
+    double distance = 0.0;
+    if (iwhich >= 0) {
+      double vol_overlap = kmax * simulator->dt / (AVOGADRO * max_prob);
+      vol_overlap *= 1.0E15;
+      double radius = 0.5 * pow(0.75*vol_overlap/PI,1.0/3.0);
+      distance = 2.0*radius;
+    }
+    max = distance;
+  }
+
+  if (prob_style == 1) {
+    double *setdist = react->setdist;
+    double *setprob = react->setprob;
+
+    for (ispecies = 0; ispecies < nspecies; ispecies++) {
+      for (jspecies = 0; jspecies < nspecies; jspecies++) {
+	for (ipair = 0; ipair < npair[ispecies][jspecies]; ipair++) {
+	  ireact = pairlist[ispecies][jspecies][ipair];
+
+	  double distance;
+	  if (setdist[ireact] == -1.0) {
+	    double d1ave = 4.0/sqrt(PI) * 
+	      sqrt(1.0e8*particle->diffusivity[ispecies] * simulator->dt);
+	    double d2ave = 4.0/sqrt(PI) * 
+	      sqrt(1.0e8*particle->diffusivity[jspecies] * simulator->dt);
+	    distance = diff_factor * (d1ave + d2ave);
+	  } else distance = setdist[ireact];
+	  max = MAX(max,distance);
+	}
+      }
+    }
+  }
+
+  if (max == 0.0) error->all("Cannot use bin react command with no reactions");
+  return max;
 }
 
 /* ----------------------------------------------------------------------
@@ -876,4 +1253,17 @@ void ChemSpatial::free_arrays()
   memory->destroy_2d_double_array(pairprobsum);
   memory->destroy_2d_double_array(distsq);
   if (rcount) delete [] rcount;
+}
+
+/* ----------------------------------------------------------------------
+   return size of ReactBin, bbounds, proclist, Migrate
+------------------------------------------------------------------------- */
+
+int ChemSpatial::memory_usage()
+{
+  int n = nrbins*sizeof(ReactBin);
+  n += 6*maxgbin * sizeof(int);
+  n += sizeproc * sizeof(int);
+  n += (size1+size2+size3) * sizeof(Migrate);
+  return n;
 }

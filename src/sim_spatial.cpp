@@ -129,7 +129,7 @@ void SimSpatial::run()
 
     if (grid->next_balance == ntimestep) {
       grid->dynamic();
-      chem->setup_stencil();
+      chem->dynamic();
       timer->stamp(TIME_BALANCE);
     }
 

@@ -419,6 +419,7 @@ int Input::execute_command()
   else if (!strcmp(command,"restart")) restart();
   else if (!strcmp(command,"run_style")) run_style();
   else if (!strcmp(command,"seed")) seed();
+  else if (!strcmp(command,"sort")) sort();
   else if (!strcmp(command,"species")) species();
   else if (!strcmp(command,"stats")) stats();
   else if (!strcmp(command,"stats_modify")) stats_modify();
@@ -846,6 +847,19 @@ void Input::seed()
 {
   if (narg != 1) error->all("Illegal seed command");
   random->seed = atoi(arg[0]);
+}
+
+/* ---------------------------------------------------------------------- */
+
+void Input::sort()
+{
+  if (!simulator) error->all("Must set run_style first");
+  if (simulator->spatial_flag == 0)
+    error->all("Cannot use sort command with non-spatial simulation");
+  if (narg != 1) error->all("Illegal sort command");
+  if (strcmp(arg[0],"no") == 0) chem->sortflag = 0;
+  else if (strcmp(arg[0],"yes") == 0) chem->sortflag = 1;
+  else error->all("Illegal sort command");
 }
 
 /* ---------------------------------------------------------------------- */
