@@ -545,7 +545,7 @@ void Particle::read(int narg, char **arg)
     }
     if (err == NULL) error->one("Unexpected end of file");
   }
-    
+
   MPI_Bcast(xyz[0],3*n,MPI_DOUBLE,0,world);
 
   // scan particle list and keep those whose bin maps to my owned domain
