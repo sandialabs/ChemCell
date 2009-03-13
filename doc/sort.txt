@@ -1,0 +1,51 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+sort command :h3
+
+[Syntax:]
+
+sort flag :pre
+
+flag = {no} or {yes} :l
+
+[Examples:]
+
+sort yes :pre
+
+[Description:]
+
+Turn sorting of particles on or off when performing a spatial
+simulation.  Sorting of particles is done when particles are assigned
+to reaction bins (see the "bin"_bin.html) command.  If sorting is
+enabled, the selection and ordering of reactions performed during two
+simulations should be the same, independent of how many processors
+they are run on.  Thus the output of the two simulations should be
+identical, which can be useful when debugging various problems.
+
+Note that sorting does not affect the accuracy of simulation output in
+a statistical sense, but does slow down a simulation due to the extra
+work involved.  Thus it should not normally be enabled, unless for
+debugging purposes.
+
+Also note that getting the same answer for two simulations run on
+different numbers of processors requires that the two simulations be
+initiated with the same random number seed.  Thus the "seed"_seed.hmtl
+command should be used, else a time-dependent random number seed will
+be generated for each simulation.
+
+[Restrictions:]
+
+This command can only be used for spatial simulations.
+
+[Related commands:] none
+
+[Default:]
+
+sort no

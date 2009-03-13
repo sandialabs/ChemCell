@@ -25,7 +25,7 @@ Set the random # seed used for the simulation.  For stochastic
 non-spatial (Gillespie) simulatoins, random numbers are used to pick
 reactions and timesteps.  For spatial simulations, random numbers are
 assigned to particles when they are read in and used thereafter to
-compute diffusive motion and reaction probabilities.
+compute diffusive motion and perform reactions.
 
 [Restrictions:]
 

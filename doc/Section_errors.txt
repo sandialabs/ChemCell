@@ -23,22 +23,26 @@ when using ChemCell.
 If two ChemCell runs do not produce the same answer on different
 machines or different numbers of processors, this is typically not a
 bug.  In theory you should get identical answers on any number of
-processors and on any machine.  In practice, numerical round-off can
-cause slight differences and eventual divergence of molecular dynamics
-phase space trajectories within a few 100s or few 1000s of timesteps.
-However, the statistical properties of the two runs (e.g. average
-energy or temperature) should still be the same.
+processors and on any machine.  In practice, the use of random numbers
+by ChemCell will cause differences in spatial simulations (see the
+"sort"_sort.html command for more info) leading to divergent
+trajectories for two simulations.  Even non-spatial simulations can
+incur numerical round-off which can cause slight differences and
+eventual divergence of phase space trajectories within a few 100s or
+few 1000s of timesteps.  However, the statistical properties of the
+two runs (e.g. average energy or temperature) should still be the
+same.
 
 A ChemCell simulation typically has two stages, setup and run.  Most
-ChemCell errors are detected at setup time; others like a bond
-stretching too far may not occur until the middle of a run.
+ChemCell errors are detected at setup time; others may not occur until
+the middle of a run.
 
 ChemCell tries to flag errors and print informative error messages so
 you can fix the problem.  Of course ChemCell cannot figure out your
 physics mistakes, like choosing too big a timestep, specifying invalid
-force field coefficients, or putting 2 atoms on top of each other!  If
-you find errors that ChemCell doesn't catch that you think it should
-flag, please send us an "email"_mail.
+reaction rates, or building an invalid geometry!  If you find errors
+that ChemCell doesn't catch that you think it should flag, please send
+us an "email"_mail.
 
 :link(mail,mailto:sjplimp@sandia.gov)
 
@@ -60,7 +64,7 @@ message first then it could be a bug (see "this section"_#9_2) or one
 of the following cases:
 
 ChemCell runs in the available memory a processor allows to be
-allocated.  Most reasonable MD runs are compute limited, not memory
+allocated.  Most reasonable runs are compute limited, not memory
 limited, so this shouldn't be a bottleneck on most platforms.  Almost
 all large memory allocations in the code are done via C-style malloc's
 which will generate an error message if you run out of memory.

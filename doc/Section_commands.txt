@@ -196,7 +196,8 @@ This section lists all ChemCell commands, grouped by category.  The
 Settings:
 
 "run_style"_run_style.html, "move_style"_move_style.html,
-"seed"_seed.html, "balance"_balance.html, "timestep"_timestep.html
+"seed"_seed.html, "sort"_sort.html, "balance"_balance.html,
+"timestep"_timestep.html
 
 Geometry:
 
@@ -278,6 +279,7 @@ This section lists all ChemCell commands alphabetically.  The
 "run_style"_run_style.html,
 "seed"_seed.html,
 "shell"_shell.html,
+"sort"_sort.html,
 "species"_species.html,
 "stats"_stats.html,
 "stats_modify"_stats_modify.html,
