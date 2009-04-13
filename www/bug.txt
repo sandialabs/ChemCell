@@ -9,8 +9,9 @@ This page lists new features and bug fixes in the ChemCell simulator
 since the current version was released.
 
 To add these features/fixes to your version of ChemCell, download the
-upgraded version from the "download page"_../download.html, that
-includes all these features/fixes, and rebuild the code.
+current tarball from the "download page"_../download.html, which
+includes all the new features/fixes listed below, and rebuild the
+code.
 
 The current version of ChemCell is 10 Sept 2008.
 
@@ -22,9 +23,9 @@ Made some enhancements to make particle binning more efficient for
 problems where the natural diffusion length scale is different than
 the reaction length scale.  Before ChemCell used one bin size for
 finding geometry during particle moves and for finding reaction
-partners during chemistry.  Now the "bin"_bin.html command lets you
-specify separate length scales leading to two different sets of bins.
-This can make a spatial simulation dramatically faster, if for
+partners during chemistry.  Now the "bin"_doc/bin.html command lets
+you specify separate length scales leading to two different sets of
+bins.  This can make a spatial simulation dramatically faster, if, for
 example, you can use smaller reaction bins than geometry bins.
 
 This is the "list of changed files"_patches/files.13Mar09 from the 19
