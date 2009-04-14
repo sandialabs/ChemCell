@@ -32,7 +32,7 @@ valid keywords: {diff} or {gsize} or {gcount} or {react} or {rsize} or {rcount} 
 
 bin diff 1.0e-8
 bin react 0.02 diff 1.0e-7
-bin count 30 35 40 :pre
+bin gcount 30 35 40 :pre
 
 [Description:]
 
