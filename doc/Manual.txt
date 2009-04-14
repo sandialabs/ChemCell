@@ -33,7 +33,7 @@ open-source code, designed to be easy to modify and extend with new
 functionality.  It is distributed freely under the terms of the GNU
 Public License (GPL).
 
-The authors of the code are "Steve Plimpton"_sjp and Alex Slepoys, who
+The authors of the code are "Steve Plimpton"_sjp and Alex Slepoy, who
 can be contacted at sjplimp at sandia.gov and alexander.sleopy at
 nnsa.doe.gov.  The "ChemCell WWW Site"_cws at
 www.cs.sandia.gov/~sjplimp/chemcell.html has more information about
