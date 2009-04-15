@@ -17,6 +17,16 @@ The current version of ChemCell is 10 Sept 2008.
 
 :line
 
+[15 Apr 2009]
+
+This upgrade adds some updated doc pages that got left out
+in previous upgrades.
+
+This is the "list of changed files"_patches/files.15Apr09 from the 13
+Sept 2009 version.
+
+:line
+
 [13 Mar 2009]
 
 Made some enhancements to make particle binning more efficient for
