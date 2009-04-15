@@ -1,3 +1,12 @@
+<HEAD>
+<TITLE>ChemCell Users Manual</TITLE>
+<META NAME="docnumber" CONTENT="ChemCell Simulator">
+<META NAME="author" CONTENT="http://www.sandia.gov/~sjplimp/chemcell.html - Sandia National Laboratories">
+<META NAME="copyright" CONTENT="Copyright (2004) Sandia Corporation.  This software and manual is distributed under the GNU General Public License.">
+</HEAD>
+
+<BODY>
+
 "ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
 Commands"_cc :c
 
