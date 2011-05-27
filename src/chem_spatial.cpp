@@ -836,12 +836,12 @@ void ChemSpatial::create()
   nrbinz = grid->nbinz * nperz;
   nrbins = nrbinx*nrbiny*nrbinz;
   maxrbin = nrbins;
-  maxgbin = grid->nbins;
+  maxnbin = grid->nbins;
 
   rblist = (ReactBin *)
     memory->srealloc(rblist,maxrbin*sizeof(ReactBin),"chem/spatial:rblist");
   bbounds = (int **)
-    memory->grow_2d_int_array(bbounds,maxgbin,6,"chem/spatial:bbounds");
+    memory->grow_2d_int_array(bbounds,maxnbin,6,"chem/spatial:bbounds");
 
   xbinsize = grid->xbinsize / nperx;
   ybinsize = grid->ybinsize / npery;
@@ -876,10 +876,10 @@ void ChemSpatial::dynamic()
     rblist = (ReactBin *)
       memory->srealloc(rblist,maxrbin*sizeof(ReactBin),"chem/spatial:rblist");
   }
-  if (grid->nbins > maxgbin) {
-    maxgbin = grid->nbins;
+  if (grid->nbins > maxnbin) {
+    maxnbin = grid->nbins;
     bbounds = (int **)
-      memory->grow_2d_int_array(bbounds,maxgbin,6,"chem/spatial:bbounds");
+      memory->grow_2d_int_array(bbounds,maxnbin,6,"chem/spatial:bbounds");
   }
 
   topology();
@@ -925,7 +925,7 @@ void ChemSpatial::topology()
 	  rblist[m].ghost = 1;
 	}
 
-  // set id for owned bins and set ghost = 0
+  // set ID for owned bins and set ghost = 0
 
   xoffset = grid->xoffset * nperx;
   yoffset = grid->yoffset * npery;
@@ -1014,9 +1014,9 @@ int ChemSpatial::whichcolor(int id)
   // cx,cy,cz = color indices
   // lowest-left global bin is color 0
 
-  int cx = (ix+1) % 2;
-  int cy = (iy+1) % 2;
-  int cz = (iz+1) % 2;
+  int cx = ix % 2;
+  int cy = iy % 2;
+  int cz = iz % 2;
 
   int icolor = cz*4 + cy*2 + cx;
   return icolor;
@@ -1064,8 +1064,8 @@ void ChemSpatial::unlink()
 }
 
 /* ----------------------------------------------------------------------
-   use xyz of particle to determine which local reaction bin the particle is in
-   also use local igridbin the particle is in
+   use xyz of particle and its local igridbin to determine
+     local reaction bin ID the particle is in
    bbounds = extent of global reaction bins in each local grid bin
    return local reaction bin ID (0 to nrbins-1)
 ------------------------------------------------------------------------- */
@@ -1262,7 +1262,7 @@ void ChemSpatial::free_arrays()
 int ChemSpatial::memory_usage()
 {
   int n = nrbins*sizeof(ReactBin);
-  n += 6*maxgbin * sizeof(int);
+  n += 6*maxnbin * sizeof(int);
   n += sizeproc * sizeof(int);
   n += (size1+size2+size3) * sizeof(Migrate);
   return n;

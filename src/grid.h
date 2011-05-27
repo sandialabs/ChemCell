@@ -27,9 +27,11 @@ class Grid : public System {
 
   struct Migrate {      // linked list of migrate actions for parts in this bin
     int proc;           // proc to send to (if me, just copy)
+    int ibin;           // local bin ID of particle in receiving location
+    int rcheck;         // 1 if should check reaction bins, 0 if no
+    int ilo,jlo,klo;    // 1 if recv bin is downwind from send bin in that dir
     int pbc;            // 0 if no PBC remapping, 1 if yes
     int xpbc,ypbc,zpbc; // -1,0,1 box lengths to add to particle coords
-    int ibin;           // local bin ID of particle in receiving location
     Migrate *ptr;       // ptr to next object in list (NULL if last)
   };
 
@@ -51,7 +53,7 @@ class Grid : public System {
 
   OneBin *blist;        // list of bins (3d array underneath)
 
-  // global bin counts not including ghosts
+  // global grid bin counts not including ghosts
   // global IDs numbered from 0 to gbins-1 (x varies fast, y middle, z slow)
   // numbered in each dim from 0 to gbinxyz-1 inclusive
 
@@ -59,7 +61,7 @@ class Grid : public System {
   int gbinx,gbiny,gbinz;        // global bin count in each dir
   int nperx,npery,nperz;        // reaction bin count per grid bin
 
-  // local bin layout including ghosts
+  // local grid bin counts including ghosts
   // local IDs numbered from 0 to nbins-1 (x varies fast, y middle, z slow)
   // numbered in each dim from 0 to nbinxyz-1 inclusive (ghost = 0,nbinxyz-1)
 

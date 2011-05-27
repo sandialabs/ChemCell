@@ -227,6 +227,10 @@ void Grid::create(int narg, char **arg)
   // allocate reaction bins and initialize reaction bin settings
 
   chem->create();
+
+  // initialize particle's knowledge of reaction bins
+
+  particle->topology();
 }
 
 /* ----------------------------------------------------------------------
@@ -542,13 +546,17 @@ void Grid::topology()
       blist[m].migrate = ptr;
       blist[m].nmigrate++;
       ptr->proc = possible[n].proc;
+      ptr->ibin = possible[n].ibin;
+      ptr->rcheck = possible[n].rcheck;
+      ptr->ilo = possible[n].ilo;
+      ptr->jlo = possible[n].jlo;
+      ptr->klo = possible[n].klo;
       ptr->pbc = possible[n].pbc;
       if (ptr->pbc) {
 	ptr->xpbc = possible[n].xpbc;
 	ptr->ypbc = possible[n].ypbc;
 	ptr->zpbc = possible[n].zpbc;
       }
-      ptr->ibin = possible[n].ibin;
     }
   }
 }
@@ -1724,7 +1732,17 @@ void Grid::migrate_possible(int iposs, int im, int jm, int km,
   // set ptr to non-NULL to indicate valid migrate action
 
   possible[iposs].proc = proc;
-  
+  possible[iposs].ibin = ibin;
+  if (nperx > 1) possible[iposs].ilo = im-is;
+  else possible[iposs].ilo = 0;
+  if (npery > 1) possible[iposs].jlo = jm-js;
+  else possible[iposs].jlo = 0;
+  if (nperz > 1) possible[iposs].klo = km-ks;
+  else possible[iposs].klo = 0;
+  if (possible[iposs].ilo || possible[iposs].jlo || possible[iposs].klo)
+    possible[iposs].rcheck = 1;
+  else possible[iposs].rcheck = 0;
+
   if (xpbc || ypbc || zpbc) {
     possible[iposs].pbc = 1;
     possible[iposs].xpbc = xpbc;
@@ -1732,6 +1750,5 @@ void Grid::migrate_possible(int iposs, int im, int jm, int km,
     possible[iposs].zpbc = zpbc;
   } else possible[iposs].pbc = 0;
 
-  possible[iposs].ibin = ibin;
   possible[iposs].ptr = possible;
 }

@@ -75,7 +75,7 @@ bool tri_line_intersect(double *v0, double *v1, double *v2, double *norm,
   // test if intersection pt is inside triangle
   // edge = edge vector of triangle
   // pvec = vector from vertex to intersection point
-  // xproduct = cross prodcut of edge with pvec
+  // xproduct = cross product of edge with pvec
   // if dot product of xproduct with norm < 0.0 for any of 3 edges,
   //   intersection point is outside tri
 

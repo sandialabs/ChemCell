@@ -19,6 +19,7 @@
 #include "simulator.h"
 #include "domain.h"
 #include "chem.h"
+#include "chem_spatial.h"
 #include "grid.h"
 #include "surf.h"
 #include "region.h"
@@ -645,6 +646,30 @@ void Particle::read(int narg, char **arg)
 }
 
 /* ----------------------------------------------------------------------
+   grab copies of various Grid and ChemSpatial settings
+   used in whichlocal() method to map particles to reaction bins
+------------------------------------------------------------------------- */
+
+void Particle::topology()
+{
+  xorigin = grid->xorigin;
+  yorigin = grid->yorigin;
+  zorigin = grid->zorigin;
+
+  ChemSpatial *chemspatial = (ChemSpatial *) chem;
+
+  xrbininv = chemspatial->xbininv;
+  yrbininv = chemspatial->ybininv;
+  zrbininv = chemspatial->zbininv;
+
+  nperx = grid->nperx;
+  npery = grid->npery;
+  nperz = grid->nperz;
+
+  bbounds = chemspatial->bbounds;
+}
+
+/* ----------------------------------------------------------------------
    migrate particles after particle motion
    after motion, each particle stores local bin its coords are in
      can be local owned bin or local ghost bin
@@ -658,12 +683,12 @@ void Particle::read(int narg, char **arg)
 
 void Particle::migrate()
 {
-  int i,ibin;
+  int i,ibin,iflag;
 
-  // debug test to see if all particles are in correct bins
+  // sanity test to see if all particles are in correct bins
   // should be unnecessary
 
-  int iflag = 0;
+  iflag = 0;
   for (i = 0; i < ntotal; i++) {
     if (plist[i].ibin < 0 || plist[i].ibin >= grid->nbins) {
       iflag++;
@@ -778,12 +803,26 @@ void Particle::unpack(int n, Migrate *buf, int ghostflag)
 }
 
 /* ----------------------------------------------------------------------
-   add Ith particle from plist to Migrate send buffer
+   add Ith particle from plist to Migrate off-processor send buffer
 ------------------------------------------------------------------------- */
 
 void Particle::fill_pm(int i, Grid::Migrate *ptr, int *pn)
 {
   int n = *pn;
+
+  // check if need to send particle
+  // do not send if sending an upwind ghost particle
+  //   and it isn't in upwind layer of reaction bins
+  // lo is set if sending an upwind ghost particle
+  // ijk_rbin = 0 if particle is in upwind layer
+
+  if (ptr->rcheck) {
+    int irbin,jrbin,krbin;
+    whichlocal(plist[i].ibin,plist[i].x,irbin,jrbin,krbin);
+    if (ptr->ilo && irbin) return;
+    if (ptr->jlo && jrbin) return;
+    if (ptr->klo && krbin) return;
+  }
 
   // grow buffer and proclist by 2x if necessary
 
@@ -834,6 +873,20 @@ void Particle::fill_pc(int i, Grid::Migrate *ptr, int *pn)
 {
   int n = *pn;
 
+  // check if need to send particle
+  // do not send if sending an upwind ghost particle
+  //   and it isn't in upwind layer of reaction bins
+  // lo is set if sending an upwind ghost particle
+  // ijk_rbin = 0 if particle is in upwind layer
+
+  if (ptr->rcheck) {
+    int irbin,jrbin,krbin;
+    whichlocal(plist[i].ibin,plist[i].x,irbin,jrbin,krbin);
+    if (ptr->ilo && irbin) return;
+    if (ptr->jlo && jrbin) return;
+    if (ptr->klo && krbin) return;
+  }
+
   // grow buffer by 2x if necessary
 
   if (n >= size3) {
@@ -863,6 +916,27 @@ void Particle::fill_pc(int i, Grid::Migrate *ptr, int *pn)
   buf3[n].itri = plist[i].itri;
 
   *pn = n+1;
+}
+
+/* ----------------------------------------------------------------------
+   use xyz of particle and its local igridbin to determine
+     3 indices of of reaction bin inside igridbin the particle is in
+   bbounds = extent of global reaction bins in each local grid bin
+   return 3 reaction bin indices (0 to nperx-1, 0 to npery-1, 0 to nperz-1)
+------------------------------------------------------------------------- */
+
+void Particle::whichlocal(int igridbin, double *x,
+			  int &iperx, int &ipery, int &iperz)
+{
+  iperx = static_cast<int> ((x[0]-xorigin)*xrbininv) - bbounds[igridbin][0];
+  ipery = static_cast<int> ((x[1]-yorigin)*yrbininv) - bbounds[igridbin][2];
+  iperz = static_cast<int> ((x[2]-zorigin)*zrbininv) - bbounds[igridbin][4];
+  iperx = MAX(iperx,0);
+  iperx = MIN(iperx,nperx-1);
+  ipery = MAX(ipery,0);
+  ipery = MIN(ipery,npery-1);
+  iperz = MAX(iperz,0);
+  iperz = MIN(iperz,nperz-1);
 }
 
 /* ----------------------------------------------------------------------

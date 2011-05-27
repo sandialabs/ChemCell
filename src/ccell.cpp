@@ -18,7 +18,7 @@
 #include "input.h"
 
 /* ----------------------------------------------------------------------
-   main program to drive LAMMPS
+   main program to drive ChemCell
 ------------------------------------------------------------------------- */
 
 int main (int argc, char **argv)

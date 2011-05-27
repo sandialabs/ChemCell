@@ -64,8 +64,8 @@ class Particle : public System {
   void set_diffusion(int, char **);
   void set_count(int, char **);
   void compute_count(int);
+  void topology();
   void migrate();
-  void migrate2();
   void ghost_acquire();
   void link();
   void unlink(int);
@@ -92,10 +92,16 @@ class Particle : public System {
   int *proclist;
   int size1,size2,size3,sizeproc;
 
+  double xorigin,yorigin,zorigin;      // copies from Grid and ChemSpatial
+  double xrbininv,yrbininv,zrbininv;
+  int nperx,npery,nperz;
+  int **bbounds;
+
   void add_alias(char *, int);
   void unpack(int, Migrate *, int);
   void fill_pm(int, Grid::Migrate *, int *);
   void fill_pc(int, Grid::Migrate *, int *);
+  void whichlocal(int, double *, int &, int &, int &);
   void check_dimension(int);
 };
 

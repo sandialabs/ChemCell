@@ -16,6 +16,7 @@
 #include "stdio.h"
 #include "mpi.h"
 #include "universe.h"
+#include "version.h"
 #include "memory.h"
 
 /* ----------------------------------------------------------------------
@@ -24,7 +25,7 @@
 
 Universe::Universe(MPI_Comm communicator)
 {
-  version = "10 Sept 2008";
+  version = (char *) CHEMCELL_VERSION;
 
   uworld = communicator;
   MPI_Comm_rank(uworld,&me);

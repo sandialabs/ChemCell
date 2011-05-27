@@ -20,6 +20,8 @@
 #include "grid.h"
 
 class ChemSpatial : public Chem {
+  friend class Particle;
+
  public:
   ChemSpatial();
   ~ChemSpatial();
@@ -76,22 +78,32 @@ class ChemSpatial : public Chem {
                                  // these bins tile all local grid bins
                                  // including full tiling of ghost grid bins
 
+  // global reaction bin counts not including ghosts
+  // global IDs numbered from 0 to gbins-1 (x varies fast, y middle, z slow)
+  // numbered in each dim from 0 to gbinxyz-1 inclusive
+
   int grbins;                    // global reaction bin count
   int grbinx,grbiny,grbinz;      // global reaction bin count in each dir
+  int nperx,npery,nperz;         // reaction bins per grid bin
+
+  // local reaction bin counts including ghosts
+  // local IDs numbered from 0 to nbins-1 (x varies fast, y middle, z slow)
+  // numbered in each dim from 0 to nbinxyz-1 inclusive
+  // first and last nper in each dim are ghost since rbins tile grid bins
 
   int nrbins;                    // local rbin count (with ghosts)
   int nrbinx,nrbiny,nrbinz;      // local rbin count in each dir (with ghosts)
-  int nperx,npery,nperz;         // # of reaction bins per grid bin in each dim
   int maxrbin;                   // max size of rblist
-
-  int **bbounds;                 // extent of global rbins in local grid bins
-                                 // 0/1 = xlo/xhi, 2/3 = ylo/yhi, 4/5 = zlo/zhi
-  int maxgbin;                   // max size of bbounds
 
   // offset between local and global reaction bins
   // global = local + offset
 
   int xoffset,yoffset,zoffset;
+
+  int **bbounds;    // bbounds[m][] = first/last global reaction bin in
+                    //                Mth local grid bin
+                    // 0/1 = xlo/xhi, 2/3 = ylo/yhi, 4/5 = zlo/zhi
+  int maxnbin;      // max size of 1st dim of bbounds
 
   double xbinsize,ybinsize,zbinsize;   // reaction bin size in each dir
   double xbininv,ybininv,zbininv;      // inverse bin size in each dir

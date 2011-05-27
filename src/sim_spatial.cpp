@@ -130,6 +130,7 @@ void SimSpatial::run()
     if (grid->next_balance == ntimestep) {
       grid->dynamic();
       chem->dynamic();
+      particle->topology();
       timer->stamp(TIME_BALANCE);
     }
 
