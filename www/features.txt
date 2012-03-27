@@ -1,5 +1,5 @@
 "ChemCell WWW Site"_cws :c
-:link(cws,../chemcell.html)
+:link(cws,index.html)
 
 :line
 
