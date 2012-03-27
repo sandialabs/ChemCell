@@ -1,7 +1,7 @@
 <HEAD>
 <TITLE>ChemCell Users Manual</TITLE>
 <META NAME="docnumber" CONTENT="ChemCell Simulator">
-<META NAME="author" CONTENT="http://www.sandia.gov/~sjplimp/chemcell.html - Sandia National Laboratories">
+<META NAME="author" CONTENT="http://chemcell.sandia.gov - Sandia National Laboratories">
 <META NAME="copyright" CONTENT="Copyright (2004) Sandia Corporation.  This software and manual is distributed under the GNU General Public License.">
 </HEAD>
 
@@ -10,7 +10,7 @@
 "ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
 Commands"_cc :c
 
-:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cws,http://chemcell.sandia.gov)
 :link(cd,Manual.html)
 :link(cc,Section_commands.html#comm)
 
@@ -60,8 +60,8 @@ Public License (GPL).
 The authors of the code are "Steve Plimpton"_sjp and Alex Slepoy, who
 can be contacted at sjplimp at sandia.gov and alexander.sleopy at
 nnsa.doe.gov.  The "ChemCell WWW Site"_cws at
-www.cs.sandia.gov/~sjplimp/chemcell.html has more information about
-the code and its uses.
+http://chemcell.sandia.gov has more information about the code and its
+uses.
 
 :link(bug,http://www.cs.sandia.gov/chemcell/bug.html)
 :link(sjp,http://www.cs.sandia.gov/~sjplimp)

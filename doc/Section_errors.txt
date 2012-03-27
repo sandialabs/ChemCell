@@ -1,7 +1,7 @@
 "Previous Section"_Section_modify.html - "ChemCell WWW Site"_cws -
 "ChemCell Documentation"_cd - "ChemCell Commands"_cc :c
 
-:link(cws,http://www.cs.sandia.gov/~sjplimp/chemcell.html)
+:link(cws,http://chemcell.sandia.gov)
 :link(cd,Manual.html)
 :link(cc,Section_commands.html#comm)
 
