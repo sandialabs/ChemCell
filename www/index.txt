@@ -88,7 +88,7 @@ results indicate the stochastic noise present in real cells can blur
 the distinction between the different responses and induce
 oscillations.
 
-:image(images/misl_plot_small.jpg,chemcell/images/misl_plot.jpg)
+:image(images/misl_plot_small.jpg,images/misl_plot.jpg)
 
 This paper has further details on the NF-kB model and the analyses we
 performed:
