@@ -34,9 +34,9 @@ files and allows particles to be selected, visualized, and animated,
 along with the ChemCell geoemtry (regions, triangulated surfaces) via
 the same Pizza.py tools.
 
-Pizza.py also has a "clog" tool which reads in ChemCell log files and
-allows the species concentration statistics to be plotted either via
-GnuPlot ("gnu" tool) or MatLab ("matlab" tool).
+Pizza.py also has a "olog" tool which can read in ChemCell log files
+and allows the species concentration statistics to be plotted either
+via GnuPlot ("gnu" tool) or MatLab ("matlab" tool).
 
 If you write additional tools (either stand-alone or as part of
 Pizza.py) that you think are generally useful for setting up or

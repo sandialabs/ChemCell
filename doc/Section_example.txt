@@ -20,7 +20,7 @@ pre-processing tool using the *.py scripts in the same directory.
 
 :link(pizza,http://www.cs.sandia.gov/~sjplimp/pizza.html)
 
-Plots can be made from the log files using the "clog" and plotting
+Plots can be made from the log files using the "olog" and plotting
 tools in Pizza.py.  Images and movies can be made from the dump and
 data files using the "cdata", "dump", and various visualization tools
 in Pizza.py.  Examples are shown on the "ChemCell WWW Site"_cws.
