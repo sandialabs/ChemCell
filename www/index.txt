@@ -1,7 +1,7 @@
 <HEAD>
     <TITLE> ChemCell Simulator </TITLE>
     <meta name="Description" content="ChemCell home page">
-    <meta name="keywords" content="ChemCell, biological cell modeling">
+    <meta name="keywords" content="ChemCell, biological cell modeling, spatial reaction/diffusion model">
     <meta name="google-site-verification" content="jIe-V87O61oNvgWFgBXMeF5bFl35XjSaG0Fm8_7q5VU" />
     <meta name="review" content="10_10_2008" />
     <meta name="filename" content="index.html" />
