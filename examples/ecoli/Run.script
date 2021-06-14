@@ -1,0 +1,11 @@
+#!/bin/csh
+
+# run all ecoli problems
+
+set date = "10Sept08"
+
+ccell_g++ < in.ecoli
+mv log.ccell log.ecoli.$date.1
+
+mpirun -np 4 ccell_g++ < in.ecoli
+mv log.ccell log.ecoli.$date.4

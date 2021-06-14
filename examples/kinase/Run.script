@@ -1,0 +1,23 @@
+#!/bin/csh
+
+# run all kinase problems
+
+set date = "10Sept08"
+
+ccell_g++ < in.kinase.ode
+mv log.ccell log.kinase.ode.$date
+
+ccell_g++ < in.kinase.gillespie
+mv log.ccell log.kinase.gillespie.$date
+
+ccell_g++ < in.kinase.spatial.box
+mv log.ccell log.kinase.spatial.box.$date.1
+
+mpirun -np 4 ccell_g++ < in.kinase.spatial.box
+mv log.ccell log.kinase.spatial.box.$date.4
+
+ccell_g++ < in.kinase.spatial.sphere
+mv log.ccell log.kinase.spatial.sphere.$date
+
+ccell_g++ < in.kinase.spatial.surf
+mv log.ccell log.kinase.spatial.surf.$date

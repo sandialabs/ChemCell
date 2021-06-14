@@ -1,0 +1,14 @@
+#!/bin/csh
+
+# run all Lotka problems
+
+set date = "10Sept08"
+
+ccell_g++ < in.lotka.gillespie
+mv log.ccell log.lotka.gillespie.$date
+
+ccell_g++ < in.lotka.spatial
+mv log.ccell log.lotka.spatial.$date.1
+
+mpirun -np 4 ccell_g++ < in.lotka.spatial
+mv log.ccell log.lotka.spatial.$date.4
