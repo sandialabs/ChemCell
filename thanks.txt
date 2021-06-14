@@ -1,0 +1,45 @@
+"ChemCell WWW Site"_cws :c
+:link(cws,index.html)
+
+:line
+
+ChemCell Thanks :h3
+
+ChemCell development has been funded by the "US Department of
+Energy"_doe (DOE), through its LDRD program and through its
+"Genomes-to-Life program"_gtl via the "ASCR"_oascr and "BER"_ober
+offices.
+
+The original version of ChemCell was part of the "GTL project"_ourgtl
+"Carbon Sequestration in Synechococcus Sp.: From Molecular Machines to
+Hierarchical Modeling".
+
+:link(sandia,http://www.sandia.gov)
+:link(doe,http://www.doe.gov)
+:link(gtl,http://www.doegenomestolife.org)
+:link(ourgtl,http://www.genomes2life.org)
+:link(oascr,http://www.sc.doe.gov/ascr/home.html)
+:link(ober,http://www.er.doe.gov/production/ober/ober_top.html)
+
+:line
+
+The authors of ChemCell are "Steve Plimpton"_sjp and Alex Slepoy, who
+can be contacted at sjplimp at sandia.gov and alexander.sleopy at
+nnsa.doe.gov.
+
+:link(sjp,http://www.cs.sandia.gov/~sjplimp)
+
+We wish to thank several individuals who helped us with specific ideas
+and features in ChemCell:
+
+Larry Lok and Roger Brent (TMSI) : useful design discussions 
+Steve Andrews (LBNL, now TMSI) : Smoldyn and reaction kinetics discussions
+Dan Gillespie : algorithm discussions
+Ray Meyers and collaborators (Elemental Technologies) : particle-triangle routines
+Karen Devine and Eric Boman (Sandia) : Zoltan load-balancing library :tb(s=:)
+
+Here are links to "TMSI"_tmsi, "Smoldyn"_smoldyn, and "Zoltan"_zoltan.
+
+:link(tmsi,http://www.molsci.org)
+:link(smoldyn,http://www.smoldyn.org)
+:link(zoltan,http://www.cs.sandia.gov/Zoltan)

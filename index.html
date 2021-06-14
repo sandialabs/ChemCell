@@ -1,0 +1,117 @@
+<HTML>
+<HEAD>
+    <TITLE> ChemCell Simulator </TITLE>
+    <meta name="Description" content="ChemCell home page">
+    <meta name="keywords" content="ChemCell, biological cell modeling, spatial reaction/diffusion model">
+    <meta name="google-site-verification" content="jIe-V87O61oNvgWFgBXMeF5bFl35XjSaG0Fm8_7q5VU" />
+    <meta name="review" content="05_01_2020" />
+    <meta name="filename" content="index.html" />
+    <meta name="subject" content="ChemCell home page" />
+    <meta name="sandia.approval_type" content="formal" />
+    <meta name="sandia.approved" content="2020-4701W" />
+    <link rev="owns" title="Steve Plimpton" href="mailto:sjplimp@sandia.gov" />
+    <link rev="made, publisher" title="Steve Plimpton" href="mailto:sjplimp@sandia.gov" />
+    <meta name="MSSmartTagsPreventParsing" content="TRUE" />
+    <meta name="Author" content="Steve Plimpton" />
+</HEAD>
+
+<CENTER><H3>ChemCell Simulator 
+</H3></CENTER>
+<CENTER><I>The era of the 'well-mixed' cell is behind us</I> -- O. S. Anderson, J
+General Physiology, 125, 3-12, (2005) 
+</CENTER>
+<CENTER><I>Whole-cell simulation (is) a grand challenge of the 21st century</I> --
+M. Tomita, Trends in Biotechnology, 19, 205-210 (2001) 
+</CENTER>
+<HR>
+
+<P>This is the home page for the biological cell modeling code ChemCell.
+</P>
+<DIV ALIGN=center><TABLE  BORDER=1 >
+<TR ALIGN="center"><TD ><A HREF = "features.html">Features</A></TD><TD ><A HREF = "doc/Manual.html">Documentation</A></TD><TD ><A HREF = "http://www.sandia.gov/~sjplimp/download.html">Download</A></TD><TD ><A HREF = "bug.html">Latest features & bug fixes</A></TD><TD ><A HREF = "pictures.html">Pictures & Movies</A></TD></TR>
+<TR ALIGN="center"><TD ><A HREF = "thanks.html">Thanks</A></TD><TD ><A HREF = "open_source.html">Open source</A></TD><TD ><A HREF = "pizza.html">Pizza.py Toolkit</A></TD><TD ><A HREF = "papers.html">Publications</A></TD><TD ><A HREF = "other.html">Other codes</A> 
+</TD></TR></TABLE></DIV>
+
+
+
+
+
+<P>ChemCell is a particle-based reaction/diffusion simulator designed for
+modeling protein networks in biological cells with spatial
+information.  Compartments within the cell are bounded by membrane
+surfaces defined as geometric regions or connected triangles.
+Particles represent individual biomolecules and diffuse via Brownian
+motion in 3d and on 2d surfaces.  Particles react with neighboring
+particles according to rules derived from chemical rate equations.
+Non-spatial models can also be run using an ODE solver or the
+Gillespie Stochastic Simulation Algorithm (SSA).  Spatial simulations
+can be run in parallel as can multiple instances of non-spatial
+simluations for statistical averaging.  The <A HREF = "http://pizza.sandia.gov">Pizza.py
+package</A> of Python-based tools can create input files for
+ChemCell and visualize and plot its output.
+</P>
+<P>ChemCell was developed at Sandia National Laboratories, a US
+Department of Energy facility, with funding from the DOE, acknowledged
+<A HREF = "thanks.html">here</A>.  It is an open-source code, designed to
+be easy to modify and extend with new functionality.  It is
+distributed freely under the terms of the GNU Public License (GPL).
+</P>
+<P>The authors of ChemCell are <A HREF = "http://www.sandia.gov/~sjplimp">Steve Plimpton</A> and Alex Slepoy, who
+can be contacted at sjplimp at sandia.gov and alexander.sleopy at
+nnsa.doe.gov.
+</P>
+<P>The ChemCell WWW site is hosted by Sandia, which has this <A HREF = "http://www.sandia.gov/general/privacy-security/index.html">Privacy and
+Security statement</A>.
+</P>
+
+
+
+
+
+
+
+
+
+
+<HR>
+
+<CENTER><H4>ChemCell Highlight 
+</H4></CENTER>
+<CENTER>(see the <A HREF = "pictures.html">Pictures & Movies</A> page for more
+examples of ChemCell calculations) 
+</CENTER>
+<P>This is work with Jaewook Joo (Sandia).  He developed a hybrid model
+of the NF-kB immune response network (by combining two models in the
+literature due to Alexander Hoffman and Tomasz Lipniacki).  Triggered
+by receptor binding to a stimulant at the cell membrane, IKK is
+produced inside the cell which is the starting point for the portion
+of the network we modeled, which contains approximately 50 species and
+70 reactions.  Eventually NF-kB, a gene transcription factor, is
+produced and enters the nucleus.  Due to negative feedback in the
+network, an oscillatory response of nuclear-NF-KB can result as it
+shuttles in and out of the nucleus.
+</P>
+<P>This non-spatial 2-compartment model was simulated in ChemCell both as
+a continuum model (ODE solver) and a stochastic model (Gillespie SSA).
+Runs in batches of 1000 and 10,000 were performed while varying
+parameters in the model to perform senstivity analyses and classify
+the various kinds of responses.  The image shows 4 plots for the
+different observed responses: sustained oscillatory, damped
+oscillatory, single-peaked, and hyperbolic (saturation to a maximum).
+The red curves are the ODE solutions; the green are stochastic.  These
+results indicate the stochastic noise present in real cells can blur
+the distinction between the different responses and induce
+oscillations.
+</P>
+<A HREF = "images/misl_plot.jpg"><IMG SRC = "images/misl_plot_small.jpg"></A>
+
+<P>This paper has further details on the NF-kB model and the analyses we
+performed:
+</P>
+<P><B>Sensitivity Analysis of a Computational Model of the IKK-NF-kB-A20
+Signal Transduction Network</B>, J. Joo, S. J. Plimpton, S. Martin,
+L. Swiler, J. L. Faulon, Annals of the New York Acadamey of Sciences,
+Volume on Reverse Engineering Biological Networks, 1115, 221-239
+(2007). (<A HREF = "abstracts/annals07.html">abstract</A>)
+</P>
+</HTML>

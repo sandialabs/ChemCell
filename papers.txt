@@ -1,0 +1,50 @@
+"ChemCell WWW Site"_cws :c
+:link(cws,index.html)
+
+:line
+
+ChemCell Papers :h3
+
+The following papers describe the ChemCell code and modeling problems
+it has been applied to.
+
+If you wish to cite ChemCell, please use the Journal of Physics paper
+for now.  A better paper has been submitted to Bioinformatics; we will
+post the reference here, if it is accepted.
+
+If you send information about a paper that uses ChemCell results, I'll
+be pleased to add info about it to this page.  Ditto for a picture or
+movie for the "Pictures & Movies"_pictures.html page.
+
+:line
+
+This paper discusses results from network analyses performed
+with ChemCell:
+
+[Sensitivity Analysis of a Computational Model of the IKK-NF-kB-A20
+Signal Transduction Network], J. Joo, S. J. Plimpton, S. Martin,
+L. Swiler, J. L. Faulon, Annals of the New York Acadamey of Sciences,
+Volume on Reverse Engineering Biological Networks, 1115, 221-239
+(2007). ("abstract"_../abstracts/annals07.html)
+
+This paper gives a brief overview of ChemCell and computational
+challenges for cell modeling:
+
+[Microbial cell modeling via reacting diffusing particles],
+S. J. Plimpton and A. Slepoy, Journal of Physics: Conference Series
+16, 305-309 (2005). ("abstract"_ajp) ("pdf"_pjp)
+
+:link(ajp,../abstracts/jp05.html)
+:link(pjp,../papers/jp05.pdf)
+
+This paper is about our "Genomics:GTL (Genomes-to-Life) project"_gtl
+funded by DOE's OBER and OASCR offices, that provided funding and
+motivation for the development of ChemCell.  The author list is the
+entire project team!
+
+:link(gtl,http://www.genomes2life.org)
+
+[Carbon Sequestration in Synechococcus Sp.: From Molecular Machines to
+Hierarchical Modeling], G. S. Heffelfinger, ..., S. J. Plimpton, ...,
+OMICS - A Journal of Integrative Biology, 6, 305-330
+(2002). ("abstract"_../abstracts/omics02.html)

@@ -1,0 +1,79 @@
+<HTML>
+<CENTER><A HREF = "index.html">ChemCell WWW Site</A> 
+</CENTER>
+
+
+<HR>
+
+<H3>ChemCell Features 
+</H3>
+<P>ChemCell is a particle-based reaction/diffusion simulator designed to
+model signaling, regulatory, or metabolic networks in biological
+cells.  It can be run as a spatial simulator where the particles
+diffuse within the specified geometry of a cell, or as a non-spatial
+simulator where there is no diffusion and the network of chemical
+reactions is time-integrated as a set of ODEs or stochastically via
+the Gillespie Stochastic Simulation Algorithm (SSA).
+</P>
+<P>For spatial simulations, a single protein, protein complex, or other
+biomolecule is represented as a dimensionless particle.  The geometry
+of a cell (membranes, organelles, etc) is represented as simple
+geometrical objects (spheres, boxes, etc) or as triangulated surfaces.
+Particles diffuse randomly via Brownian motion, either in 3d or on 2d
+surfaces.  Biochemical reactions occur in accord with chemical rate
+equations, which are inputs to ChemCell.  Monte Carlo rules are used
+to perform reactions each timestep between pairs of nearby particles.
+</P>
+<P>For non-spatial simulations, the cell is treated as a well-mixed
+chemical reactor, and the chemical rate equations can be
+time-integrated either by a fixed-step or adaptive-timestep ODE solver
+or by the direct-method variant of the Gillespie Stochastic Simulation
+Algorithm (SSA) using the Gibson/Bruck methodology.
+</P>
+<P>ChemCell runs on single-processor desktop or laptop machines, but can
+also be run in parallel.  Multiple runs can be performed on a
+collection of processors (for statistical purposes), or (for spatial
+simulations) the simulation domain can be partitioned across
+processors and a single simulation run in parallel.  For spatial
+simulations, ChemCell can model systems with only a few particles up
+to many millions.
+</P>
+
+
+<P>ChemCell is a freely-available open-source code, distributed under the
+terms of the <A HREF = "http://www.gnu.org/copyleft/gpl.html">GNU Public License</A>, which means you can use or
+modify the code however you wish.  See <A HREF = "open_source.html">this page</A>
+for a brief discussion of the open-source philosophy.
+</P>
+
+
+<P>ChemCell is designed to be easy to modify or extend with new
+capabilities, such as modified reaction rules or boundary conditions.
+See <A HREF = "doc/Section_modify.html">this section</A> for more details.
+</P>
+<P>ChemCell is written in C++ and can be downloaded from the <A HREF = "index.html">ChemCell
+WWW Site</A>.  No additional software is needed to run ChemCell in
+serial on a desktop machine.  ChemCell will run on any parallel
+machine that compiles C++ and supports the <A HREF = "http://www-unix.mcs.anl.gov/mpi">MPI</A> message-passing
+library.  This includes distributed- or shared-memory parallel
+machines and Beowulf-style clusters.  To run with spatial parallelism,
+the <A HREF = "http://www.cs.sandia.gov/Zoltan">Zoltan library</A> must also be installed.
+</P>
+
+
+<P>ChemCell does not have the ability to create cellular geometries or
+visualize simulation output.  Currently, these tasks are handled by
+pre- and post-processing codes.  Our group has written a separate
+toolkit called <A HREF = "http://www.cs.sandia.gov/~sjplimp/pizza.html">Pizza.py</A> which provides tools for doing setup,
+analysis, plotting, and visualization for ChemCell simulations.
+Pizza.py is written in <A HREF = "http://www.python.org">Python</A> and is available for download
+from <A HREF = "http://www.cs.sandia.gov/~sjplimp/pizza.html">the Pizza.py WWW site</A>.
+</P>
+
+
+
+
+<P>More details about ChemCell are given in the <A HREF = "doc/Manual.html">ChemCell
+documentation</A>.
+</P>
+</HTML>
