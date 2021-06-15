@@ -1,0 +1,50 @@
+<HTML>
+<CENTER><A HREF = "http://chemcell.sandia.gov">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>debug command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>debug proc-ID timestep index 
+</PRE>
+<UL><LI>proc-ID = processor (0 to P-1) to perform debug testing on
+<LI>timestep = timestep to do testing on 
+<LI>index = particle index (0 to N-1) to perform testing on 
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>debug 0 145 7555 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Track the diffusive motion of a single particle on a single processor
+during a single timestep.  This enables a print out of its
+interactions with regions and triangles for debugging purposes.
+</P>
+<P>To turn off debugging for a subsequent run, set proc-ID to -1.
+</P>
+<P><B>Restrictions:</B>
+</P>
+<P>In order to use this command, ChemCell must be compiled with this line
+uncommented at the top of src/move.cpp:
+</P>
+<PRE>#define DEBUG_MOVE 
+</PRE>
+<P>or with a -DDEBUG_MOVE switch defined in your Makefile.foo.
+</P>
+<P><B>Related commands:</B>
+</P>
+<P><A HREF = "check.html">check</A>
+</P>
+<P><B>Default:</B> none
+</P>
+</HTML>

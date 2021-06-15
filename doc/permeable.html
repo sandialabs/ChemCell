@@ -1,0 +1,78 @@
+<HTML>
+<CENTER><A HREF = "http://chemcell.sandia.gov">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>permeable command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>permeable species-ID surface-ID flag keyword value ... 
+</PRE>
+<UL><LI>species-ID = ID of particle species 
+
+<LI>surface-ID = ID of region or triangulated surface 
+
+<LI>flag = <I>in</I> or <I>out</I> or <I>both</I> 
+
+<LI>one or more keyword/value pairs can be specified 
+
+<PRE>  keywords = <I>reflect</I> or <I>near</I> or <I>stick</I> or <I>far</I> or <I>thru</I> or <I>rsp</I> or <I>nsp</I> or <I>ssp</I> or <I>fsp</I> or <I>tsp</I>
+  <I>reflect</I>, <I>near</I>, <I>stick</I>, <I>far</I>, <I>thru</I> value = probability
+    probability = value between 0.0 and 1.0 (inclusive)
+  <I>rsp</I>, <I>nsp</I>, <I>ssp</I>, <I>fsp</I>, <I>tsp</I> value = species-ID
+    species-ID = what the permeating particle will become if event takes place 
+</PRE>
+
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>permeable A nucleus out reflect 0.9 thru 0.1 tsp A_nuc
+permeable Ca_cyto cell reflect 1.0 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Set the permeability for a species when it encounters a surface
+(region or triangulated surface) during a move.  The <I>flag</I> value
+in/out/both refers to which side of the surface.  Each triangle in a
+triangulated surface has an "outside" determined by applying the
+right-hand rule to its 3 ordered vertices.
+</P>
+<P>Each time a 3d particle hits a surface, there are 5 possibilities.  It
+can reflect off and continue its move, end its move by being placed
+EPSILON away from the surface on the near side, stick to the surface
+and become a 2d species, end its move by being placed EPSILON away
+from the surface on the far side, or pass thru the surface unimpeded.
+</P>
+<P>Each of the 5 cases is assigned a fractional probability P, the sum of
+which must be 1.0.  When a particle moves and a surface is
+encountered, a random number is generated which is used to select
+which of the 5 cases occurs.
+</P>
+<P>Each of the 5 surface interactions can also cause the particle to
+become a new species, if the corresponding keyword
+(rsp,nsp,ssp,fsp,tsp) is specified.
+</P>
+<P><B>Restrictions:</B>
+</P>
+<P>This command cannot be used for 2d species.  If the stick probability
+is non-zero, the <I>ssp</I> keyword must be specified, else the 3d species
+cannot become a 2d species.
+</P>
+<P>This command can only be used for spatial simulations.
+</P>
+<P><B>Related commands:</B> none
+</P>
+<P><B>Default:</B>
+</P>
+<P>By default, all 3d species interact with all surfaces with a
+reflection probability of 1.0 and with no species change.
+</P>
+</HTML>

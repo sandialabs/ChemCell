@@ -1,0 +1,146 @@
+<HTML>
+<CENTER><A HREF = "http://chemcell.sandia.gov">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>react_modify command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>react_modify reaction-ID keyword value(s) ... 
+</PRE>
+<UL><LI>reaction-ID = ID of reaction to modify 
+
+<LI>one or more keyword/value pairs can be specified 
+
+<PRE>  keywords = <I>rate</I> or <I>loc</I> or <I>dist</I> or <I>prob</I> or <I>weight</I>
+  <I>rate</I> value = rate
+    rate = reaction rate (same units as in <A HREF = "reaction.html">reaction</A> command)
+  <I>loc</I> values = product styleflag whichflag dirflag
+    product = which product (1-N)
+    styleflag = <I>def</I> or <I>at</I> or <I>near</I>
+    whichflag = <I>def</I> or <I>1</I> or <I>2</I> or <I>1/2</I>
+    dirflag = <I>def</I> or <I>in</I> or <I>out</I> or <I>in/out</I>
+  <I>dist</I> = R
+    R = distance at which reactants will react (microns)
+  <I>prob</I> = P
+    P = probability (0-1) with which reactants react
+  <I>weight</I> values = which index ratio
+    which = <I>reactant</I> or <I>product</I>
+    index = which reactant or product (1-N)
+    ratio = weighting factor to apply 
+</PRE>
+
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>react_modify 1 dist 0.05 prob 1.0
+react_modify channel 2 near 2 out 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Reset one or more parameters of a specific reaction.
+</P>
+<P>The <I>rate</I> keyword resets the reaction rate.
+</P>
+<P>The <I>loc</I> keyword sets the location at which a product of the reaction
+is placed.  The <I>product</I> setting determines which product (1 to N).
+A value of -1 means all products.  The <I>styleflag</I> setting refers to
+placing the product at or near a reactant's location.  The <I>whichflag</I>
+setting refers to which reactant (1 to N) to place the product at or
+near.  A value of <I>1/2</I> means to randomly choose which reactant each
+time a reaction occurs.  The <I>dirflag</I> setting only applies to 3d
+products placed near 2d reactants and refers to which side of the
+surface (inside or outside) to place the product on.  A value of
+<I>in/out</I> means to randomly choose the side each time a reaction
+occurs.  A value of <I>def</I> for default should be used if <I>dirflag</I> does
+not apply.
+</P>
+<P>Depending on the kind of reaction (1 or 2 reactants) and whether the
+reactants are 3d diffusing species or 2d (on a surface), certain
+combinations of settings are invalid and will generate errors.  Note
+that only 3d products can be placed at a 3d reactant's location.  Only
+2d products can be placed at a 2d reactant's location.  And only 3d
+products can be placed near a 2d reactant's location, which means to
+place it a distance epsilon from the surface the 2d reactant is on.
+</P>
+<P>These are the default rules for reactions with a single reactant:
+</P>
+<UL><LI>If the reactant and product are 3d,   put the product at the location of the reactant.
+<LI>If the reactant and product are 2d,   put the product at the location of the reactant.
+<LI>If the reactant is 3d and the product is 2d, this is an error.
+<LI>If the reactant is 2d and the product is 3d,   put the product near the reactant on the inside of the surface. 
+</UL>
+<P>These are the default rules for reactions with two reactants:
+</P>
+<UL><LI>If both reactants and the product are 2d, put the product at the   location of the reactant with the smaller diffusion coeff.
+<LI>If both reactants and the product are 3d, put the product at the   location of the reactant with the smaller diffusion coeff.
+<LI>If one reactant is 2d and the other 3d and the product is 3d, put the   product at the 3d reactant's location.
+<LI>If one reactant is 2d and the other 3d and the product is 2d, put the   product at the 2d reactant's location.
+<LI>If both reactants are 3d and the product is 2d, this is an error.
+<LI>If both reactants are 2d and the product is 3d, put the product   a distance epsilon away from the reactant with the smaller diffusion coeff   on the inside of the surface.
+<LI>In all cases where diffusion coeffs are used, if the diffusion coeffs of   the 2 reactants are equal, the 1st reactant is used. 
+</UL>
+<P>The <I>dist</I> keyword explicitly sets the cutoff distance for a binary
+reaction bewteen two reactants.  Normally, ChemCell sets this distance
+itself (see the <A HREF = "probability.html">probability</A> command for options).
+Setting the <I>dist</I> value to -1.0 turns off the explicit setting;
+ChemCell will again compute the reaction cutoff.
+</P>
+<P>The <I>prob</I> keyword explicitly sets the probablility (from 0.0 to 1.0)
+for a binary reaction to take place (assuming the reactants are within
+the cutoff distance).  Normally, ChemCell sets this probability itself
+(see the <A HREF = "probability.html">probability</A> command for options).  Setting
+the <I>prob</I> value to -1.0 turns off the explicit setting; ChemCell will
+again compute the probability.
+</P>
+<P>Note that the <I>dist</I> and <I>prob</I> keywords give you the option of
+setting reaction parameters directly, using your own formulation or
+algorithms and settings from another code.  For example, the
+<A HREF = "http://www.smoldyn.org">Smoldyn</A> simulator calculates a variety of reaction
+parameterizations for different kinds of reactions, as described in
+<A HREF = "#Andrews">(Andrews)</A>.  Essentially it computes reaction cutoff
+distances (binding radii in Smoldyn nomenclature) as a function of
+diffusion coefficients of the reactants, timestep, and reaction rate.
+The Smoldyn formulation spans the spectrum from diffusion-limited to
+reaction-limited reactions and thus produces reaction cutoff distances
+which are more accurate and complete than the simple heuristic that
+ChemCell uses by default.
+</P>
+<P>The <I>weight</I> keyword sets a volume weighting factor for a specific
+reactant or product which adjusts its concentration the reaction
+occurs and the species is removed or produced.  This can be used by
+non-spatial, continuum simulations (ODEs) to weight the effects of a
+reaction.  The weighting factor can be thought of as a volume ratio
+between 2 compartments, so a factor can be set to enable a
+multi-compartment ODE solution where each compartment has its own
+volume.
+</P>
+<P><B>Restrictions:</B> none
+</P>
+<P>The <I>loc</I> and <I>dist</I> and <I>prob</I> keywords only apply to spatial
+simulations.  The <I>weight</I> keyword only applies to non-spatial,
+continuum (ODE) simulations.
+</P>
+<P><B>Related commands:</B>
+</P>
+<P><A HREF = "probability.html">probability</A>, <A HREF = "reaction.html">reaction</A>
+</P>
+<P><B>Default:</B> none
+</P>
+<HR>
+
+<A NAME = "Andrews"></A>
+
+<P><B>(Andrews)</B> Andrews and Bray, Phys Biol, 1, 137-151 (2004).
+</P>
+
+
+</HTML>

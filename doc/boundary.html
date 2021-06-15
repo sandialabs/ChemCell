@@ -1,0 +1,47 @@
+<HTML>
+<CENTER><A HREF = "http://chemcell.sandia.gov">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>boundary command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>boundary x y z 
+</PRE>
+<LI>x,y,z = <I>p</I> or <I>n</I> 
+
+<PRE>  <I>p</I> is periodic
+  <I>n</I> is non-periodic 
+</PRE>
+<P><B>Examples:</B>
+</P>
+<PRE>boundary p p n 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Set the periodicity of the global domain in each of the x,y,z
+dimensions.  "N" means the domain is non-periodic in that dimension,
+so that if particles move outside the domain, they are lost.  "P"
+means the domain is periodic in that dimension, so particles
+wrap-around to the other size and can react with nearby particles
+across the periodic boundary.
+</P>
+<P><B>Restrictions:</B> none
+</P>
+<P><B>Related commands:</B>
+</P>
+<P><A HREF = "global.html">global</A>
+</P>
+<P><B>Default:</B>
+</P>
+<P>All dimensions are periodic.
+</P>
+</HTML>

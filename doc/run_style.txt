@@ -1,0 +1,88 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://chemcell.sandia.gov)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+run_style command :h3
+
+[Syntax:]
+
+run_style style :pre
+
+style = {spatial} or {gillespie} or {ode} or {ode/rk} :ul
+
+[Examples:]
+
+run_style spatial
+run_style gillespie :pre
+
+[Description:]
+
+Set the style of simulation that will be run. 
+
+The {spatial} option runs a spatial reaction/diffusion model where
+particles diffuse volumetrially (3d) or on surfaces (2d) via Brownian
+motion with a diffusion coefficient defined by the
+"diffusion"_diffusion.html command.  Particles store coordinates (see
+the "particles"_particles.html command) and geometric surfaces can be
+defined (see the "triangles"_triangles.html and "region"_region.html
+commands) for particles to interact with (see the
+"permeable"_permeable.html command).
+
+In spatial simulations, pairs of particles react each timestep with a
+probability between 0.0 and 1.0 if they are within a cutoff distance
+of each other.  Reactions and associated rates are set via the
+"reaction"_reaction.html command.  The "probability"_probability.html
+or "react_modify"_react_modify.html commands are used to set the
+probability and cutoff distance for individual reactions.  Setting the
+probability to 1.0 and the cutoff distance to the binding radius
+computed by the Smoldyn algorithms described in "(Andrews)"_#Andrews
+enables a "Smoldyn-style"_smoldyn spatial simulation to be run.
+
+The {gillespie} option runs the "direct method" version of Gillespie's
+Stochastic Simulation Algorithm (SSA) as described in
+"(Gillespie)"_#Gillespie, with computational enhancements outlined in
+"(Gibson/Bruck)"_#Gibson.  Reactions and associated rates are set via
+the "reaction"_reaction.html command.  The volume of the system is set
+via the "volume"_volume.html command.  Initial particle counts are set
+via the "count"_count.html command.  This is a non-spatial simulation,
+so particle coordinates are not defined, nor is any geometric
+information.
+
+The {ode} and {ode/rk} options solve the system of coupled reactions
+with a continuum ODE time integration scheme.  For style {ode} a
+fixed-size timestep is used.  For style {ode/rk} an adaptive timestep
+Runge-Kutta algorithm is used as described in "(Shampine)"_#Shampine.
+Reactions and associated rates are set via the
+"reaction"_reaction.html command.  The volume of the system is set via
+the "volume"_volume.html command.  Initial particle counts are set via
+the "count"_count.html command.  This is a non-spatial simulation, so
+particle coordinates are not defined, nor is any geometric
+information.
+
+[Restrictions:] none
+
+[Related commands:] none
+
+[Default:] none
+
+:line
+
+:link(Andrews)
+[(Andrews)] Andrews and Bray, Phys Biol, 1, 137-151 (2004).
+
+:link(Gibson)
+[(Gibson/Bruck)] Gibson and Bruck, J Phys Chem A, 104, 1876-1889 (2000).
+
+:link(Gillespie)
+[(Gillespie)] Gillespie, J Phys Chem, 81, 2340 (1977).
+
+:link(Shampine)
+[(Shampine)] Shampine, Watts, and Davenport, SIAM Review, 18, 376-411
+(1976).
+
+:link(smoldyn,http://genomics.lbl.gov/~sandrews/software.html)

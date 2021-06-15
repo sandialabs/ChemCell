@@ -1,0 +1,36 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://chemcell.sandia.gov)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+timestep command :h3
+
+[Syntax:]
+
+timestep dt :pre
+
+dt = timestep size (seconds) :ul
+
+[Examples:]
+
+timestep 1.0e-5
+timestep 0.003 :pre
+
+[Description:]
+
+Set the timestep size for spatial or non-spatial ODE simulations.
+
+[Restrictions:]
+
+This command cannot be used for a stochastic non-spatial (Gillespie)
+simulation, since it chooses the timestep for each reaction itself.
+
+[Related commands:]
+
+"run"_run.html, "run_style"_run_style.html
+
+[Default:] none

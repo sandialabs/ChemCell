@@ -1,0 +1,41 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://chemcell.sandia.gov)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+boundary command :h3
+
+[Syntax:]
+
+boundary x y z :pre
+
+x,y,z = {p} or {n} :l
+  {p} is periodic
+  {n} is non-periodic :pre
+
+[Examples:]
+
+boundary p p n :pre
+
+[Description:]
+
+Set the periodicity of the global domain in each of the x,y,z
+dimensions.  "N" means the domain is non-periodic in that dimension,
+so that if particles move outside the domain, they are lost.  "P"
+means the domain is periodic in that dimension, so particles
+wrap-around to the other size and can react with nearby particles
+across the periodic boundary.
+
+[Restrictions:] none
+
+[Related commands:]
+
+"global"_global.html
+
+[Default:]
+
+All dimensions are periodic.

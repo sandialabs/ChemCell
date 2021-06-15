@@ -1,0 +1,70 @@
+<HTML>
+<CENTER><A HREF = "http://chemcell.sandia.gov">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>dump command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>dump ID N filename species1-ID species2-ID ...
+dump ID delta filename species1-ID species2-ID ... 
+</PRE>
+<UL><LI>ID = user-assigned name for the dump
+<LI>N = dump particles every N timesteps (integer value)
+<LI>delta = dump particles every delta seconds (floating point value)
+<LI>filename = file to dump to
+<LI>speciesN-ID = optional list of species-IDs to dump to file 
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>dump 1 100 tmp.dump
+dump Ca-dump 0.1 tmp.dump.Ca Ca-cyto Ca-ER 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Dump a snapshot of particle coordinates and species types to a file
+every so often as a simulation runs.  The species list is optional; if
+not specified, all particles are dumped.
+</P>
+<P>The ID of a dump can contain alphanumeric characters and underscores.
+</P>
+<P>The frequency of output can be specied in timesteps or elapsed
+simulation time.  Using an integer versus a floating-point value (with
+a decimal point) determines how the argument is interpreted.
+</P>
+<P>Any species-ID can contain a single wildcard character * which will
+match species and alias names in the usual way.  E.g. a species-ID can
+be *, ab*, *ab, ab*cd.
+</P>
+<P>Multiple dumps (with different IDs) can be defined.  See the
+<A HREF = "undump.html">undump</A> command for turning off a dump.
+</P>
+<P>The format of the dump file is self-explanatory.  For each particle,
+an ID, its species type (an an integer), and its x,y,z coordinates are
+printed.  Dump files can be visualized with the <A HREF = "http://www.cs.sandia.gov/~sjplimp/pizza.html">Pizza.py
+toolkit</A> or converted into other formats (via Pizza.py) suitable
+for visualization with other tools, e.g. <A HREF = "http://www.ks.uiuc.edu/Research/vmd">VMD</A>.
+</P>
+
+
+
+
+<P><B>Restrictions:</B>
+</P>
+<P>This command can only be used for spatial simluations.
+</P>
+<P><B>Related commands:</B>
+</P>
+<P><A HREF = "dump_modify.html">dump_modify</A>, <A HREF = "stats.html">stats</A>, <A HREF = "undump.html">undump</A>
+</P>
+<P><B>Default:</B> none
+</P>
+</HTML>

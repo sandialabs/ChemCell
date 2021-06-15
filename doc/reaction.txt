@@ -1,0 +1,62 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://chemcell.sandia.gov)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+reaction command :h3
+
+[Syntax:]
+
+reaction ID K product1 product2 ...
+reaction ID reactant1 K product1 product2 ...
+reaction ID reactant1 reactant2 K product1 product2 ... :pre
+
+ID = user-assigned name for the reaction
+reactant1,reactant2 = species-IDs of reactant(s)
+K = reaction rate (see units below)
+productN = species-IDs of zero or more products :ul
+
+[Examples:]
+
+reaction 1 Ca_cyto IP3R 1.0e7 IP3R Ca_er
+reaction decay receptor-active 0.1 receptor-inactive
+reaction influx 1.0e-8 Ca :pre
+
+[Description:]
+
+Define a reaction that turns reactants into products at a specified
+reaction rate.  The reaction can have zero, one, or two reactants and
+0 or more products.
+
+The ID of a reaction can contain alphanumeric characters and
+underscores and dashes.
+
+The species-IDs of all reactants and products must have been
+previously defined using the "species"_species.html command.
+
+The units of the reaction rate K are molarity/sec for reactions with 0
+reactants, 1/sec for unary reactions, and 1/molarity-sec for binary
+reactions.
+
+The "react_modify"_react_modify.html command can be used to specify
+the spatial location of created products as well as other reaction
+attributes.
+
+[Restrictions:]
+
+Reactions with 0 reactants can only be specified for non-spatial
+simulations.
+
+The maximum number of product species for any one reaction is
+hard-wired in src/react.cpp via the MAX_PRODUCT setting.  Currently it
+is set to 5.
+
+[Related commands:]
+
+"react_modify"_react_modify.html
+
+[Default:] none

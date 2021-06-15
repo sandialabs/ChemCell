@@ -1,0 +1,37 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://chemcell.sandia.gov)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+volume command :h3
+
+[Syntax:]
+
+volume V :pre
+
+V = volume of simulation domain (liters) :ul
+
+[Examples:]
+
+volume 8.0e-15
+
+[Description:]
+
+Set the volume of the system for a non-spatial simulation.  This will
+be the well-mixed volume within which reactions take place, e.g. for
+a stochastic Gillespie or continuum ODE simulation.
+
+[Restrictions:]
+
+This command can only be used for non-spatial simulations.  See the
+"global"_global.html command for spatial simulations.
+
+[Related commands:]
+
+"global"_global.html
+
+[Default:] none

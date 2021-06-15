@@ -1,0 +1,44 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://chemcell.sandia.gov)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+read_restart command :h3
+
+[Syntax:]
+
+read_restart file :pre
+
+file = name of binary restart file to read in :ul
+
+[Examples:]
+
+read_restart save.10000 :pre
+
+[Description:]
+
+Read in a previously saved set of particles from a restart file.  This
+allows continuation of a previous spatial simulation.
+
+Only particle information is stored in the restart file.  Thus before
+reading a restart file, you should re-define species and geometry
+information, and must setup bins via the "bin"_bin.html command.
+
+Because restart files are binary, they may not be portable to other
+machines.
+
+[Restrictions:] none
+
+The "bin"_bin.html command must be used before reading a restart file.
+
+This command can only be used for spatial simulations.
+
+[Related commands:]
+
+"write_restart"_write_restart.html, "restart"_restart.html
+
+[Default:] none

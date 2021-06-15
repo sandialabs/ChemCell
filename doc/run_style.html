@@ -1,0 +1,97 @@
+<HTML>
+<CENTER><A HREF = "http://chemcell.sandia.gov">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>run_style command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>run_style style 
+</PRE>
+<UL><LI>style = <I>spatial</I> or <I>gillespie</I> or <I>ode</I> or <I>ode/rk</I> 
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>run_style spatial
+run_style gillespie 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Set the style of simulation that will be run. 
+</P>
+<P>The <I>spatial</I> option runs a spatial reaction/diffusion model where
+particles diffuse volumetrially (3d) or on surfaces (2d) via Brownian
+motion with a diffusion coefficient defined by the
+<A HREF = "diffusion.html">diffusion</A> command.  Particles store coordinates (see
+the <A HREF = "particles.html">particles</A> command) and geometric surfaces can be
+defined (see the <A HREF = "triangles.html">triangles</A> and <A HREF = "region.html">region</A>
+commands) for particles to interact with (see the
+<A HREF = "permeable.html">permeable</A> command).
+</P>
+<P>In spatial simulations, pairs of particles react each timestep with a
+probability between 0.0 and 1.0 if they are within a cutoff distance
+of each other.  Reactions and associated rates are set via the
+<A HREF = "reaction.html">reaction</A> command.  The <A HREF = "probability.html">probability</A>
+or <A HREF = "react_modify.html">react_modify</A> commands are used to set the
+probability and cutoff distance for individual reactions.  Setting the
+probability to 1.0 and the cutoff distance to the binding radius
+computed by the Smoldyn algorithms described in <A HREF = "#Andrews">(Andrews)</A>
+enables a <A HREF = "http://genomics.lbl.gov/~sandrews/software.html">Smoldyn-style</A> spatial simulation to be run.
+</P>
+<P>The <I>gillespie</I> option runs the "direct method" version of Gillespie's
+Stochastic Simulation Algorithm (SSA) as described in
+<A HREF = "#Gillespie">(Gillespie)</A>, with computational enhancements outlined in
+<A HREF = "#Gibson">(Gibson/Bruck)</A>.  Reactions and associated rates are set via
+the <A HREF = "reaction.html">reaction</A> command.  The volume of the system is set
+via the <A HREF = "volume.html">volume</A> command.  Initial particle counts are set
+via the <A HREF = "count.html">count</A> command.  This is a non-spatial simulation,
+so particle coordinates are not defined, nor is any geometric
+information.
+</P>
+<P>The <I>ode</I> and <I>ode/rk</I> options solve the system of coupled reactions
+with a continuum ODE time integration scheme.  For style <I>ode</I> a
+fixed-size timestep is used.  For style <I>ode/rk</I> an adaptive timestep
+Runge-Kutta algorithm is used as described in <A HREF = "#Shampine">(Shampine)</A>.
+Reactions and associated rates are set via the
+<A HREF = "reaction.html">reaction</A> command.  The volume of the system is set via
+the <A HREF = "volume.html">volume</A> command.  Initial particle counts are set via
+the <A HREF = "count.html">count</A> command.  This is a non-spatial simulation, so
+particle coordinates are not defined, nor is any geometric
+information.
+</P>
+<P><B>Restrictions:</B> none
+</P>
+<P><B>Related commands:</B> none
+</P>
+<P><B>Default:</B> none
+</P>
+<HR>
+
+<A NAME = "Andrews"></A>
+
+<P><B>(Andrews)</B> Andrews and Bray, Phys Biol, 1, 137-151 (2004).
+</P>
+<A NAME = "Gibson"></A>
+
+<P><B>(Gibson/Bruck)</B> Gibson and Bruck, J Phys Chem A, 104, 1876-1889 (2000).
+</P>
+<A NAME = "Gillespie"></A>
+
+<P><B>(Gillespie)</B> Gillespie, J Phys Chem, 81, 2340 (1977).
+</P>
+<A NAME = "Shampine"></A>
+
+<P><B>(Shampine)</B> Shampine, Watts, and Davenport, SIAM Review, 18, 376-411
+(1976).
+</P>
+
+
+</HTML>

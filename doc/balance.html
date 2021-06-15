@@ -1,0 +1,75 @@
+<HTML>
+<CENTER><A HREF = "http://chemcell.sandia.gov">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>balance command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<P>balance style args file
+</P>
+<LI>style = <I>static</I> or <I>dynamic</I> 
+
+<PRE>  <I>static</I> arg: <I>bin</I> or <I>particle</I>
+    bin = balance by bin count
+    particle = balance by particle count
+  <I>dynamic</I> args: N threshhold
+    N = test whether to balance every N steps
+    threshhold = only balance if imbalance is greater than threshhold 
+</PRE>
+<P>file = filename for storing sub-domain boundaries (optional)
+</P>
+<P><B>Examples:</B>
+</P>
+<PRE>bin static particle
+bin dynamic 1000 1.5 out.file 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>For parallel runs of spatial simulations, determine how bins are
+partitioned across processors.
+</P>
+<P>If this command is not used, the set of 3d bins are partitioned into
+small 3d bricks, one per processor.
+</P>
+<P>If "static bin" is used, bins are partitioned by recursive coordinate
+bisectioning (RCB) one time at the beginning of the 1st run.  Each bin
+is weighted the same, no matter how many particles it contains.
+</P>
+<P>If "static particle" is used, bins are partitioned by recursive
+coordinate bisectioning (RCB) at the beginning of each run.  Each bin
+is weighted by the number of particles it contains.
+</P>
+<P>If "dynamic" is used, bins are re-partitioned every N timesteps, with
+each bin weighting by their current number of particles.
+Re-partitioning only occurs if the imbalance factor exceeds the
+specfied threshhold.  The imbalance factor is the ratio of the maximum
+particles on any processor divided by the average particles across all
+processors, so an imbalance factor or 1.0 is perfect balance.
+</P>
+<P>File is an optional argument.  If specified the load balance
+partitions are written to the file each time the balancer is invoked,
+formatted as a surface of triangles which can be visualized with
+the <A HREF = "http://www.cs.sandia.gov/~sjplimp/pizza.html">Pizza.py toolkit</A>.
+</P>
+
+
+<P><B>Restrictions:</B>
+</P>
+<P>This command can only be used for spatial simulations.
+</P>
+<P><B>Related commands:</B> none
+</P>
+<P><B>Default:</B>
+</P>
+<P>Static partitioning of bins as 3d bricks.
+</P>
+</HTML>

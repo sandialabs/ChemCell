@@ -1,0 +1,177 @@
+"Previous Section"_Section_tools.html - "ChemCell WWW Site"_cws -
+"ChemCell Documentation"_cd - "ChemCell Commands"_cc - "Next
+Section"_Section_errors.html :c
+
+:link(cws,http://chemcell.sandia.gov)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+6. Modifying & extending ChemCell :h3
+
+ChemCell is designed in a modular fashion so as to be easy to modify
+and extend with new functionality.  In this section, changes and
+additions users can make are listed along with some minimal
+instructions.  Realistically, the best way to add a new feature is to
+find a similar feature in ChemCell and look at the corresponding
+source and header files to figure out what it does.  You will need
+some knowledge of C++ to be able to understand the hi-level structure
+of ChemCell and its class organization, but functions (class methods)
+that do actual computations are written in vanilla C-style code and
+typically operate on simple C-style data structures (vectors and
+arrays).
+
+The new features described in this section require you to write a new
+C++ class.  Creating a new class requires 2 files, a source code file
+(*.cpp) and a header file (*.h).  Their contents are briefly discussed
+below.  Enabling ChemCell to invoke the new class is as simple as
+adding two definition lines to the style.h file, in the same syntax as
+the existing ChemCell classes are defined in the style.h file.
+
+The power of C++ and its object-orientation is that usually, all the
+code and variables needed to define the new feature are contained in
+the 2 files you write, and thus shouldn't make the rest of the code
+more complex or cause side-effect bugs.
+
+Here is a concrete example.  Suppose you write 2 files fix_foo.cpp and
+fix_foo.h that define a new class FixFoo that implements a boundary
+condition described in the classic 1997 "paper"_#Foo by Foo, et. al.
+If you wish to invoke that boundary condition in a ChemCell input
+script with a command like
+
+fix 1 foo 0.1 3.5 :pre
+
+you simply need to put your 2 files in the ChemCell src directory, add
+2 lines to the style.h file, and re-make the code.
+
+The first line added to style.h would be
+
+FixStyle(foo,FixFoo) :pre
+
+in the #ifdef FixClass section, where "foo" is the style keyword in
+the pair_style command, and FixFoo is the class name in your C++
+files.
+
+The 2nd line added to style.h would be
+
+#include "fix_foo.h" :pre
+
+in the #ifdef FixInclude section, where fix_foo.h is the name of your
+new include file.
+
+When you re-make ChemCell, your new boundary condition becomes part of
+the executable and can be invoked with a fix command like the example
+above.  Arguments like 0.1 and 3.5 can be defined and processed by
+your new class.
+
+Note that if you are using Makefile.list instead of Makefile to build
+ChemCell, you will need to explicitly add the names of your new .cpp and
+.h file to Makefile.list.
+
+Here is a list of the kinds of new features that can be added in this
+way:
+
+"Region geometry options"_#region
+"Fix options"_#fix which include boundary conditions, \
+   diagnostic output, etc
+"Simulator options"_#simulator
+"New top-level commands"_#command :ul
+
+As illustrated by the fix example, these options are referred to in
+the ChemCell documentation as the "style" of a particular command.
+
+The instructions below for each category will list the header file for
+the parent class that these styles are sub-classes of.  Public
+variables in that file are ones used and set by the sub-classes which
+are also used by the parent class.  Sometimes they are also used by
+the rest of ChemCell.  Virtual functions in the header file which are
+set = 0 are ones you must define in your new class to give it the
+functionality ChemCell expects.  Virtual functions that are not set to 0
+are functions you can optionally define.
+
+:line
+:line
+
+Region geometry options :link(region),h4
+
+Classes that define simple geometric regions are sub-classes of the
+Region class.  See the region.h file for a list of methods these
+classes defines.  Regions are used in ChemCell to define surfaces
+which particles diffuse between or on.
+
+Region_sphere.cpp and region_sphere.h are the simplest example of a
+Region class.  They implement the {sphere} style of the
+"region"_region.html command.
+
+Here is a brief description of the class methods required:
+
+bbox: bounding box
+inside: determine whether a point is in the region
+hex_intersect: check if region surface intersects a hex cell
+line_intersect: check if line segment intersects region surface
+compute_normal: unit normal to region at a point
+move2d: perform a 2d move on region surface
+distance: compute distance from point to region surface :tb(s=:)
+
+:line
+
+Fix options :link(fix),h4
+
+In ChemCell, a "fix" is any operation that is computed during
+timestepping that alters some property of the system.  It could be
+alteration of a rate or a rate equation, implementation of a boundary
+condition, or calculation of some diagnostic property.  See the fix.h
+file for a list of methods these classes define.
+
+Here is a brief description of the class methods.  All of these
+methods are optional.
+
+init: called before timestepping
+initial: called at the beginning of each timestep
+final: called at the end of each timestep
+cleanup: called after timestepping :tb(s=:)
+
+:line
+
+Simulator options :link(simulator),h4
+
+Classes that define the style of simulation being performed via the
+"run_style"_run_style.html command are sub-classes of the Simulator
+class.  These include ODE solvers, a Gillespie solve, and a spatial
+solver for spatial simulations.  See the simulator.h file for a list
+of methods these classed define.
+
+Here is a brief description of the class methods required:
+
+init: setup a simulation
+run: the timestepper :tb(s=:)
+
+:line
+
+New Top-level Commands :link(command),h4
+
+It is possible to add a new command to a ChemCell input script as
+opposed to adding a new style to an existing command (region, fix,
+simulator).  For example the run and write_restart commands are
+top-level ChemCell commands that are listed in the Command section of
+style.h.  When such a command is encountered in the ChemCell input
+script, the topmost level of ChemCell (ChemCell.cpp) simply creates a
+class with the corresponding name, invokes the "command" method of the
+class, and passes it the arguments from the input script.  The command
+method can perform whatever operations it wishes on the ChemCell data
+structures.
+
+Thus to add a new command, you simply need to add a *.cpp and *.h file
+containing a single class:
+
+command: operations performed by the new command :tb(s=:)
+
+Of course, the new class can define other methods and variables that
+it uses internally.
+
+:line
+
+:link(Foo)
+[(Foo)] Foo, Morefoo, and Maxfoo, J of Biological Boundary Conditions,
+75, 345 (1997).

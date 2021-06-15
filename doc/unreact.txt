@@ -1,0 +1,33 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://chemcell.sandia.gov)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+unreact command :h3
+
+[Syntax:]
+
+unreact reaction-ID :pre
+
+reaction-ID = ID of previously defined reaction :ul
+
+[Examples:]
+
+unreact AB
+unreact channel-flux :pre
+
+[Description:]
+
+Delete a previously defined reaction so that it is no longer active.
+
+[Restrictions:] none
+
+[Related commands:] none
+
+"reaction"_reaction.html
+
+[Default:] none

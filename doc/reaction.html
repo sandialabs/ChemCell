@@ -1,0 +1,67 @@
+<HTML>
+<CENTER><A HREF = "http://chemcell.sandia.gov">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>reaction command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>reaction ID K product1 product2 ...
+reaction ID reactant1 K product1 product2 ...
+reaction ID reactant1 reactant2 K product1 product2 ... 
+</PRE>
+<UL><LI>ID = user-assigned name for the reaction
+<LI>reactant1,reactant2 = species-IDs of reactant(s)
+<LI>K = reaction rate (see units below)
+<LI>productN = species-IDs of zero or more products 
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>reaction 1 Ca_cyto IP3R 1.0e7 IP3R Ca_er
+reaction decay receptor-active 0.1 receptor-inactive
+reaction influx 1.0e-8 Ca 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Define a reaction that turns reactants into products at a specified
+reaction rate.  The reaction can have zero, one, or two reactants and
+0 or more products.
+</P>
+<P>The ID of a reaction can contain alphanumeric characters and
+underscores and dashes.
+</P>
+<P>The species-IDs of all reactants and products must have been
+previously defined using the <A HREF = "species.html">species</A> command.
+</P>
+<P>The units of the reaction rate K are molarity/sec for reactions with 0
+reactants, 1/sec for unary reactions, and 1/molarity-sec for binary
+reactions.
+</P>
+<P>The <A HREF = "react_modify.html">react_modify</A> command can be used to specify
+the spatial location of created products as well as other reaction
+attributes.
+</P>
+<P><B>Restrictions:</B>
+</P>
+<P>Reactions with 0 reactants can only be specified for non-spatial
+simulations.
+</P>
+<P>The maximum number of product species for any one reaction is
+hard-wired in src/react.cpp via the MAX_PRODUCT setting.  Currently it
+is set to 5.
+</P>
+<P><B>Related commands:</B>
+</P>
+<P><A HREF = "react_modify.html">react_modify</A>
+</P>
+<P><B>Default:</B> none
+</P>
+</HTML>

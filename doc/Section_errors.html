@@ -1,0 +1,901 @@
+<HTML>
+<CENTER><A HREF = "Section_modify.html">Previous Section</A> - <A HREF = "http://chemcell.sandia.gov">ChemCell WWW Site</A> -
+<A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>7. Errors 
+</H3>
+<P>This section describes the various kinds of errors you can encounter
+when using ChemCell.
+</P>
+7.1 <A HREF = "#7_1">Common problems</A><BR>
+7.2 <A HREF = "#7_2">Reporting bugs</A><BR>
+7.3 <A HREF = "#7_3">Error & warning messages</A> <BR>
+
+<HR>
+
+<A NAME = "7_1"></A><H4>7.1 Common problems 
+</H4>
+<P>If two ChemCell runs do not produce the same answer on different
+machines or different numbers of processors, this is typically not a
+bug.  In theory you should get identical answers on any number of
+processors and on any machine.  In practice, the use of random numbers
+by ChemCell will cause differences in spatial simulations (see the
+<A HREF = "sort.html">sort</A> command for more info) leading to divergent
+trajectories for two simulations.  Even non-spatial simulations can
+incur numerical round-off which can cause slight differences and
+eventual divergence of phase space trajectories within a few 100s or
+few 1000s of timesteps.  However, the statistical properties of the
+two runs (e.g. average energy or temperature) should still be the
+same.
+</P>
+<P>A ChemCell simulation typically has two stages, setup and run.  Most
+ChemCell errors are detected at setup time; others may not occur until
+the middle of a run.
+</P>
+<P>ChemCell tries to flag errors and print informative error messages so
+you can fix the problem.  Of course ChemCell cannot figure out your
+physics mistakes, like choosing too big a timestep, specifying invalid
+reaction rates, or building an invalid geometry!  If you find errors
+that ChemCell doesn't catch that you think it should flag, please send
+us an <A HREF = "mailto:sjplimp@sandia.gov">email</A>.
+</P>
+
+
+<P>If you get an error message about an invalid command in your input
+script, you can determine what command is causing the problem by
+looking in the log.ChemCell file or using the <A HREF = "echo.html">echo command</A>
+to see it on the screen.  For a given command, ChemCell expects certain
+arguments in a specified order.  If you mess this up, ChemCell will
+often flag the error, but it may read a bogus argument and assign a
+value that is valid, but not what you wanted.  E.g. trying to read the
+string "abc" as an integer value and assigning the associated variable
+a value of 0.
+</P>
+<P>Generally, ChemCell will print a message to the screen and exit
+gracefully when it encounters a fatal error.  Sometimes it will print
+a WARNING and continue on; you can decide if the WARNING is important
+or not.  If ChemCell crashes or hangs without spitting out an error
+message first then it could be a bug (see <A HREF = "#9_2">this section</A>) or one
+of the following cases:
+</P>
+<P>ChemCell runs in the available memory a processor allows to be
+allocated.  Most reasonable runs are compute limited, not memory
+limited, so this shouldn't be a bottleneck on most platforms.  Almost
+all large memory allocations in the code are done via C-style malloc's
+which will generate an error message if you run out of memory.
+Smaller chunks of memory are allocated via C++ "new" statements.  If
+you are unlucky you could run out of memory just when one of these
+small requests is made, in which case the code will crash or hang (in
+parallel), since ChemCell doesn't trap on those errors.
+</P>
+<P>Illegal arithmetic can cause ChemCell to run slow or crash.  This is
+typically due to invalid physics and numerics that your simulation is
+computing.  If you see wild thermodynamic values or NaN values in your
+ChemCell output, something is wrong with your simulation.
+</P>
+<P>In parallel, one way ChemCell can hang is due to how different MPI
+implementations handle buffering of messages.  If the code hangs
+without an error message, it may be that you need to specify an MPI
+setting or two (usually via an environment variable) to enable
+buffering or boost the sizes of messages that can be buffered.
+</P>
+<HR>
+
+<A NAME = "7_2"></A><H4>7.2 Reporting bugs 
+</H4>
+<P>If you are confident that you have found a bug in ChemCell, we'd like to
+know about it via <A HREF = "mailto:sjplimp@sandia.gov">email</A>.
+</P>
+<P>First, check the "New features and bug fixes" section of the <A HREF = "http://chemcell.sandia.gov">ChemCell
+WWW site</A> to see if the bug has already been reported or fixed.
+</P>
+<P>If not, the most useful thing you can do for us is to isolate the
+problem.  Run it on the smallest number of atoms and fewest number of
+processors and with the simplest input script that reproduces the bug.
+</P>
+<P>Send an email that describes the problem and any ideas you have as to
+what is causing it or where in the code the problem might be.  We'll
+request your input script and data files if necessary.
+</P>
+<HR>
+
+<H4><A NAME = "7_3"></A>7.3 Error & warning Messages 
+</H4>
+<P>These are two alphabetic lists of the <A HREF = "#error">ERROR</A> and
+<A HREF = "#warn">WARNING</A> messages ChemCell prints out and the reason why.  If the
+explanation here is not sufficient, the documentation for the
+offending command may help.  Grepping the source files for the text of
+the error message and staring at the source code and comments is also
+not a bad idea!  Note that sometimes the same message can be printed
+from multiple places in the code.
+</P>
+<H4><A NAME = "error"></A>Errors: 
+</H4>
+<DL>
+
+<DT><I>%d local particles on proc %d are in ghost cells after compact</I> 
+
+<DD>Debug test to insure particles have moved to correct processors.
+This error should not occur. 
+
+<DT><I>%d particles assigned to procs</I> 
+
+<DD>Particles read from file, but not all assigned correctly to
+processors. 
+
+<DT><I>2d particle move hit a triangle vertex</I> 
+
+<DD>Particle moving on a surface went exactly through a triangle vertex.
+Should not occur. 
+
+<DT><I>Alias %s already exists</I> 
+
+<DD>Cannot reuse a species name. 
+
+<DD><I>All universe/uloop variables must have same # of values</I> 
+
+<DT><I>All variables in next command must be same style</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Another input script is already being processed</I> 
+
+<DD>Cannot attempt to open a 2nd input script, when the original file is
+still being processed. 
+
+<DT><I>Arccos of invalid value in variable formula</I> 
+
+<DD>Argument of arccos() must be between -1 and 1. 
+
+<DT><I>Arcsin of invalid value in variable formula</I> 
+
+<DD>Argument of arcsin() must be between -1 and 1. 
+
+<DT><I>Bin size of 0.0</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Bins are already setup</I> 
+
+<DD>Global and boundary command must be used before bins command.  Bins
+command can only be used once. 
+
+<DT><I>Cannot add triangles to a region surface</I> 
+
+<DD>Triangles can only be added to a trianguated surface. 
+
+<DT><I>Cannot change dimension of existing particles</I> 
+
+<DD>Particles are either 2d or 3d.  Cannot be changed. 
+
+<DT><I>Cannot check for a 2d species</I> 
+
+<DD>Check command for inside/outside a surface can only be done
+for 3d species. 
+
+<DT><I>Cannot do move_test with timestep = 0</I> 
+
+<DD>Timestep must be non-zero to perform a move test. 
+
+<DT><I>Cannot have 0-reactant reactions with spatial simulation</I> 
+
+<DD>This is because the volume within which to create the particles
+is not well-defined. 
+
+<DT><I>Cannot open fix conc/random file %s</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Cannot open fix conc/set file %s</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Cannot open input script %s</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Cannot open logfile %s</I> 
+
+<DD>The ChemCell log file specified in the input script cannot be opened.
+Check that the path and name are correct. 
+
+<DT><I>Cannot open restart file %s</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Cannot perform match with two or more wildcard *</I> 
+
+<DD>A string with a wildcard character "*" can only have one wildcard. 
+
+<DT><I>Cannot redefine variable as a different style</I> 
+
+<DD>An equal-style variable can be re-defined but only if it was
+originally an equal-style variable. 
+
+<DT><I>Cannot set permeability for a 2d species</I> 
+
+<DD>Permeability only makes sense for a 3d species hitting a surface. 
+
+<DT><I>Cannot use balance command with non-spatial simulation</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Cannot use bin command with non-spatial simulation</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Cannot use count command with spatial simulation</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Cannot use diffusion command with non-spatial simulation</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Cannot use dimension command with non-spatial simulation</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Cannot use dump command with non-spatial simulation</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Cannot use fix conc/random with non-spatial simulations</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Cannot use fix conc/set with spatial simulations</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Cannot use fix dna/toggle with spatial simulations</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Cannot use fix rate/saturate with spatial simulations</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Cannot use global command with non-spatial simulation</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Cannot use move_style command with non-spatial simulation</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Cannot use move_test command with non-spatial simulation</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Cannot use particle command with non-spatial simulation</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Cannot use permeable command with non-spatial simulation</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Cannot use probability command with non-spatial simulation</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Cannot use region command with non-spatial simulation</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Cannot use this run style in parallel</I> 
+
+<DD>Only some run styles support parallel execution. 
+
+<DT><I>Cannot use timestep command with gillespie simulation</I> 
+
+<DD>Stochastic simulations set the timestep for each reaction. 
+
+<DT><I>Cannot use triangles command with non-spatial simulation</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Cannot use volume command with spatial simulation</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Cannot write dump files for non-spatial simulation</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Cannot write restart files for non-spatial simulation</I> 
+
+<DD>Restart files only contain particle info, so they are not
+used for non-spatial simulations. 
+
+<DT><I>Code is not compiled with move debug option</I> 
+
+<DD>Debug command cannot be used unless ChemCell was compiled with
+-DDEBUG_MOVE flag or with the "#define DEBUG_MOVE" line uncommented at
+the top of src/move.cpp. 
+
+<DT><I>Could not find reaction ID</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Could not find undump ID</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Could not find unfix ID</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Could not find unreact ID</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Could not open balance file</I> 
+
+<DD>The output file used by the balance command could not be opened. 
+
+<DT><I>Could not open dump file</I> 
+
+<DD>The output file used by the dump command could not be opened. 
+
+<DT><I>Could not open input script</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Could not open log.ccell</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Could not open logfile</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Could not open move_test file</I> 
+
+<DD>The output file used by the move_test command could not be opened. 
+
+<DT><I>Could not open screen file</I> 
+
+<DD>The screen file specified as a command-line argument cannot be
+opened.  Check that the directory you are running in allows for files
+to be created. 
+
+<DT><I>Could not open universe log file</I> 
+
+<DD>For a multi-partition run, the master log file cannot be opened.
+Check that the directory you are running in allows for files to be
+created. 
+
+<DT><I>Could not open universe screen file</I> 
+
+<DD>For a multi-partition run, the master screen file cannot be opened.
+Check that the directory you are running in allows for files to be
+created. 
+
+<DT><I>Cound not find dump_modify ID</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Did not assign all particles correctly</I> 
+
+<DD>Reading of restart file did not assign all particles to processors
+correctly. 
+
+<DT><I>Did not find matching reaction particle</I> 
+
+<DD>After particle communication, matching particle on another processor
+could not be found.  This error should not occur. 
+
+<DT><I>Divide by 0 in variable formula</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Dump species count does not match particle species count</I> 
+
+<DD>Species count has changed since dump file was defined. 
+
+<DT><I>Failed to allocate %d bytes for array %s</I> 
+
+<DD>Your ChemCell simulation has run out of memory.  You need to run a
+smaller simulation or on more processors. 
+
+<DT><I>Failed to reallocate %d bytes for array %s</I> 
+
+<DD>Your ChemCell simulation has run out of memory.  You need to run a
+smaller simulation or on more processors. 
+
+<DT><I>Global bin does not map to local domain</I> 
+
+<DD>Problem with converting global bin ID to a local bin ID.  This
+error should not occur. 
+
+<DT><I>Illegal ... command</I> 
+
+<DD>Self-explanatory.  Check the input script syntax and compare to the
+documentation for the command.  You can use -echo screen as a
+command-line option when running ChemCell to see the offending line. 
+
+<DT><I>Invalid diffusion constant</I> 
+
+<DD>Diffusion coefficient must be >= 0. 
+
+<DT><I>Invalid dimensionality</I> 
+
+<DD>Dimensionality must be 2 or 3. 
+
+<DT><I>Invalid dump frequency</I> 
+
+<DD>Dump frequency must be 1 or greater. 
+
+<DT><I>Invalid fix style</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Invalid region style</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Invalid run style</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Input line too long after variable substitution</I> 
+
+<DD>This is a hard (very large) limit defined in the input.cpp file. 
+
+<DT><I>Input line too long: %s</I> 
+
+<DD>This is a hard (very large) limit defined in the input.cpp file. 
+
+<DT><I>Invalid 2d particle move</I> 
+
+<DD>Problem occured with 2d particle moving on a triangle.  This error
+should not occur. 
+
+<DT><I>Invalid command-line argument</I> 
+
+<DD>One or more command-line arguments is invalid.  Check the syntax of
+the command you are using to launch ChemCell. 
+
+<DT><I>Invalid flag in header of restart file</I> 
+
+<DD>Format of restart file was not recognized.  This error should not
+occur unless restart file is corrupted. 
+
+<DT><I>Invalid math function in variable formula</I> 
+
+<DD>The math or group function is not recognized. 
+
+<DT><I>Invalid reaction ID in fix dna/toggle command</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Invalid reaction ID in fix rate/saturate command</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Invalid region arguments</I> 
+
+<DD>Number of arguments doesn't match region style. 
+
+<DT><I>Invalid settings for reaction %s</I> 
+
+<DD>One or more settings for a reaction are invalid.  This error
+should not occur. 
+
+<DT><I>Invalid species %s in stats command</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Invalid species ID in fix conc/random command</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Invalid species ID in fix conc/set command</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Invalid species ID in fix dna/toggle command</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Invalid species ID in fix rate/saturate command</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Invalid syntax in variable formula</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Invalid variable evaluation in variable formula</I> 
+
+<DD>A variable used in a formula could not be evaluated. 
+
+<DT><I>Invalid variable in next command</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Invalid variable name in variable formula</I> 
+
+<DD>Variable name is not recognized. 
+
+<DT><I>Invalid variable name</I> 
+
+<DD>Variable name used in an input script line is invalid. 
+
+<DT><I>Invalid variable style with next command</I> 
+
+<DD>Variable styles <I>equal</I> and <I>world</I> cannot be used in a next
+command. 
+
+<DT><I>Label wasn't found in input script</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Log of zero/negative in variable formula</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Max 2d move distance > bin size</I> 
+
+<DD>Move distance exceeds bin size.  Must increase bin size or reduce move
+size. 
+
+<DT><I>Max 3d move distance > bin size</I> 
+
+<DD>Move distance exceeds bin size.  Must increase bin size or reduce move
+size. 
+
+<DT><I>Max reaction distance > bin size</I> 
+
+<DD>Binary reaction distance exceeds bin size.  Must increase bin size or
+reduce reaction distance. 
+
+<DT><I>Move to next bin out of range</I> 
+
+<DD>Particle moved into bin not owned by this processor.  This error
+should not occur.  
+
+<DT><I>Must be 2 or more bins in periodic dimensions</I> 
+
+<DD>Binning of global domain has resulted in only one bin in a particular
+dimension. 
+
+<DT><I>Must print stats in count units for spatial simulation</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Must set bins before defining region</I> 
+
+<DD>Use bin command before using region command. 
+
+<DT><I>Must set bins before read restart</I> 
+
+<DD>Use bin command before using read_restart command. 
+
+<DT><I>Must set bins before reading particles</I> 
+
+<DD>Use bin command before using particles command. 
+
+<DT><I>Must set bins before reading surface</I> 
+
+<DD>Use bin command before using triangles command. 
+
+<DT><I>Must set bins before run</I> 
+
+<DD>Use bin command before using run command. 
+
+<DT><I>Must set global domain before bins</I> 
+
+<DD>Use global command before using bin command. 
+
+<DT><I>Must set run_style first</I> 
+
+<DD>Cannot use this command before the run style is set 
+
+<DT><I>Must set simulation domain via global command</I> 
+
+<DD>Global command has not been used before a simulation is being
+initialized. 
+
+<DT><I>Must set volume for run style gillespie</I> 
+
+<DD>This run style requires that the volume command be used. 
+
+<DT><I>Must set volume for run style ode/rk</I> 
+
+<DD>This run style requires that the volume command be used. 
+
+<DT><I>Must set volume for run style ode</I> 
+
+<DD>This run style requires that the volume command be used. 
+
+<DT><I>Must use -in switch with multiple partitions</I> 
+
+<DD>A multi-partition simulation cannot read the input script from stdin.
+The -in command-line option must be used to specify a file. 
+
+<DT><I>No matching move style parameters</I> 
+
+<DD>Style of requested move does not exist. 
+
+<DT><I>No particle species match dump species</I> 
+
+<DD>Requested dump species does not exist. 
+
+<DT><I>Part,spec %d,%d on step %d exceeds MAXITER</I> 
+
+<DD>Movement of particle has exceeded preset iteration count.  This error
+should not occur unless there is a problem with the move. 
+
+<DT><I>Particle %d is outside global domain</I> 
+
+<DD>Particle being read from file is outside the global domain. 
+
+<DT><I>Particle %d's triangle does not exist</I> 
+
+<DD>Could not successfully assign a read-in particle to a triangle on a 2d
+surface.  Probably because it is too far from any triangle. 
+
+<DT><I>Particle is outside global domain</I> 
+
+<DD>Particle being read from restart file is outside the global domain. 
+
+<DT><I>Particles surf-ID does not exist</I> 
+
+<DD>2d particles read from file are assigned to a surface ID that does
+not exist. 
+
+<DT><I>Permeability is set for 2d species</I> 
+
+<DD>Permeability can only be set for 3d species. 
+
+<DT><I>Permeable probabilities do not sum to 1.0</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Permeable stick species is not 2d</I> 
+
+<DD>When a 3d species sticks to a surface, it must become a 2d species. 
+
+<DT><I>Post-migrate: %d particles on proc %d are not in correct bin</I> 
+
+<DD>Particle migration to a new processor has resulted in incorrect bin
+assignments.  This error shoud not occur. 
+
+<DT><I>Power by 0 in variable formula</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Pre-migrate: %d particles on proc %d are not in correct bin</I> 
+
+<DD>Particle migration to a new processor is occuring with incorrect bin
+assignments.  This error shoud not occur. 
+
+<DT><I>Probability %g for reaction %s is too large</I> 
+
+<DD>The computed probability exceeds 1.0.  You need to reduce the reaction
+distance so the probability will shrink. 
+
+<DT><I>Processor partitions are inconsistent</I> 
+
+<DD>The total number of processors in all partitions must match the number
+of processors ChemCell is running on. 
+
+<DT><I>Reaction ID %s already exists</I> 
+
+<DD>A reaction ID can only be used once. 
+
+<DT><I>Reaction cannot have more than MAX_PRODUCT products</I> 
+
+<DD>This is a hard limit in react.cpp. 
+
+<DT><I>Reaction has no numeric rate</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Reaction must have 0,1,2 reactants</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Reading 2d particles for a 3d species</I> 
+
+<DD>3d particles cannot be assigned to a surface. 
+
+<DT><I>Reading 3d particles for a 2d species</I> 
+
+<DD>2d particles must be assigned to a surface. 
+
+<DT><I>Region extends outside global domain</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Region intersects bin next to periodic boundary</I> 
+
+<DD>For a periodic dimension, there must be a bin at each boundary which
+has no region interesecting it. 
+
+<DT><I>Region surf-ID already exists</I> 
+
+<DD>Surface IDs must be unique. 
+
+<DT><I>Replacing a fix, but new style != old style</I> 
+
+<DD>A fix ID can be used a 2nd time, but only if the style matches the
+previous fix.  In this case it is assumed you with to reset a fix's
+parameters.  This error may mean you are mistakenly re-using a fix ID
+when you do not intend to. 
+
+<DT><I>Reuse of dump ID</I> 
+
+<DD>A dump ID cannot be used twice. 
+
+<DT><I>Run style does not support checking</I> 
+
+<DD>Not all run styles can use check command. 
+
+<DT><I>Simulation domain is already set</I> 
+
+<DD>Cannot use global command twice. 
+
+<DT><I>Species already exists and no new aliases are defined</I> 
+
+<DD>Cannot use a species name more than once. 
+
+<DT><I>Sqrt of negative in variable formula</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Sticking species is not 2d</I> 
+
+<DD>A membrane-bound species must be defined as dimension = 2d. 
+
+<DT><I>Substitution for illegal variable</I> 
+
+<DD>Input script line contained a variable that could not be substituted
+for. 
+
+<DT><I>Summed probability %g for species %s & %s is too large</I> 
+
+<DD>Probabilities for all reactions involving this pair of species > 1.0 
+
+<DT><I>Summed probability %g for species %s is too large</I> 
+
+<DD>Probabilities for all reactions involving this species > 1.0 
+
+<DT><I>Triangle intersects bin next to periodic boundary</I> 
+
+<DD>For a periodic dimension, there must be a bin at each boundary which
+has no trinagles interesecting it. 
+
+<DT><I>Two or more wildcard * in count species ID</I> 
+
+<DD>A string with a wildcard character "*" can only have one wildcard. 
+
+<DT><I>Two or more wildcard * in diffusion species ID</I> 
+
+<DD>A string with a wildcard character "*" can only have one wildcard. 
+
+<DT><I>Two or more wildcard * in dimension species ID</I> 
+
+<DD>A string with a wildcard character "*" can only have one wildcard. 
+
+<DT><I>Two or more wildcard * in stats species ID</I> 
+
+<DD>A string with a wildcard character "*" can only have one wildcard. 
+
+<DT><I>Unbalanced quotes in input line</I> 
+
+<DD>No matching end double quote was found following a leading double
+quote. 
+
+<DT><I>Unexpected end of file</I> 
+
+<DD>ChemCell hit the end of the file while attempting to read particles or
+surface info.  Something is wrong with the format of the file. 
+
+<DT><I>Universe/uloop variable count < # of partitions</I> 
+
+<DD>A universe or uloop style variable must specify a number of values >= to the
+number of processor partitions. 
+
+<DT><I>Unknown command: %s</I> 
+
+<DD>The command is not known to ChemCell.  Check the input script. 
+
+<DT><I>Unknown species %s in check command</I> 
+
+<DD>Self-explantory. 
+
+<DT><I>Unknown species %s in permeable command</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Unknown species in count command</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Unknown species in diffusion command</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Unknown species in dimension command</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Unknown species in move_test command</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Unknown species in particles command</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Unknown species in reaction command</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Unknown surface %s in check command</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Unknown surface %s in permeable command</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Variable name must be alphanumeric or underscore characters</I> 
+
+<DD>Self-explanatory. 
+
+<DT><I>Vertex %d in surf %s is outside global domain</I> 
+
+<DD>One or more vertices in triangles being read in are outside global
+domain. 
+
+<DT><I>World variable count doesn't match # of partitions</I> 
+
+<DD>A world-style variable must specify a number of values equal to the
+number of processor partitions. 
+
+
+</DL>
+<H4><A NAME = "warn"></A>Warnings: 
+</H4>
+<DL>
+
+<DT><I>Particle is inside surface</I> 
+
+<DD>Check determined a particle is inside surface when it should be
+outside. 
+
+<DT><I>Particle is outside surface</I> 
+
+<DD>Check determined a particle is outside surface when it should be
+inside. 
+
+<DT><I>Restart file used different # of processors</I> 
+
+<DD>The restart file was written by a simulation run on a different
+number of processors. 
+
+<DT><I>Restart file version does not match ChemCell version</I> 
+
+<DD>The restart file was written with an older version of ChemCell. 
+
+<DT><I>Run styles do not match</I> 
+
+<DD>The restart file was written by a simulation that defined a different
+run style. 
+
+
+</DL>
+</HTML>

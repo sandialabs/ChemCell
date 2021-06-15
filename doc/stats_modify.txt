@@ -1,0 +1,55 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://chemcell.sandia.gov)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+stats_modify command :h3
+
+[Syntax:]
+
+stats_modify keyword args ... :pre
+
+one or more keyword/arg pairs may be appended
+keyword = {units} or {format} :ul
+  {units} arg = {count} or {molarity} or {um} or {nm}
+    count = integer count of particles
+    molarity = concentration in molarity = moles/liter
+    um = concentration in micro-molar
+    nm = concentration in nano-molar
+  {format} arg = C-style format string :pre
+
+[Examples:]
+
+stats_modify units molarity
+stats_modify format %7.2g :pre
+
+[Description:]
+
+Set options for how statistics are printed to the screen and logfile.
+via the "stats"_stats.html command.
+
+The {units} keyword sets the style of units used to print particle
+statistics.  Style {count} is the only allowed option for spatial
+simulations, since the enclosing volume is arbitrary.  For non-spatial
+simulations, output can be in concentration units (molarity, uM, nM)
+since a volume is explicitly specified.
+
+The {format} keyword sets the precision for how each particle species
+is printed.  For unit style {count} this should be an integer setting,
+e.g. %10d.  For other unit styles, it should be a floating point
+setting, e.g. %7.2g.
+
+[Restrictions:] none
+
+[Related commands:]
+
+"stats"_stats.html
+
+[Default:]
+
+The option defaults are units = count, format = %d (for count units)
+or format = %g (for any of the molarity units).

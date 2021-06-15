@@ -1,0 +1,72 @@
+<HTML>
+<CENTER><A HREF = "http://chemcell.sandia.gov">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>region command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>region ID style args 
+</PRE>
+<UL><LI>ID = user-assigned name for the region 
+
+<LI>style = <I>sphere</I> or <I>box</I> or <I>plane</I> or <I>cylinder</I> 
+
+<LI>args = list of arguments for a particular style 
+
+<PRE>  <I>sphere</I> args = x y z r
+    x,y,z = center of sphere (microns)
+    r = radius of sphere (microns)
+  <I>box</I> args = xlo ylo zlo xhi yhi zhi
+    xlo,ylo,zlo = lower left corner of box (microns)
+    xhi,yhi,zhi = upper right corner of box (microns)
+  <I>plane</I> args = x y z nx ny nz
+    x,y,z = point on plane (microns)
+    nx,ny,nz = vector pointing in normal direction to plane
+  <I>cylinder</I> args = dim c1 c2 r
+    dim = <I>x</I> or <I>y</I> or <I>z</I>
+    c1,c2 = coords of axis in other 2 dimensions (yz,xz,xy) (microns)
+    r = radius of cylinder (microns) 
+</PRE>
+
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>region sph sphere 0 0 0 10.0
+region cell box 0 0 0 4 2 2 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Define a simple geometric region as a surface.  Similar to
+<A HREF = "triangles.html">triangulated surfaces</A>, the region surface can be used
+as a boundary for 3d particles or as a surface on which 2d particles
+are located and move.
+</P>
+<P>The ID of a region can contain alphanumeric characters and
+underscores and dashes.
+</P>
+<P>The <I>plane</I> style defines an infinite plane which should be
+axis-aligned if the simulation box is periodic.  The <I>cylinder</I> style
+defines an infinite open-ended axis-aligned cylinder.
+</P>
+<P><B>Restrictions:</B>
+</P>
+<P>The <A HREF = "bin.html">bin command</A> must be used before defining a region.
+</P>
+<P>This command can only be used for spatial simulations.
+</P>
+<P><B>Related commands:</B>
+</P>
+<P><A HREF = "triangles.html">triangles</A>
+</P>
+<P><B>Default:</B> none
+</P>
+</HTML>

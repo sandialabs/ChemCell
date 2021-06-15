@@ -1,0 +1,65 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://chemcell.sandia.gov)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+fix command :h3
+
+[Syntax:]
+
+fix ID style args :pre
+
+ID = user-assigned name for the fix
+style = style name of fix (see possible styles below)
+args = arguments used by a particular style :ul
+
+[Examples:]
+
+fix 1 conc 100 data.file 2 CheA CheAa 2 CheAa CheA :pre
+
+[Description:]
+
+Set a fix that will be applied during a simulation.  In ChemCell, a
+"fix" is any operation that is applied to the system during
+timestepping.  Examples include adjusting reaction rates, applying
+boundary conditions, or computing diagnostics.  There is currently
+only a small number of fixes defined in ChemCell, but others can be
+added - see "this section"_Section_modify.html of the documentation
+for a discussion.
+
+The ID of a fix can contain alphanumeric characters and underscores.
+
+Each fix style has its own documentation page which describes its
+arguments and what it does.  For example, see the "fix
+conc/set"_fix_conc_set.html page for information on style {conc/set}.
+
+Fixes perform their operations at different stages of the timestep.
+If 2 or more fixes both operate at the same stage of the timestep,
+they are invoked in the order they were specified in the input script.
+
+Specifying a new fix with the same ID as an existing fix effectively
+replaces the old fix (and its parameters) with the new fix.  This can
+only be done if the new fix has the same style as the existing fix.
+
+Fixes can be deleted with the "unfix"_unfix.html command.  Note that
+this is the only way to turn off a fix; simply specifying a new fix
+with a similar style will not turn off the first one.
+
+Here is an alphabetic list of fix styles currently defined in ChemCell:
+
+"fix conc/random"_fix_conc_random.html - set the concentration of one or more species
+"fix conc/set"_fix_conc_set.html - set the concentration of one or more species
+"fix dna/toggle"_fix_dna_toggle.html - model DNA toggling on/off to modulate mRNA production
+"fix rate/saturate"_fix_rate_saturate.html - adjust the rate of one or more reactions :ul
+
+[Restrictions:] none
+
+[Related commands:]
+
+"unfix"_unfix.html
+
+[Default:] none

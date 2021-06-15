@@ -1,0 +1,45 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://chemcell.sandia.gov)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+write_restart command :h3
+
+[Syntax:]
+
+write_restart file :pre
+
+file = name of file to write restart information to :ul
+
+[Examples:]
+
+write_restart restart.equil :pre
+
+[Description:]
+
+Write a binary restart file of the current state of the simulation.
+Only particle information is stored in a restart file.
+
+During a long simulation, the "restart"_restart.html command is
+typically used to dump restart files periodically.  The write_restart
+command is useful between simulations or whenever you wish to write
+out a single current restart file.
+
+Restart files can be read by a "read_restart"_read_restart.html
+command to restart a simulation from a particular state.  Because the
+file is binary (to enable exact restarts), it may not be readable on
+another machine.
+
+[Restrictions:]
+
+This command can only be used for spatial simulations.
+
+[Related commands:]
+
+"restart"_restart.html, "read_restart"_read_restart.html
+
+[Default:] none

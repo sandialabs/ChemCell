@@ -1,0 +1,136 @@
+<HTML>
+<CENTER><A HREF = "http://chemcell.sandia.gov">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>bin command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>bin keyword value(s) ... 
+</PRE>
+<LI>zero or more keyword/value pairs may be appended 
+
+<LI>valid keywords: <I>diff</I> or <I>gsize</I> or <I>gcount</I> or <I>react</I> or <I>rsize</I> or <I>rcount</I> 
+
+<PRE>  <I>diff</I> value = D
+    D = diffusion coefficient (cm^2/sec)
+  <I>gsize</I> values = Lx Ly Lz
+    Lx,Ly,Lz = geometry bin sizes in each dimension (microns)
+  <I>gcount</I> values = Nx Ny Ny
+    Nx,Ny,Nz = geometry bin count in each dimension
+  <I>react</I> value = cutoff
+    cutoff = max distance between a pair of reacting particles (microns)
+  <I>rsize</I> values = Lx Ly Lz
+    Lx,Ly,Lz = reaction bin sizes in each dimension (microns)
+  <I>rcount</I> values = Nx Ny Ny
+    Nx,Ny,Nz = reaction bin count per geometry bin in each dimension 
+</PRE>
+<P><B>Examples:</B>
+</P>
+<PRE>bin diff 1.0e-8
+bin react 0.02 diff 1.0e-7
+bin gcount 30 35 40 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Create two sets of bins that overlay the simulation domain.  Geometry
+bins are used for storing the location of geometry elements (regions,
+surface triangles) so that particles can be efficiently moved.
+Reaction bins are used to quickly find pairs of nearby reacting
+particles.  In general, simulations will run faster if these bin sizes
+are as small as possible, while still meeting the constraints
+described below.  However, this is not always the case, so this
+command gives you the freedom to tune the performance of particular
+simulations.
+</P>
+<P>Geometry bins must be large enough that particles with the largest
+diffusion coefficient will not move further than one bin length in a
+single timestep. 
+</P>
+<P>Reaction bins must be large enough that the largest distance at which
+a pair of particles react is not greater than one bin length.
+Additionally, reaction bins can be no larger than geometry bins and in
+each dimension an integer number of reaction bins must fit inside each
+geometry bin.  Thus, in a dimension, reaction bins can be equal in
+size to geometry bins, or 1/2 size, or 1/3 size, etc.
+</P>
+<P>The number and size of geometry bins is determined by using zero or
+more of 3 keywords: <I>diff</I>, <I>gsize</I>, and <I>gcount</I>.  If multiple
+keywords are used, the geometry bin size is set to the maximum of the
+sizes induced by each keyword.  If none of the 3 keywords are used,
+geometry bins are setup as if the <I>diff</I> keyword had been specified
+with a diffusion coefficient of 0.0, which as described below is the
+same as using the largest diffusion coefficient currently defined.
+Note that the global simulation domain must have an integer number of
+geometry bins in each dimension, so the bin size may be set slightly
+larger than the values inferred by these keywords.
+</P>
+<P>The <I>diff</I> keyword sets the geometry bin size to the maximum distance
+a particle will move in one timestep, which depends on the specified
+<A HREF = "diffusion.html">diffusion</A> coefficient, the <A HREF = "timestep.html">timestep</A>
+size, and <A HREF = "move_style.html">move_style</A> settings.  If the specified
+diffusion coefficient is 0.0, then ChemCell will compute the maximum
+distance using the largest diffusion coefficient currently defined.
+Note that if these values are changed after using the bin command
+(e.g. you change the timestep or reset some particle's diffusion
+coefficient), you may end up with an invalid geometry bin size.  Also
+note that you can run ChemCell once (e.g. for zero timesteps) to see
+the maximum diffusive distance printed out.
+</P>
+<P>The <I>gsize</I> keyword sets the geometry bin size in each dimension
+to the specified values.
+</P>
+<P>The <I>gcount</I> keyword sets the number of geometry bins in each
+dimension to the specified values.
+</P>
+<P>The number and size of reaction bins is determined by using zero or
+more of 3 keywords: <I>react</I>, <I>rsize</I>, and <I>rcount</I>.  If multiple
+keywords are used, the reaction bin size is set to the maximum of the
+sizes induced by each keyword.  If none of the 3 keywords are used,
+reactions bins are set to the same size as the geometry bins.
+</P>
+<P>The <I>react</I> keyword sets the reaction bin size in all 3 dimensions to
+the specified size, which is assumed to be the largest distance at
+which a binary reaction between 2 particles will occur.  If the
+specified cutoff is 0.0, then the maximum reaction distance is
+computed, which depends on <A HREF = "reaction.html">reaction rates</A>, the
+<A HREF = "probability">probability</A> settings, the <A HREF = "timestep.html">timestep</A>, and
+particle <A HREF = "diffusion.html">diffusion</A> coefficients.  Note that if these
+values are changed after using the bin command (e.g. you change the
+timestep or reset a reaction rate), you may end up with an invalid
+reaction bin size.  Also note that you can run ChemCell once (e.g. for
+zero timesteps) to see the maximum reaction distance printed out.
+</P>
+<P>The <I>rsize</I> keyword sets the reaction bin size in each dimension
+to the specified values.
+</P>
+<P>The <I>rcount</I> keyword sets the number of reaction bins per geometry bin
+to the specified values in each dimension.  E.g. a setting of rcount 1
+1 1 will make reaction bins equal in size to the geometry bins.  A
+setting of rcount 4 4 4 will put 64 reaction bins inside each geometry
+bin.
+</P>
+<P><B>Restrictions:</B> 
+</P>
+<P>This command can only be used for spatial simulations.
+</P>
+<P>The <A HREF = "global.html">global</A> command must be used before this command, to
+specify the size of the simulation box.
+</P>
+<P><B>Related commands:</B> none
+</P>
+<P><B>Default:</B>
+</P>
+<P>Using the bin command with no arguments, sets geometry bins to the
+size inferred by the maximum diffusivity of any particle, and sets
+reaction bins to the same size as geometry bins.
+</P>
+</HTML>

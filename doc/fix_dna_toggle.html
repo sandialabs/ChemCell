@@ -1,0 +1,111 @@
+<HTML>
+<CENTER><A HREF = "http://chemcell.sandia.gov">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>fix dna/toggle command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>fix ID dna/toggle N speciesDNA-ID Kon Koff reactRNA-ID Ktranscription Kconstitutive reactDNA-ID bind-ID Vratio 
+</PRE>
+<UL><LI>ID is documented in <A HREF = "fix.html">fix</A> command
+<LI>dna/toggle = style name of this fix command
+<LI>N = apply fix every this many timesteps
+<LI>speciesDNA-ID = ID of DNA species
+<LI>Kon = rate at which DNA is turned on (per second per molarity)
+<LI>Koff = rate at which DNA is turned off (per second)
+<LI>reactRNA-ID = ID of reaction which produces mRNA transcripts
+<LI>Ktranscription = transcription rate at which mRNA is produced (per second per molarity)
+<LI>Kconstitutive = constitutive rate at which mRNA is produced (molarity per second)
+<LI>reactDNA-ID = ID of reaction which represents DNA on/off state
+<LI>bind-ID = ID of transcription species which binds to DNA
+<LI>Vratio = volume ratio to use as scale factor on bind-ID concentration 
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>fix mine dna/toggle 1 DNA 2.0e5 0.02 RNA-reac 100.0 0.1 DNA-reac NFkB-nuc 10.0 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Adjust two reaction rates based on a DNA species which toggles on and
+off.  This is a method for modeling the state of a DNA site as
+occupied (on) by a transcription factor or unoccupied (off).  When
+occupied, mRNA transcripts are produced at a transcription rate; when
+unoccupied they are produced at a 2nd constitutive rate.
+</P>
+<P>Here is how the fix operates.  Assume a speciesDNA-ID is defined.
+Also assume 2 reactions are defined.  The first is reactRNA-ID which
+produces mRNA transcripts.  The second is reactDNA-ID which toggles
+the DNA on and off.  They should be specified in the following form
+where NULL means there are no reactants.  As discussed below, their
+specified rates are ignored since the rates are set by this fix, so
+they can be specified as 0.0.
+</P>
+<PRE>NULL -> mRNA
+NULL -> speciesDNA-ID 
+</PRE>
+<PRE>reaction reactRNA-ID 0.0 mRNA-ID
+reaction reactDNA-ID 0.0 speciesDNA-ID 
+</PRE>
+<P>Every N timesteps, two operations are performed.  First the
+concentration or count of speciesDNA-ID is reset.  For continuum ODE
+simulations it will be a continuous value between 0 and 1.  For
+stochastic models, it will be a discrete count, either 0 or 1.  A
+value of 0 represents an "off" or unbound state for the DNA, while 1
+represents an "on" or bound state.  As discussed below, in stochastic
+models, the 2nd reaction will potentially set the DNA count to 1 or 2;
+the latter value will be changed to 0 by the fix.  I.e. the DNA
+toggles on or off.
+</P>
+<P>Second, the rates of the 2 reactions are reset in the following way.
+The rate of the 1st reaction is set to be
+</P>
+<PRE>Knew = Ktranscription * Koff/Kon * DNA + Kconstitutive * (1 - DNA) 
+</PRE>
+<P>Ktranscription and Kconstitutive are the parameters specified in the
+fix command, as are Koff and Kon.  Ktranscription is the rate at which
+mRNA is produced when the transcription factor is bound to the DNA
+site.  Kconstitutive is the native rate mRNA is produced when the DNA
+site is unbound.  Koff/Kon has units of molarity and represents an
+average concentration.  DNA is a unitless number between 0 and 1.  The
+units of both terms and thus the overall rate Knew is molarity/sec
+which is the rate at which the mRNA species in the 1st reaction will
+be produced.
+</P>
+<P>The rate of the 2nd reaction is set to be
+</P>
+<PRE>Knew = sign * Koff * DNA + Kon * [bind-ID] * (1 - DNA) 
+</PRE>
+<P>Koff, Kon, and DNA are as above.  [bind-ID] is the concentration of
+the transcription factor species which binds to the DNA site.  This
+concentration will be boosted by Vratio if you need to account for the
+fact that the transcription factor species is in a smaller-volume
+compartment, e.g. the nucleus.  This is only relevant for stochastic
+models since the concentration should already be scaled appopriately
+in an ODE model.  The units of Knew are thus per second which is the
+rate at which the DNA toggles its state.
+</P>
+<P>Sign is set to a value of -1 for continuum ODE models.  This is what
+keeps the value of DNA between 0 and 1.  Sign is set to +1 for
+stochastic models.  If this reaction is performed when DNA is on
+(value of 1), then the DNA count will increase from 1 to 2, and be
+reset to 0 on the subsequent timestep as described above.  Thus the
+DNA will effectively be turned off.
+</P>
+<P><B>Restrictions:</B>
+</P>
+<P>This fix can only be used with non-spatial simulations.
+</P>
+<P><B>Related commands:</B> none
+</P>
+<P><B>Default:</B> none
+</P>
+</HTML>

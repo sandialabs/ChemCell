@@ -1,0 +1,44 @@
+"Previous Section"_Section_example.html - "ChemCell WWW Site"_cws -
+"ChemCell Documentation"_cd - "ChemCell Commands"_cc - "Next
+Section"_Section_modify.html :c
+
+:link(cws,http://chemcell.sandia.gov)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+5. Additional tools :h3
+
+ChemCell is designed to be a computational kernel for performing
+reaction/diffusion computations.  Additional pre- and post-processing
+steps are typically needed to setup and analyze a simulation.
+
+Our group has written and released a separate toolkit called
+"Pizza.py"_pizza which provides tools for doing setup, analysis,
+plotting, and visualization for ChemCell simulations.  Pizza.py is
+written in "Python"_python and is available for download from "the
+Pizza.py WWW site"_pizza.  Images and movies created by Pizza.py are
+displayed on the "ChemCell WWW site"_cws.
+
+:link(pizza,http://www.cs.sandia.gov/~sjplimp/pizza.html)
+:link(python,http://www.python.org)
+
+Pizza.py has a "cdata" tool with many sub-commands for reading and
+creating regions, surfaces, particles.  The resulting geoemtries can
+be visualized with other Pizza.py tools: "gl", "vcr", "raster", "svg",
+etc.
+
+Similarly, Pizza.py has a "dump" tool which reads in ChemCell dump
+files and allows particles to be selected, visualized, and animated,
+along with the ChemCell geoemtry (regions, triangulated surfaces) via
+the same Pizza.py tools.
+
+Pizza.py also has a "olog" tool which can read in ChemCell log files
+and allows the species concentration statistics to be plotted either
+via GnuPlot ("gnu" tool) or MatLab ("matlab" tool).
+
+If you write additional tools (either stand-alone or as part of
+Pizza.py) that you think are generally useful for setting up or
+analyzing ChemCell simulations, send us an email; we can include them
+as part of the ChemCell or Pizza.py packages.

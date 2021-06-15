@@ -1,0 +1,69 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://chemcell.sandia.gov)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+triangles command :h3
+
+[Syntax:]
+
+triangles surf-ID M N :pre
+
+surf-ID = user-assigned name for triangulated surface
+M = number of vertices that follow
+N = number of triangles and edge connections that follow :ul
+
+[Examples:]
+
+triangles cell 150 100
+triangles ER 27000 16000 :pre
+
+[Description:]
+
+Define a surface with M vertices and N triangles from successive lines
+of the input script.  If surf-ID already exists, the new triangles are
+added to it.  If it doesn't exist, a new surface is created with
+default permeability settings for all species.
+
+The ID of a surface can contain alphanumeric characters and
+underscores and dashes.
+
+Following the triangles command, the next line in the input script is
+skipped (leave it blank).  3 sections of information follow, separated
+by blank lines.
+
+The first section has M vertex lines, each with an index (1-M) and 3
+coordinates (x,y,z in microns).
+
+The second section has N lines, each with an index (1-N) and 3 integer
+vertex indices (1-M) which define the corner points of each triangle.
+The 3 indices should be ordered so that applying the right-hand rule
+yields a normal vector pointing in the "outward" direction from the
+triangle face.
+
+The third section has an index (1-N) followed by 6 integers: i ei j ej
+k ek.  I,J,K are the 3 triangles this triangle is connected to across
+its 3 edges where its 1st edge is between vertices 1-2, its 2nd edge
+is between 2-3, and its 3rd edge is between 3-1.  I,J,K are integer
+values between 1-N.  Ei,Ej,Ek is the edge (1-3) on the other triangle
+that this edge is connected to.  If a triangle has no connection
+across a particular edge, than the 2 associated values (e.g. I,Ei)
+should be 0.
+
+Note that a long list of triangles can be put in a separate file and
+read in via the "include"_include.html command.
+
+[Restrictions:]
+
+The "bin command"_bin.html must be used before defining a triangulated
+surface.
+
+[Related commands:]
+
+"region"_region.html
+
+[Default:] none

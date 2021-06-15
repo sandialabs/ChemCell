@@ -1,0 +1,42 @@
+<HTML>
+<CENTER><A HREF = "http://chemcell.sandia.gov">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>volume command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>volume V 
+</PRE>
+<UL><LI>V = volume of simulation domain (liters) 
+</UL>
+<P><B>Examples:</B>
+</P>
+<P>volume 8.0e-15
+</P>
+<P><B>Description:</B>
+</P>
+<P>Set the volume of the system for a non-spatial simulation.  This will
+be the well-mixed volume within which reactions take place, e.g. for
+a stochastic Gillespie or continuum ODE simulation.
+</P>
+<P><B>Restrictions:</B>
+</P>
+<P>This command can only be used for non-spatial simulations.  See the
+<A HREF = "global.html">global</A> command for spatial simulations.
+</P>
+<P><B>Related commands:</B>
+</P>
+<P><A HREF = "global.html">global</A>
+</P>
+<P><B>Default:</B> none
+</P>
+</HTML>

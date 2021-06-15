@@ -1,0 +1,61 @@
+<HTML>
+<CENTER><A HREF = "http://chemcell.sandia.gov">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>stats command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>stats N species1-ID species2-ID ...
+stats delta species1-ID species2-ID ... 
+</PRE>
+<UL><LI>N = print stats every N timesteps (integer value)
+<LI>delta = print stats every delta seconds (floating point value)
+<LI>speciesN-ID = optional list of species IDs 
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>stats 100
+stats 0.01 Ca_cyto Ca_er 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Print particle statistics to the screen (and log file) every so often
+as a simulation runs.  Setting N = 0 will only print statistics at the
+beginning and end of the run.  The units for the particle stats are
+specified by the <A HREF = "stats_modify.html">stats_modify</A> command.  The
+default is particle count.
+</P>
+<P>The frequency of output can be specied in timesteps or elapsed
+simulation time.  Using an integer versus a floating-point value (with
+a decimal point) determines how the argument is interpreted.
+</P>
+<P>For stochastic non-spatial (Gillepsie) simulations, N refers to a
+number of reactions, since there is one timestep/reaction.
+</P>
+<P>The list of species is optional.  If not specified, counts for all
+species will be printed.
+</P>
+<P>Any species-ID can contain a single wildcard character * which will
+match species and alias names in the usual way.  E.g. a species-ID can
+be *, ab*, *ab, ab*cd.
+</P>
+<P><B>Restrictions:</B> none
+</P>
+<P><B>Related commands:</B>
+</P>
+<P><A HREF = "dump.html">dump</A>, <A HREF = "stats_modify.html">stats_modify</A>
+</P>
+<P><B>Default:</B>
+</P>
+<P>N = 0
+</P>
+</HTML>

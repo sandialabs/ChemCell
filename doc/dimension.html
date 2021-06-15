@@ -1,0 +1,51 @@
+<HTML>
+<CENTER><A HREF = "http://chemcell.sandia.gov">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>dimension command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>dimension species-ID value 
+</PRE>
+<UL><LI>species-ID = particle species
+<LI>value = dimensionality of species = 2 or 3 
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>dimension Ca 3
+dimension receptor* 2 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Set the dimensionality for one or more particle species.  A value of 3
+means the particles diffuse volumetrically.  A value of 2 means the
+particles diffuse on a surface; see the <A HREF = "region.html">region</A> or
+<A HREF = "triangles.html">triangles</A> command.
+</P>
+<P>The species-ID can contain a single wildcard character * which will
+match species and alias names in the usual way.  E.g. species-ID can
+be *, ab*, *ab, ab*cd.
+</P>
+<P><B>Restrictions:</B>
+</P>
+<P>The dimensionality of a species cannot be changed if particles of that
+species already exist.
+</P>
+<P>This command can only be used for spatial simulations.
+</P>
+<P><B>Related commands:</B> none
+</P>
+<P><B>Default:</B>
+</P>
+<P>Dimension = 3 for all species.
+</P>
+</HTML>

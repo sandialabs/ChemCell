@@ -1,0 +1,46 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://chemcell.sandia.gov)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+debug command :h3
+
+[Syntax:]
+
+debug proc-ID timestep index :pre
+
+proc-ID = processor (0 to P-1) to perform debug testing on
+timestep = timestep to do testing on 
+index = particle index (0 to N-1) to perform testing on :ul
+
+[Examples:]
+
+debug 0 145 7555 :pre
+
+[Description:]
+
+Track the diffusive motion of a single particle on a single processor
+during a single timestep.  This enables a print out of its
+interactions with regions and triangles for debugging purposes.
+
+To turn off debugging for a subsequent run, set proc-ID to -1.
+
+[Restrictions:]
+
+In order to use this command, ChemCell must be compiled with this line
+uncommented at the top of src/move.cpp:
+
+#define DEBUG_MOVE :pre
+
+or with a -DDEBUG_MOVE switch defined in your Makefile.foo.
+
+[Related commands:]
+
+"check"_check.html
+
+[Default:] none
+

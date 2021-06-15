@@ -1,0 +1,54 @@
+<HTML>
+<CENTER><A HREF = "http://chemcell.sandia.gov">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>dump_modify command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>dump_modify dump-ID keyword args ... 
+</PRE>
+<UL><LI>dump-ID = ID of dump to modify 
+
+<LI>one or more keyword/arg pairs may be appended 
+
+<LI>keyword = <I>orient</I> 
+
+<PRE>  <I>orient</I> arg = <I>yes</I> or <I>no</I> 
+</PRE>
+
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>dump_modify 1 orient yes 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Modify the parameters of a previously defined dump command.
+</P>
+<P>The <I>orient</I> keyword determines whether 3 orientation values are added
+to each particle in the dump file.  These could be used for
+visualization purposes.  For 2d species, the 3 values will be the
+normal vector components for the current location of the particle on
+its 2d surface (region or triangulated surface).  For 3d species, the
+3 values will be 0.0.
+</P>
+<P><B>Restrictions:</B> none
+</P>
+<P><B>Related commands:</B>
+</P>
+<P><A HREF = "dump.html">dump</A>
+</P>
+<P><B>Default:</B>
+</P>
+<P>The option defaults are orient = no.
+</P>
+</HTML>

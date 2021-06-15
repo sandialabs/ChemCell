@@ -1,0 +1,896 @@
+"Previous Section"_Section_modify.html - "ChemCell WWW Site"_cws -
+"ChemCell Documentation"_cd - "ChemCell Commands"_cc :c
+
+:link(cws,http://chemcell.sandia.gov)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+7. Errors :h3
+
+This section describes the various kinds of errors you can encounter
+when using ChemCell.
+
+7.1 "Common problems"_#7_1
+7.2 "Reporting bugs"_#7_2
+7.3 "Error & warning messages"_#7_3 :all(b)
+
+:line
+
+7.1 Common problems :link(7_1),h4
+
+If two ChemCell runs do not produce the same answer on different
+machines or different numbers of processors, this is typically not a
+bug.  In theory you should get identical answers on any number of
+processors and on any machine.  In practice, the use of random numbers
+by ChemCell will cause differences in spatial simulations (see the
+"sort"_sort.html command for more info) leading to divergent
+trajectories for two simulations.  Even non-spatial simulations can
+incur numerical round-off which can cause slight differences and
+eventual divergence of phase space trajectories within a few 100s or
+few 1000s of timesteps.  However, the statistical properties of the
+two runs (e.g. average energy or temperature) should still be the
+same.
+
+A ChemCell simulation typically has two stages, setup and run.  Most
+ChemCell errors are detected at setup time; others may not occur until
+the middle of a run.
+
+ChemCell tries to flag errors and print informative error messages so
+you can fix the problem.  Of course ChemCell cannot figure out your
+physics mistakes, like choosing too big a timestep, specifying invalid
+reaction rates, or building an invalid geometry!  If you find errors
+that ChemCell doesn't catch that you think it should flag, please send
+us an "email"_mail.
+
+:link(mail,mailto:sjplimp@sandia.gov)
+
+If you get an error message about an invalid command in your input
+script, you can determine what command is causing the problem by
+looking in the log.ChemCell file or using the "echo command"_echo.html
+to see it on the screen.  For a given command, ChemCell expects certain
+arguments in a specified order.  If you mess this up, ChemCell will
+often flag the error, but it may read a bogus argument and assign a
+value that is valid, but not what you wanted.  E.g. trying to read the
+string "abc" as an integer value and assigning the associated variable
+a value of 0.
+
+Generally, ChemCell will print a message to the screen and exit
+gracefully when it encounters a fatal error.  Sometimes it will print
+a WARNING and continue on; you can decide if the WARNING is important
+or not.  If ChemCell crashes or hangs without spitting out an error
+message first then it could be a bug (see "this section"_#9_2) or one
+of the following cases:
+
+ChemCell runs in the available memory a processor allows to be
+allocated.  Most reasonable runs are compute limited, not memory
+limited, so this shouldn't be a bottleneck on most platforms.  Almost
+all large memory allocations in the code are done via C-style malloc's
+which will generate an error message if you run out of memory.
+Smaller chunks of memory are allocated via C++ "new" statements.  If
+you are unlucky you could run out of memory just when one of these
+small requests is made, in which case the code will crash or hang (in
+parallel), since ChemCell doesn't trap on those errors.
+
+Illegal arithmetic can cause ChemCell to run slow or crash.  This is
+typically due to invalid physics and numerics that your simulation is
+computing.  If you see wild thermodynamic values or NaN values in your
+ChemCell output, something is wrong with your simulation.
+
+In parallel, one way ChemCell can hang is due to how different MPI
+implementations handle buffering of messages.  If the code hangs
+without an error message, it may be that you need to specify an MPI
+setting or two (usually via an environment variable) to enable
+buffering or boost the sizes of messages that can be buffered.
+
+:line
+
+7.2 Reporting bugs :link(7_2),h4
+
+If you are confident that you have found a bug in ChemCell, we'd like to
+know about it via "email"_mail.
+
+First, check the "New features and bug fixes" section of the "ChemCell
+WWW site"_cws to see if the bug has already been reported or fixed.
+
+If not, the most useful thing you can do for us is to isolate the
+problem.  Run it on the smallest number of atoms and fewest number of
+processors and with the simplest input script that reproduces the bug.
+
+Send an email that describes the problem and any ideas you have as to
+what is causing it or where in the code the problem might be.  We'll
+request your input script and data files if necessary.
+
+:line
+
+7.3 Error & warning Messages :h4,link(7_3)
+
+These are two alphabetic lists of the "ERROR"_#error and
+"WARNING"_#warn messages ChemCell prints out and the reason why.  If the
+explanation here is not sufficient, the documentation for the
+offending command may help.  Grepping the source files for the text of
+the error message and staring at the source code and comments is also
+not a bad idea!  Note that sometimes the same message can be printed
+from multiple places in the code.
+
+Errors: :h4,link(error)
+
+:dlb
+
+{%d local particles on proc %d are in ghost cells after compact} :dt
+
+Debug test to insure particles have moved to correct processors.
+This error should not occur. :dd
+
+{%d particles assigned to procs} :dt
+
+Particles read from file, but not all assigned correctly to
+processors. :dd
+
+{2d particle move hit a triangle vertex} :dt
+
+Particle moving on a surface went exactly through a triangle vertex.
+Should not occur. :dd
+
+{Alias %s already exists} :dt
+
+Cannot reuse a species name. :dd
+
+{All universe/uloop variables must have same # of values} :dd
+
+{All variables in next command must be same style} :dt
+
+Self-explanatory. :dd
+
+{Another input script is already being processed} :dt
+
+Cannot attempt to open a 2nd input script, when the original file is
+still being processed. :dd
+
+{Arccos of invalid value in variable formula} :dt
+
+Argument of arccos() must be between -1 and 1. :dd
+
+{Arcsin of invalid value in variable formula} :dt
+
+Argument of arcsin() must be between -1 and 1. :dd
+
+{Bin size of 0.0} :dt
+
+Self-explanatory. :dd
+
+{Bins are already setup} :dt
+
+Global and boundary command must be used before bins command.  Bins
+command can only be used once. :dd
+
+{Cannot add triangles to a region surface} :dt
+
+Triangles can only be added to a trianguated surface. :dd
+
+{Cannot change dimension of existing particles} :dt
+
+Particles are either 2d or 3d.  Cannot be changed. :dd
+
+{Cannot check for a 2d species} :dt
+
+Check command for inside/outside a surface can only be done
+for 3d species. :dd
+
+{Cannot do move_test with timestep = 0} :dt
+
+Timestep must be non-zero to perform a move test. :dd
+
+{Cannot have 0-reactant reactions with spatial simulation} :dt
+
+This is because the volume within which to create the particles
+is not well-defined. :dd
+
+{Cannot open fix conc/random file %s} :dt
+
+Self-explanatory. :dd
+
+{Cannot open fix conc/set file %s} :dt
+
+Self-explanatory. :dd
+
+{Cannot open input script %s} :dt
+
+Self-explanatory. :dd
+
+{Cannot open logfile %s} :dt
+
+The ChemCell log file specified in the input script cannot be opened.
+Check that the path and name are correct. :dd
+
+{Cannot open restart file %s} :dt
+
+Self-explanatory. :dd
+
+{Cannot perform match with two or more wildcard *} :dt
+
+A string with a wildcard character "*" can only have one wildcard. :dd
+
+{Cannot redefine variable as a different style} :dt
+
+An equal-style variable can be re-defined but only if it was
+originally an equal-style variable. :dd
+
+{Cannot set permeability for a 2d species} :dt
+
+Permeability only makes sense for a 3d species hitting a surface. :dd
+
+{Cannot use balance command with non-spatial simulation} :dt
+
+Self-explanatory. :dd
+
+{Cannot use bin command with non-spatial simulation} :dt
+
+Self-explanatory. :dd
+
+{Cannot use count command with spatial simulation} :dt
+
+Self-explantory. :dd
+
+{Cannot use diffusion command with non-spatial simulation} :dt
+
+Self-explantory. :dd
+
+{Cannot use dimension command with non-spatial simulation} :dt
+
+Self-explantory. :dd
+
+{Cannot use dump command with non-spatial simulation} :dt
+
+Self-explantory. :dd
+
+{Cannot use fix conc/random with non-spatial simulations} :dt
+
+Self-explantory. :dd
+
+{Cannot use fix conc/set with spatial simulations} :dt
+
+Self-explantory. :dd
+
+{Cannot use fix dna/toggle with spatial simulations} :dt
+
+Self-explantory. :dd
+
+{Cannot use fix rate/saturate with spatial simulations} :dt
+
+Self-explantory. :dd
+
+{Cannot use global command with non-spatial simulation} :dt
+
+Self-explantory. :dd
+
+{Cannot use move_style command with non-spatial simulation} :dt
+
+Self-explantory. :dd
+
+{Cannot use move_test command with non-spatial simulation} :dt
+
+Self-explantory. :dd
+
+{Cannot use particle command with non-spatial simulation} :dt
+
+Self-explantory. :dd
+
+{Cannot use permeable command with non-spatial simulation} :dt
+
+Self-explantory. :dd
+
+{Cannot use probability command with non-spatial simulation} :dt
+
+Self-explantory. :dd
+
+{Cannot use region command with non-spatial simulation} :dt
+
+Self-explantory. :dd
+
+{Cannot use this run style in parallel} :dt
+
+Only some run styles support parallel execution. :dd
+
+{Cannot use timestep command with gillespie simulation} :dt
+
+Stochastic simulations set the timestep for each reaction. :dd
+
+{Cannot use triangles command with non-spatial simulation} :dt
+
+Self-explantory. :dd
+
+{Cannot use volume command with spatial simulation} :dt
+
+Self-explantory. :dd
+
+{Cannot write dump files for non-spatial simulation} :dt
+
+Self-explantory. :dd
+
+{Cannot write restart files for non-spatial simulation} :dt
+
+Restart files only contain particle info, so they are not
+used for non-spatial simulations. :dd
+
+{Code is not compiled with move debug option} :dt
+
+Debug command cannot be used unless ChemCell was compiled with
+-DDEBUG_MOVE flag or with the "#define DEBUG_MOVE" line uncommented at
+the top of src/move.cpp. :dd
+
+{Could not find reaction ID} :dt
+
+Self-explantory. :dd
+
+{Could not find undump ID} :dt
+
+Self-explantory. :dd
+
+{Could not find unfix ID} :dt
+
+Self-explantory. :dd
+
+{Could not find unreact ID} :dt
+
+Self-explantory. :dd
+
+{Could not open balance file} :dt
+
+The output file used by the balance command could not be opened. :dd
+
+{Could not open dump file} :dt
+
+The output file used by the dump command could not be opened. :dd
+
+{Could not open input script} :dt
+
+Self-explantory. :dd
+
+{Could not open log.ccell} :dt
+
+Self-explantory. :dd
+
+{Could not open logfile} :dt
+
+Self-explantory. :dd
+
+{Could not open move_test file} :dt
+
+The output file used by the move_test command could not be opened. :dd
+
+{Could not open screen file} :dt
+
+The screen file specified as a command-line argument cannot be
+opened.  Check that the directory you are running in allows for files
+to be created. :dd
+
+{Could not open universe log file} :dt
+
+For a multi-partition run, the master log file cannot be opened.
+Check that the directory you are running in allows for files to be
+created. :dd
+
+{Could not open universe screen file} :dt
+
+For a multi-partition run, the master screen file cannot be opened.
+Check that the directory you are running in allows for files to be
+created. :dd
+
+{Cound not find dump_modify ID} :dt
+
+Self-explanatory. :dd
+
+{Did not assign all particles correctly} :dt
+
+Reading of restart file did not assign all particles to processors
+correctly. :dd
+
+{Did not find matching reaction particle} :dt
+
+After particle communication, matching particle on another processor
+could not be found.  This error should not occur. :dd
+
+{Divide by 0 in variable formula} :dt
+
+Self-explanatory. :dd
+
+{Dump species count does not match particle species count} :dt
+
+Species count has changed since dump file was defined. :dd
+
+{Failed to allocate %d bytes for array %s} :dt
+
+Your ChemCell simulation has run out of memory.  You need to run a
+smaller simulation or on more processors. :dd
+
+{Failed to reallocate %d bytes for array %s} :dt
+
+Your ChemCell simulation has run out of memory.  You need to run a
+smaller simulation or on more processors. :dd
+
+{Global bin does not map to local domain} :dt
+
+Problem with converting global bin ID to a local bin ID.  This
+error should not occur. :dd
+
+{Illegal ... command} :dt
+
+Self-explanatory.  Check the input script syntax and compare to the
+documentation for the command.  You can use -echo screen as a
+command-line option when running ChemCell to see the offending line. :dd
+
+{Invalid diffusion constant} :dt
+
+Diffusion coefficient must be >= 0. :dd
+
+{Invalid dimensionality} :dt
+
+Dimensionality must be 2 or 3. :dd
+
+{Invalid dump frequency} :dt
+
+Dump frequency must be 1 or greater. :dd
+
+{Invalid fix style} :dt
+
+Self-explanatory. :dd
+
+{Invalid region style} :dt
+
+Self-explanatory. :dd
+
+{Invalid run style} :dt
+
+Self-explanatory. :dd
+
+{Input line too long after variable substitution} :dt
+
+This is a hard (very large) limit defined in the input.cpp file. :dd
+
+{Input line too long: %s} :dt
+
+This is a hard (very large) limit defined in the input.cpp file. :dd
+
+{Invalid 2d particle move} :dt
+
+Problem occured with 2d particle moving on a triangle.  This error
+should not occur. :dd
+
+{Invalid command-line argument} :dt
+
+One or more command-line arguments is invalid.  Check the syntax of
+the command you are using to launch ChemCell. :dd
+
+{Invalid flag in header of restart file} :dt
+
+Format of restart file was not recognized.  This error should not
+occur unless restart file is corrupted. :dd
+
+{Invalid math function in variable formula} :dt
+
+The math or group function is not recognized. :dd
+
+{Invalid reaction ID in fix dna/toggle command} :dt
+
+Self-explanatory. :dd
+
+{Invalid reaction ID in fix rate/saturate command} :dt
+
+Self-explanatory. :dd
+
+{Invalid region arguments} :dt
+
+Number of arguments doesn't match region style. :dd
+
+{Invalid settings for reaction %s} :dt
+
+One or more settings for a reaction are invalid.  This error
+should not occur. :dd
+
+{Invalid species %s in stats command} :dt
+
+Self-explanatory. :dd
+
+{Invalid species ID in fix conc/random command} :dt
+
+Self-explanatory. :dd
+
+{Invalid species ID in fix conc/set command} :dt
+
+Self-explanatory. :dd
+
+{Invalid species ID in fix dna/toggle command} :dt
+
+Self-explanatory. :dd
+
+{Invalid species ID in fix rate/saturate command} :dt
+
+Self-explanatory. :dd
+
+{Invalid syntax in variable formula} :dt
+
+Self-explanatory. :dd
+
+{Invalid variable evaluation in variable formula} :dt
+
+A variable used in a formula could not be evaluated. :dd
+
+{Invalid variable in next command} :dt
+
+Self-explanatory. :dd
+
+{Invalid variable name in variable formula} :dt
+
+Variable name is not recognized. :dd
+
+{Invalid variable name} :dt
+
+Variable name used in an input script line is invalid. :dd
+
+{Invalid variable style with next command} :dt
+
+Variable styles {equal} and {world} cannot be used in a next
+command. :dd
+
+{Label wasn't found in input script} :dt
+
+Self-explanatory. :dd
+
+{Log of zero/negative in variable formula} :dt
+
+Self-explanatory. :dd
+
+{Max 2d move distance > bin size} :dt
+
+Move distance exceeds bin size.  Must increase bin size or reduce move
+size. :dd
+
+{Max 3d move distance > bin size} :dt
+
+Move distance exceeds bin size.  Must increase bin size or reduce move
+size. :dd
+
+{Max reaction distance > bin size} :dt
+
+Binary reaction distance exceeds bin size.  Must increase bin size or
+reduce reaction distance. :dd
+
+{Move to next bin out of range} :dt
+
+Particle moved into bin not owned by this processor.  This error
+should not occur.  :dd
+
+{Must be 2 or more bins in periodic dimensions} :dt
+
+Binning of global domain has resulted in only one bin in a particular
+dimension. :dd
+
+{Must print stats in count units for spatial simulation} :dt
+
+Self-explanatory. :dd
+
+{Must set bins before defining region} :dt
+
+Use bin command before using region command. :dd
+
+{Must set bins before read restart} :dt
+
+Use bin command before using read_restart command. :dd
+
+{Must set bins before reading particles} :dt
+
+Use bin command before using particles command. :dd
+
+{Must set bins before reading surface} :dt
+
+Use bin command before using triangles command. :dd
+
+{Must set bins before run} :dt
+
+Use bin command before using run command. :dd
+
+{Must set global domain before bins} :dt
+
+Use global command before using bin command. :dd
+
+{Must set run_style first} :dt
+
+Cannot use this command before the run style is set :dd
+
+{Must set simulation domain via global command} :dt
+
+Global command has not been used before a simulation is being
+initialized. :dd
+
+{Must set volume for run style gillespie} :dt
+
+This run style requires that the volume command be used. :dd
+
+{Must set volume for run style ode/rk} :dt
+
+This run style requires that the volume command be used. :dd
+
+{Must set volume for run style ode} :dt
+
+This run style requires that the volume command be used. :dd
+
+{Must use -in switch with multiple partitions} :dt
+
+A multi-partition simulation cannot read the input script from stdin.
+The -in command-line option must be used to specify a file. :dd
+
+{No matching move style parameters} :dt
+
+Style of requested move does not exist. :dd
+
+{No particle species match dump species} :dt
+
+Requested dump species does not exist. :dd
+
+{Part,spec %d,%d on step %d exceeds MAXITER} :dt
+
+Movement of particle has exceeded preset iteration count.  This error
+should not occur unless there is a problem with the move. :dd
+
+{Particle %d is outside global domain} :dt
+
+Particle being read from file is outside the global domain. :dd
+
+{Particle %d's triangle does not exist} :dt
+
+Could not successfully assign a read-in particle to a triangle on a 2d
+surface.  Probably because it is too far from any triangle. :dd
+
+{Particle is outside global domain} :dt
+
+Particle being read from restart file is outside the global domain. :dd
+
+{Particles surf-ID does not exist} :dt
+
+2d particles read from file are assigned to a surface ID that does
+not exist. :dd
+
+{Permeability is set for 2d species} :dt
+
+Permeability can only be set for 3d species. :dd
+
+{Permeable probabilities do not sum to 1.0} :dt
+
+Self-explanatory. :dd
+
+{Permeable stick species is not 2d} :dt
+
+When a 3d species sticks to a surface, it must become a 2d species. :dd
+
+{Post-migrate: %d particles on proc %d are not in correct bin} :dt
+
+Particle migration to a new processor has resulted in incorrect bin
+assignments.  This error shoud not occur. :dd
+
+{Power by 0 in variable formula} :dt
+
+Self-explanatory. :dd
+
+{Pre-migrate: %d particles on proc %d are not in correct bin} :dt
+
+Particle migration to a new processor is occuring with incorrect bin
+assignments.  This error shoud not occur. :dd
+
+{Probability %g for reaction %s is too large} :dt
+
+The computed probability exceeds 1.0.  You need to reduce the reaction
+distance so the probability will shrink. :dd
+
+{Processor partitions are inconsistent} :dt
+
+The total number of processors in all partitions must match the number
+of processors ChemCell is running on. :dd
+
+{Reaction ID %s already exists} :dt
+
+A reaction ID can only be used once. :dd
+
+{Reaction cannot have more than MAX_PRODUCT products} :dt
+
+This is a hard limit in react.cpp. :dd
+
+{Reaction has no numeric rate} :dt
+
+Self-explanatory. :dd
+
+{Reaction must have 0,1,2 reactants} :dt
+
+Self-explanatory. :dd
+
+{Reading 2d particles for a 3d species} :dt
+
+3d particles cannot be assigned to a surface. :dd
+
+{Reading 3d particles for a 2d species} :dt
+
+2d particles must be assigned to a surface. :dd
+
+{Region extends outside global domain} :dt
+
+Self-explantory. :dd
+
+{Region intersects bin next to periodic boundary} :dt
+
+For a periodic dimension, there must be a bin at each boundary which
+has no region interesecting it. :dd
+
+{Region surf-ID already exists} :dt
+
+Surface IDs must be unique. :dd
+
+{Replacing a fix, but new style != old style} :dt
+
+A fix ID can be used a 2nd time, but only if the style matches the
+previous fix.  In this case it is assumed you with to reset a fix's
+parameters.  This error may mean you are mistakenly re-using a fix ID
+when you do not intend to. :dd
+
+{Reuse of dump ID} :dt
+
+A dump ID cannot be used twice. :dd
+
+{Run style does not support checking} :dt
+
+Not all run styles can use check command. :dd
+
+{Simulation domain is already set} :dt
+
+Cannot use global command twice. :dd
+
+{Species already exists and no new aliases are defined} :dt
+
+Cannot use a species name more than once. :dd
+
+{Sqrt of negative in variable formula} :dt
+
+Self-explanatory. :dd
+
+{Sticking species is not 2d} :dt
+
+A membrane-bound species must be defined as dimension = 2d. :dd
+
+{Substitution for illegal variable} :dt
+
+Input script line contained a variable that could not be substituted
+for. :dd
+
+{Summed probability %g for species %s & %s is too large} :dt
+
+Probabilities for all reactions involving this pair of species > 1.0 :dd
+
+{Summed probability %g for species %s is too large} :dt
+
+Probabilities for all reactions involving this species > 1.0 :dd
+
+{Triangle intersects bin next to periodic boundary} :dt
+
+For a periodic dimension, there must be a bin at each boundary which
+has no trinagles interesecting it. :dd
+
+{Two or more wildcard * in count species ID} :dt
+
+A string with a wildcard character "*" can only have one wildcard. :dd
+
+{Two or more wildcard * in diffusion species ID} :dt
+
+A string with a wildcard character "*" can only have one wildcard. :dd
+
+{Two or more wildcard * in dimension species ID} :dt
+
+A string with a wildcard character "*" can only have one wildcard. :dd
+
+{Two or more wildcard * in stats species ID} :dt
+
+A string with a wildcard character "*" can only have one wildcard. :dd
+
+{Unbalanced quotes in input line} :dt
+
+No matching end double quote was found following a leading double
+quote. :dd
+
+{Unexpected end of file} :dt
+
+ChemCell hit the end of the file while attempting to read particles or
+surface info.  Something is wrong with the format of the file. :dd
+
+{Universe/uloop variable count < # of partitions} :dt
+
+A universe or uloop style variable must specify a number of values >= to the
+number of processor partitions. :dd
+
+{Unknown command: %s} :dt
+
+The command is not known to ChemCell.  Check the input script. :dd
+
+{Unknown species %s in check command} :dt
+
+Self-explantory. :dd
+
+{Unknown species %s in permeable command} :dt
+
+Self-explanatory. :dd
+
+{Unknown species in count command} :dt
+
+Self-explanatory. :dd
+
+{Unknown species in diffusion command} :dt
+
+Self-explanatory. :dd
+
+{Unknown species in dimension command} :dt
+
+Self-explanatory. :dd
+
+{Unknown species in move_test command} :dt
+
+Self-explanatory. :dd
+
+{Unknown species in particles command} :dt
+
+Self-explanatory. :dd
+
+{Unknown species in reaction command} :dt
+
+Self-explanatory. :dd
+
+{Unknown surface %s in check command} :dt
+
+Self-explanatory. :dd
+
+{Unknown surface %s in permeable command} :dt
+
+Self-explanatory. :dd
+
+{Variable name must be alphanumeric or underscore characters} :dt
+
+Self-explanatory. :dd
+
+{Vertex %d in surf %s is outside global domain} :dt
+
+One or more vertices in triangles being read in are outside global
+domain. :dd
+
+{World variable count doesn't match # of partitions} :dt
+
+A world-style variable must specify a number of values equal to the
+number of processor partitions. :dd
+
+:dle
+
+Warnings: :h4,link(warn)
+
+:dlb
+
+{Particle is inside surface} :dt
+
+Check determined a particle is inside surface when it should be
+outside. :dd
+
+{Particle is outside surface} :dt
+
+Check determined a particle is outside surface when it should be
+inside. :dd
+
+{Restart file used different # of processors} :dt
+
+The restart file was written by a simulation run on a different
+number of processors. :dd
+
+{Restart file version does not match ChemCell version} :dt
+
+The restart file was written with an older version of ChemCell. :dd
+
+{Run styles do not match} :dt
+
+The restart file was written by a simulation that defined a different
+run style. :dd
+
+:dle

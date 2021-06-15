@@ -1,0 +1,48 @@
+<HTML>
+<CENTER><A HREF = "http://chemcell.sandia.gov">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>run command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>run N
+run delta 
+</PRE>
+<UL><LI>N = run for N timesteps (integer value)
+<LI>delta = run for delta seconds (floating point value) 
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>run 1000
+run 5.0 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Run a simulation for N timesteps or delta seconds.  If a previous run
+was made, this command continues the simulation.
+</P>
+<P>The length of the run can be specied in timesteps or elapsed
+simulation time.  Using an integer versus a floating-point value (with
+a decimal point) determines how the argument is interpreted.
+</P>
+<P>For stochastic non-spatial (Gillepsie) simulations, N refers to a
+number of reactions, since there is one timestep/reaction.
+</P>
+<P><B>Restrictions:</B> none
+</P>
+<P><B>Related commands:</B>
+</P>
+<P><A HREF = "run_style.html">run_style</A>
+</P>
+<P><B>Default:</B> none
+</P>
+</HTML>

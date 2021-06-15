@@ -1,0 +1,64 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://chemcell.sandia.gov)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+   
+dump command :h3
+
+[Syntax:]
+
+dump ID N filename species1-ID species2-ID ...
+dump ID delta filename species1-ID species2-ID ... :pre
+
+ID = user-assigned name for the dump
+N = dump particles every N timesteps (integer value)
+delta = dump particles every delta seconds (floating point value)
+filename = file to dump to
+speciesN-ID = optional list of species-IDs to dump to file :ul
+
+[Examples:]
+
+dump 1 100 tmp.dump
+dump Ca-dump 0.1 tmp.dump.Ca Ca-cyto Ca-ER :pre
+
+[Description:]
+
+Dump a snapshot of particle coordinates and species types to a file
+every so often as a simulation runs.  The species list is optional; if
+not specified, all particles are dumped.
+
+The ID of a dump can contain alphanumeric characters and underscores.
+
+The frequency of output can be specied in timesteps or elapsed
+simulation time.  Using an integer versus a floating-point value (with
+a decimal point) determines how the argument is interpreted.
+
+Any species-ID can contain a single wildcard character * which will
+match species and alias names in the usual way.  E.g. a species-ID can
+be *, ab*, *ab, ab*cd.
+
+Multiple dumps (with different IDs) can be defined.  See the
+"undump"_undump.html command for turning off a dump.
+
+The format of the dump file is self-explanatory.  For each particle,
+an ID, its species type (an an integer), and its x,y,z coordinates are
+printed.  Dump files can be visualized with the "Pizza.py
+toolkit"_pizza or converted into other formats (via Pizza.py) suitable
+for visualization with other tools, e.g. "VMD"_vmd.
+
+:link(pizza,http://www.cs.sandia.gov/~sjplimp/pizza.html)
+:link(vmd,http://www.ks.uiuc.edu/Research/vmd)
+
+[Restrictions:]
+
+This command can only be used for spatial simluations.
+
+[Related commands:]
+
+"dump_modify"_dump_modify.html, "stats"_stats.html, "undump"_undump.html
+
+[Default:] none

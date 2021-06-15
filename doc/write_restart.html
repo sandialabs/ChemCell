@@ -1,0 +1,50 @@
+<HTML>
+<CENTER><A HREF = "http://chemcell.sandia.gov">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>write_restart command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>write_restart file 
+</PRE>
+<UL><LI>file = name of file to write restart information to 
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>write_restart restart.equil 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Write a binary restart file of the current state of the simulation.
+Only particle information is stored in a restart file.
+</P>
+<P>During a long simulation, the <A HREF = "restart.html">restart</A> command is
+typically used to dump restart files periodically.  The write_restart
+command is useful between simulations or whenever you wish to write
+out a single current restart file.
+</P>
+<P>Restart files can be read by a <A HREF = "read_restart.html">read_restart</A>
+command to restart a simulation from a particular state.  Because the
+file is binary (to enable exact restarts), it may not be readable on
+another machine.
+</P>
+<P><B>Restrictions:</B>
+</P>
+<P>This command can only be used for spatial simulations.
+</P>
+<P><B>Related commands:</B>
+</P>
+<P><A HREF = "restart.html">restart</A>, <A HREF = "read_restart.html">read_restart</A>
+</P>
+<P><B>Default:</B> none
+</P>
+</HTML>

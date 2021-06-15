@@ -1,0 +1,70 @@
+<HTML>
+<CENTER><A HREF = "http://chemcell.sandia.gov">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>fix command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>fix ID style args 
+</PRE>
+<UL><LI>ID = user-assigned name for the fix
+<LI>style = style name of fix (see possible styles below)
+<LI>args = arguments used by a particular style 
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>fix 1 conc 100 data.file 2 CheA CheAa 2 CheAa CheA 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Set a fix that will be applied during a simulation.  In ChemCell, a
+"fix" is any operation that is applied to the system during
+timestepping.  Examples include adjusting reaction rates, applying
+boundary conditions, or computing diagnostics.  There is currently
+only a small number of fixes defined in ChemCell, but others can be
+added - see <A HREF = "Section_modify.html">this section</A> of the documentation
+for a discussion.
+</P>
+<P>The ID of a fix can contain alphanumeric characters and underscores.
+</P>
+<P>Each fix style has its own documentation page which describes its
+arguments and what it does.  For example, see the <A HREF = "fix_conc_set.html">fix
+conc/set</A> page for information on style <I>conc/set</I>.
+</P>
+<P>Fixes perform their operations at different stages of the timestep.
+If 2 or more fixes both operate at the same stage of the timestep,
+they are invoked in the order they were specified in the input script.
+</P>
+<P>Specifying a new fix with the same ID as an existing fix effectively
+replaces the old fix (and its parameters) with the new fix.  This can
+only be done if the new fix has the same style as the existing fix.
+</P>
+<P>Fixes can be deleted with the <A HREF = "unfix.html">unfix</A> command.  Note that
+this is the only way to turn off a fix; simply specifying a new fix
+with a similar style will not turn off the first one.
+</P>
+<P>Here is an alphabetic list of fix styles currently defined in ChemCell:
+</P>
+<UL><LI><A HREF = "fix_conc_random.html">fix conc/random</A> - set the concentration of one or more species
+<LI><A HREF = "fix_conc_set.html">fix conc/set</A> - set the concentration of one or more species
+<LI><A HREF = "fix_dna_toggle.html">fix dna/toggle</A> - model DNA toggling on/off to modulate mRNA production
+<LI><A HREF = "fix_rate_saturate.html">fix rate/saturate</A> - adjust the rate of one or more reactions 
+</UL>
+<P><B>Restrictions:</B> none
+</P>
+<P><B>Related commands:</B>
+</P>
+<P><A HREF = "unfix.html">unfix</A>
+</P>
+<P><B>Default:</B> none
+</P>
+</HTML>

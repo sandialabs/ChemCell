@@ -1,0 +1,46 @@
+<HTML>
+<CENTER><A HREF = "http://chemcell.sandia.gov">ChemCell WWW Site</A> - <A HREF = "Manual.html">ChemCell Documentation</A> - <A HREF = "Section_commands.html#comm">ChemCell
+Commands</A> 
+</CENTER>
+
+
+
+
+
+
+<HR>
+
+<H3>move_test command 
+</H3>
+<P><B>Syntax:</B>
+</P>
+<PRE>move_test species-ID N Nhisto seed file 
+</PRE>
+<UL><LI>species-ID = ID of species
+<LI>N = # of moves
+<LI>Nhisto = number of histogram bins
+<LI>seed = random # seed
+<LI>file = file to write results to 
+</UL>
+<P><B>Examples:</B>
+</P>
+<PRE>move_test Ca 10000 100 58327 tmp.diff 
+</PRE>
+<P><B>Description:</B>
+</P>
+<P>Test the diffusive movement of a species by performing N moves of a
+single particle, and binning the result in distance.  The histogram
+statistics are written to the specified file.
+</P>
+<P>This is useful for testing the distribution of move distances for a
+particular diffusion coefficient and timestep size.
+</P>
+<P><B>Restrictions:</B> none
+</P>
+<P><B>Related commands:</B>
+</P>
+<P><A HREF = "move_style.html">move_style</A>
+</P>
+<P><B>Default:</B> none
+</P>
+</HTML>

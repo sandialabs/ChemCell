@@ -1,0 +1,63 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://chemcell.sandia.gov)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+region command :h3
+
+[Syntax:]
+
+region ID style args :pre
+
+ID = user-assigned name for the region :ulb,l
+style = {sphere} or {box} or {plane} or {cylinder} :l
+args = list of arguments for a particular style :l
+  {sphere} args = x y z r
+    x,y,z = center of sphere (microns)
+    r = radius of sphere (microns)
+  {box} args = xlo ylo zlo xhi yhi zhi
+    xlo,ylo,zlo = lower left corner of box (microns)
+    xhi,yhi,zhi = upper right corner of box (microns)
+  {plane} args = x y z nx ny nz
+    x,y,z = point on plane (microns)
+    nx,ny,nz = vector pointing in normal direction to plane
+  {cylinder} args = dim c1 c2 r
+    dim = {x} or {y} or {z}
+    c1,c2 = coords of axis in other 2 dimensions (yz,xz,xy) (microns)
+    r = radius of cylinder (microns) :pre
+:ule
+
+[Examples:]
+
+region sph sphere 0 0 0 10.0
+region cell box 0 0 0 4 2 2 :pre
+
+[Description:]
+
+Define a simple geometric region as a surface.  Similar to
+"triangulated surfaces"_triangles.html, the region surface can be used
+as a boundary for 3d particles or as a surface on which 2d particles
+are located and move.
+
+The ID of a region can contain alphanumeric characters and
+underscores and dashes.
+
+The {plane} style defines an infinite plane which should be
+axis-aligned if the simulation box is periodic.  The {cylinder} style
+defines an infinite open-ended axis-aligned cylinder.
+
+[Restrictions:]
+
+The "bin command"_bin.html must be used before defining a region.
+
+This command can only be used for spatial simulations.
+
+[Related commands:]
+
+"triangles"_triangles.html
+
+[Default:] none

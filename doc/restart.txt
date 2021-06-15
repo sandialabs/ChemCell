@@ -1,0 +1,55 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://chemcell.sandia.gov)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+restart command :h3
+
+[Syntax:]
+
+restart 0
+restart N root
+restart N file1 file2 :pre
+
+N = write a restart file every this many timesteps
+root = filename to which timestep # is appended
+file1,file2 = two full filenames, toggle between them when writing file :ul
+
+[Examples:]
+
+restart 0
+restart 1000 ecoli.restart
+restart 10000 ecoli.r.1 ecoli.r.2 :pre
+
+[Description:]
+
+Write out a binary restart file every so many timesteps as a run
+proceeds.  A value of 0 means do not write out restart files.  Using
+one filename as an argument will create a series of filenames with a
+timestep suffix, e.g. the 2nd example above will create
+ecoli.restart.1000, ecoli.restart.2000, ecoli.restart.3000, etc.
+Using two filenames will produce only 2 restart files.  ChemCell will
+toggle between the 2 names as it writes successive restart files.
+
+Only particle information is stored in a restart file.
+
+Restart files can be read by a "read_restart"_read_restart.html
+command to restart a simulation from a particular state.  Because the
+file is binary (to enable exact restarts), it may not be readable on
+another machine.
+
+[Restrictions:]
+
+This command can only be used for spatial simulations.
+
+[Related commands:]
+
+"write_restart"_write_restart.html, "read_restart"_read_restart.html
+
+[Default:]
+
+restart 0 :pre

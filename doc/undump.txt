@@ -1,0 +1,34 @@
+"ChemCell WWW Site"_cws - "ChemCell Documentation"_cd - "ChemCell
+Commands"_cc :c
+
+:link(cws,http://chemcell.sandia.gov)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+undump command :h3
+
+[Syntax:]
+
+undump dump-ID :pre
+
+dump-ID = ID of previously defined dump :ul
+
+[Examples:]
+
+undump mine
+undump 2 :pre
+
+[Description:]
+
+Turn off a previously defined dump so that it is no longer active.
+This closes the file associated with the dump.
+
+[Restrictions:] none
+
+[Related commands:]
+
+"dump"_dump.html
+
+[Default:] none

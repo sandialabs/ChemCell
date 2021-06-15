@@ -1,0 +1,45 @@
+"Previous Section"_Section_commands.html - "ChemCell WWW Site"_cws -
+"ChemCell Documentation"_cd - "ChemCell Commands"_cc - "Next
+Section"_Section_tools.html :c
+
+:link(cws,http://chemcell.sandia.gov)
+:link(cd,Manual.html)
+:link(cc,Section_commands.html#comm)
+
+:line
+
+4. Example problems :h3
+
+The ChemCell distribution includes an examples sub-directory with
+several sample problems.  Each problem is in a sub-directory of its
+own.  Each problem has an input script (in.*) and produces a log file
+(log.*).  If may also produce a dump file (dump.*) when it runs.  Some
+use one or more data files (data.*) of geometry or particle info as
+additional input.  These were created via the "Pizza.py"_pizza
+pre-processing tool using the *.py scripts in the same directory.
+
+:link(pizza,http://www.cs.sandia.gov/~sjplimp/pizza.html)
+
+Plots can be made from the log files using the "olog" and plotting
+tools in Pizza.py.  Images and movies can be made from the dump and
+data files using the "cdata", "dump", and various visualization tools
+in Pizza.py.  Examples are shown on the "ChemCell WWW Site"_cws.
+
+These are the sample problems in the examples sub-directories:
+
+abc: simple A + B -> C reaction
+kinase: 3-stage kinase cascade
+lotka: Lotka-Volterra predator-prey system
+ecoli: E Coli chemotaxis signaling pathway model :tb(s=:)
+
+Here is how you might run and visualize one of the sample problems:
+
+cd kinase
+cp ../../src/ccell_linux .         # copy ChemCell executable to this dir
+ccell_linux < in.kinase            # run the problem :pre
+
+Running the simulation produces the files {dump.kinase} and
+{log.ccell}.  Assuming you have Pizza.py installed, you could
+visualize the dump file as follows:
+
+pizza -f dview.py dump.kinase :pre
