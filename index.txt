@@ -28,14 +28,15 @@ This is the home page for the biological cell modeling code ChemCell.
 
 "Features"_features.html,
 "Documentation"_doc/Manual.html,
-"Download"_download,
 "Latest features & bug fixes"_bug.html,
 "Pictures & Movies"_pictures.html,
 "Thanks"_thanks.html,
 "Open source"_open_source.html,
+"Download"_https://www.sandia.gov/~sjplimp/download.html,
+"GitHub"_https://github.com/sjplimp/chemcell,
 "Pizza.py Toolkit"_pizza.html,
 "Publications"_papers.html,
-"Other codes"_other.html :tb(c=5,ea=c,a=c)
+"Other codes"_other.html :tb(c=6,ea=c,a=c)
 
 :link(download,http://www.sandia.gov/~sjplimp/download.html)
 :link(pizza,http://pizza.sandia.gov)
@@ -64,15 +65,10 @@ The authors of ChemCell are "Steve Plimpton"_sjp and Alex Slepoy, who
 can be contacted at sjplimp at sandia.gov and alexander.sleopy at
 nnsa.doe.gov.
 
-The ChemCell WWW site is hosted by Sandia, which has this "Privacy and
-Security statement"_security.
-
 :link(sjp,http://www.sandia.gov/~sjplimp)
-
 :link(gpl,http://www.gnu.org/copyleft/gpl.html)
 :link(snl,http://www.sandia.gov)
 :link(doe,http://www.doe.gov)
-:link(security,http://www.sandia.gov/general/privacy-security/index.html)
 
 :line
 
